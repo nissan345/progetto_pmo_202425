@@ -6,6 +6,8 @@ import main.neri.interfaces.OggettoGioco;
 
 public interface Stanza{
     /* */
+    public String getNomeStanza();
+    /* */
     public List<OggettoGioco> getOggettiInStanza();
     /* */
     public List<NPC> getNpcInStanza();

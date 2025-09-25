@@ -8,10 +8,16 @@ import main.neri.interfaces.OggettoGioco;
 public class StanzaImpl implements Stanza{
     private final List<NPC> npcInStanza;               // Indica gli oggetti presenti nella stanza
     private final List<OggettoGioco> oggettiInStanza;  // Indica gli NPC presenti nella stanza
+    private String nomeStanza;
 
-    public StanzaImpl(List<NPC> npc, List<OggettoGioco> oggetti){
+    public StanzaImpl(String nome, List<NPC> npc, List<OggettoGioco> oggetti){
+        this.nomeStanza = nome;
         this.npcInStanza = npc;
         this.oggettiInStanza = oggetti;
+    }
+
+    public String getNomeStanza(){
+        return nomeStanza;
     }
 
     public List<OggettoGioco> getOggettiInStanza() {
@@ -30,27 +36,22 @@ public class StanzaImpl implements Stanza{
         return this.oggettiInStanza.contains(o);
     }
     
-    public void addNpc(NPC n) throws IllegalArgumentException{
-        if(hasNpc(n)){
-            throw new IllegalArgumentException();
-        }
+    public void addNpc(NPC n) {
         this.npcInStanza.add(n);
     };
-    public void addOggettoStanza(OggettoGioco o)throws IllegalArgumentException{
-        if(hasOggettoStanza(o))
-            throw new IllegalArgumentException();
+    public void addOggettoStanza(OggettoGioco o){
         this.oggettiInStanza.add(o);
     };
-    public void removeOggettoStanza(OggettoGioco o)throws IllegalArgumentException{
-        if(!hasOggettoStanza(o))
-            throw new IllegalArgumentException();
+    public void removeOggettoStanza(OggettoGioco o){
         this.oggettiInStanza.remove(o);
     };
 
-    public void removeNpc(NPC n)throws IllegalArgumentException{
-        if(!hasNpc(n)){
-            throw new IllegalArgumentException();
-        }
+    public void removeNpc(NPC n){
         this.npcInStanza.remove(n);
     };
+
+    @Override
+    public String toString(){
+        return this.nomeStanza + "\nNPC presenti: " + this.npcInStanza + "\nOggetti presenti: " + this.oggettiInStanza;
+    }
 }

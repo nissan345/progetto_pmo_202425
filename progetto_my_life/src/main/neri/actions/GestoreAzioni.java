@@ -1,10 +1,10 @@
 package main.neri.actions;
 
-import model.*;
 import java.util.*;
+import main.neri.model.*;
 
 public class GestoreAzioni {
-    private Map<String, Azione> azioni;
+     Map<String, Azione> azioni;
     
     public GestoreAzioni() {
         this.azioni = new HashMap<>();

@@ -1,7 +1,7 @@
 package main.neri.model;
 
 public class OggettoGenerico extends OggettoGioco {
-    private TipoOggetto tipo;
+    public TipoOggetto tipo;
     private boolean statoSpeciale; // per oggetti con stato (es. piante annaffiate)
     
     public enum TipoOggetto {
@@ -70,11 +70,89 @@ public class OggettoGenerico extends OggettoGioco {
     @Override
     public RisultatoAzione usa(Personaggio personaggio) {
         switch(tipo) {
-            // … (mantieni tutta la logica che hai già scritto per ogni oggetto)
-            default:
+        // Camera da letto
+        case LETTO -> {
+            return new RisultatoAzione("Ti sdrai sul letto e riposi.", 0, 0, +40, -10);
+            }
+        case COMPUTER -> {
+            return new RisultatoAzione("Passi un po' di tempo al computer.", +10, +5, -20, -5);
+            }
+        case ARMADIO -> {
+            return new RisultatoAzione("Ti cambi con un abito nuovo. Ti senti fresca!", 0, 0, -5, +20);
+            }
+            // Cucina
+        case FRIGORIFERO -> {
+            return new RisultatoAzione("Mangi qualcosa dal frigorifero.", -30, 0, +10, -5);
+            }
+        case FORNELLI -> {
+            return new RisultatoAzione("Cucini un pasto caldo.", -20, 0, -10, -5);
+            }
+            // Bagno
+        case LAVANDINO -> {
+            return new RisultatoAzione("Bevi un bicchiere d'acqua fresca.", 0, -30, +5, 0);
+            }
+        case DOCCIA -> {
+            return new RisultatoAzione("Fai una doccia rigenerante.", 0, 0, +10, +40);
+            }
+        case WC -> {
+            return new RisultatoAzione("Ti senti sollevata dopo essere andata al bagno.", 0, 0, +5, +5);
+            }
+        case LAVATRICE -> {
+            return new RisultatoAzione("Metti i vestiti in lavatrice. La casa è più ordinata!", 0, 0, -10, +10);
+            }
+             // Salotto
+        case TELEVISIONE -> {
+            return new RisultatoAzione("Guardi la TV e ti rilassi.", +5, +5, +10, -5);
+            }
+        case STEREO -> {
+            return new RisultatoAzione("Ascolti la tua musica preferita.", 0, 0, +10, 0);
+            }
+        case DIVANO -> {
+            return new RisultatoAzione("Ti siedi sul divano e ti riposi un po'.", 0, 0, +15, 0);
+            }
+        case LIBRERIA -> {
+            return new RisultatoAzione("Leggi un buon libro dalla libreria.", +5, 0, +10, 0);
+            }
+            // Sgabuzzino
+        case ASPIRAPOLVERE -> {
+            return new RisultatoAzione("Usi l'aspirapolvere e pulisci la stanza.", 0, 0, -20, +10);
+            }
+            // Giardino
+        case INNAFFIATOIO -> {
+            if (!statoSpeciale) {
+                statoSpeciale = true;
+                return new RisultatoAzione("Innaffi le piante: ora sono felici!", 0, 0, -5, 0);
+            } else {
+                return new RisultatoAzione("Le piante sono già state annaffiate di recente.");
+            }
+            }
+        case PIANTE -> {
+            if (!statoSpeciale) {
+                return new RisultatoAzione("Le piante sembrano assetate. Forse dovresti usare l'innaffiatoio.");
+            } else {
+                return new RisultatoAzione("Le piante sono rigogliose e verdi!", 0, 0, +5, +5);
+            }
+            }
+        case PALLA -> {
+            return new RisultatoAzione("Giochi con la palla e fai un po' di esercizio.", +10, +5, -15, -5);
+            }
+        case ALTALENA -> {
+            return new RisultatoAzione("Ti dondoli sull'altalena, ti diverti e ti rilassi.", 0, 0, +15, 0);
+            }
+        case MACCHINA -> {
+            return new RisultatoAzione("Prendi la macchina e fai un giro.", +15, +15, -20, -1);
+            }
+            default -> {
                 return new RisultatoAzione("Non sai come usare questo oggetto.");
+            }
         }
-    }
+
+
+
+
+
+ 
+            }
     
     // Metodo per resettare stati speciali (es. a fine giornata)
     public void resetStato() {

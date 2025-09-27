@@ -1,8 +1,8 @@
 package main.neri.actions;
 
-import model.OggettoGioco;
-import model.Personaggio;
-import model.RisultatoAzione;
+import main.neri.model.OggettoGioco;
+import main.neri.model.Personaggio;
+import main.neri.model.RisultatoAzione;
 
 public interface Azione {
     RisultatoAzione esegui(OggettoGioco oggetto, Personaggio personaggio);

@@ -1,7 +1,7 @@
 package main.neri.actions;
 
 
-import model.*;
+import main.neri.model.*;
 
 public class AzioniImplementate {
     

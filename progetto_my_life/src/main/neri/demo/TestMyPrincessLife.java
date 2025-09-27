@@ -1,8 +1,8 @@
 package main.neri.demo;
 
-import model.*;
-import actions.*;
 import java.util.*;
+import main.neri.actions.*;
+import main.neri.model.*;
 
 public class TestMyPrincessLife {
     public static void main(String[] args) {
@@ -50,9 +50,12 @@ public class TestMyPrincessLife {
         RisultatoAzione risultato = gestore.eseguiAzione(azione, oggetto, personaggio);
         System.out.println("➤ " + risultato.getMessaggio());
         personaggio.applicaEffetti(risultato);
-        if (Math.abs(risultato.getDeltaFame()) > 0 || Math.abs(risultato.getDeltaSete()) > 0 || 
+              if (Math.abs(risultato.getDeltaFame()) > 0 || Math.abs(risultato.getDeltaSete()) > 0 || 
             Math.abs(risultato.getDeltaEnergia()) > 10 || Math.abs(risultato.getDeltaIgiene()) > 10) {
             System.out.println("📊 " + personaggio.getStato());
-        }
+     }
+    }
+}
+
    
 

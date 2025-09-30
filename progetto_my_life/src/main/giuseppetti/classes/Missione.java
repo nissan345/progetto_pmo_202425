@@ -38,7 +38,7 @@ public class Missione {
         return this.descrizione; 
     }
 
-    public NPC getnpcAssegnato() { 
+    public NPC getNPCAssegnato() { 
         return this.npcAssegnato; 
     }
 

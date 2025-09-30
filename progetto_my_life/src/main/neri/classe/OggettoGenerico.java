@@ -1,4 +1,4 @@
-package main.neri.model;
+package main.neri.classe;
 
 public class OggettoGenerico extends OggettoGioco {
     public TipoOggetto tipo;

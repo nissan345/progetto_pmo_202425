@@ -1,4 +1,4 @@
-package main.neri.model;
+package main.neri.classe;
 
 
 /**
@@ -22,7 +22,7 @@ public abstract class OggettoGioco {
     public boolean isUtilizzabile() { return utilizzabile; }
     public String getStanza() { return stanza; }
     
-    public abstract RisultatoAzione usa(Personaggio personaggio);
+   // public abstract RisultatoAzione usa(Personaggio personaggio);
     
     @Override
     public String toString() {

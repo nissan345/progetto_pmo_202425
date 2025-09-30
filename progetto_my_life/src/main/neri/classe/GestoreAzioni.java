@@ -1,4 +1,4 @@
-package main.neri.actions;
+package main.neri.classe;
 
 import java.util.*;
 import main.neri.model.*;

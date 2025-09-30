@@ -1,34 +1,34 @@
 package main.neri.demo;
 
 import java.util.*;
-import main.neri.actions.*;
-import main.neri.model.*;
+import main.neri.classe.*;
+import main.neri.interfacce.*;
 
 public class TestMyPrincessLife {
     public static void main(String[] args) {
         System.out.println("=== MY PRINCESS LIFE - SISTEMA AZIONI E OGGETTI ===");
         System.out.println();
         
-        Personaggio principessa = new Personaggio("Isabella");
+     //   Personaggio principessa = new Personaggio("Isabella");
         GestoreAzioni gestore = new GestoreAzioni();
         Map<String, OggettoGenerico> casa = FabbricaOggetti.creaCasaCompleta();
         
         System.out.println("🏠 Casa creata con " + casa.size() + " oggetti!");
-        System.out.println("👸 " + principessa.getStato());
+       // System.out.println("👸 " + principessa.getStato());
         System.out.println();
         
-        simulaGiornata(principessa, gestore, casa);
+      //  simulaGiornata(principessa, gestore, casa);
         
         System.out.println("\n=== STATISTICHE FINALI ===");
-        System.out.println("👸 " + principessa.getStato());
+     //   System.out.println("👸 " + principessa.getStato());
         
         System.out.println("\n=== AZIONI DISPONIBILI ===");
         OggettoGenerico letto = casa.get("letto");
         List<String> azioniDisponibili = gestore.getAzioniDisponibili(letto, principessa);
         System.out.println("Per " + letto.getNome() + ": " + azioniDisponibili);
-    }
+    }}
     
-    private static void simulaGiornata(Personaggio principessa, GestoreAzioni gestore, Map<String, OggettoGenerico> casa) {
+    /* private static void simulaGiornata(Personaggio principessa, GestoreAzioni gestore, Map<String, OggettoGenerico> casa) {
         System.out.println("🌅 INIZIO GIORNATA");
         eseguiEMostra("🚿 DOCCIA MATTUTINA", gestore, "usa", casa.get("doccia"), principessa);
         eseguiEMostra("🚽 BAGNO", gestore, "usa", casa.get("wc"), principessa);
@@ -56,6 +56,6 @@ public class TestMyPrincessLife {
      }
     }
 }
-
+*/
    
 

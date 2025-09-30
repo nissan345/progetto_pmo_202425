@@ -13,7 +13,7 @@ public class Personaggio {
     private int igiene;    // 0-100
     
     public Personaggio(String nome) {
-        this.nome = nome;
+       this.nome = nome;
         this.livello = 1;
         this.fame = 50;
         this.sete = 50;

@@ -2,8 +2,8 @@ package main.aboufaris.classes;
 
 import java.util.List;
 import main.aboufaris.interfaces.Stanza;
-import main.giuseppetti.interfaces.NPC;
-import main.neri.interfaces.OggettoGioco;
+import main.giuseppetti.classes.NPC;
+import main.neri.classe.OggettoGioco;
 
 public class StanzaImpl implements Stanza{
     private String nomeStanza;

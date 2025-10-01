@@ -1,7 +1,7 @@
 package main.neri.classe;
 
 import java.util.*;
-import main.neri.model.*;
+import main.neri.interfacce.*;
 
 public class GestoreAzioni {
      Map<String, Azione> azioni;

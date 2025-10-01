@@ -11,9 +11,9 @@ public class AzioniImplementate {
         @Override
         public String getDescrizione() { return "Utilizza l'oggetto per i suoi effetti"; }
         @Override
-        public boolean puoEseguire(OggettoGioco oggetto, Personaggio personaggio) {
+         public boolean puoEseguire(OggettoGioco oggetto, Personaggio personaggio) {
             return oggetto.isUtilizzabile();
-        }
+        } 
         @Override
         public RisultatoAzione esegui(OggettoGioco oggetto, Personaggio personaggio) {
             if (!puoEseguire(oggetto, personaggio)) {

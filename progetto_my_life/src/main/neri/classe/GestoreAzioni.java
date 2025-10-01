@@ -1,6 +1,7 @@
 package main.neri.classe;
 
 import java.util.*;
+import main.fabbri.classes.*;
 import main.neri.interfacce.*;
 
 public class GestoreAzioni {

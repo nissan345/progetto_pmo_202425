@@ -3,6 +3,7 @@ package main.neri.demo;
 import java.util.*;
 import main.neri.classe.*;
 import main.neri.interfacce.*;
+import main.fabbri.classes.*;
 
 public class TestMyPrincessLife {
     public static void main(String[] args) {

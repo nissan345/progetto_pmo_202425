@@ -122,6 +122,16 @@ public class Personaggio {
     }
     */
 
+    //FUNZIONE AGGIUNTA DA ALI, NON SO SE SERVE
+    /* // Metodo per applicare gli effetti delle azioni
+    public void applicaEffetti(RisultatoAzione risultato) {
+        this.fame = Math.max(0, Math.min(100, this.fame + risultato.getDeltaFame()));
+        this.sete = Math.max(0, Math.min(100, this.sete + risultato.getDeltaSete()));
+        this.energia = Math.max(0, Math.min(100, this.energia + risultato.getDeltaEnergia()));
+        this.igiene = Math.max(0, Math.min(100, this.igiene + risultato.getDeltaIgiene()));
+    }  */
+
+    
     // FUNZIONI PRINCIPALI ----------------------------------------------------------------
 
     public void stampaStato() {

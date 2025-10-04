@@ -1,5 +1,6 @@
 package main.neri.interfacce;
 
+import main.fabbri.classes.*;
 import main.neri.classe.OggettoGioco;
 import main.neri.classe.RisultatoAzione;
 

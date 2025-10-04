@@ -1,4 +1,5 @@
 package main.neri.classe;
+import main.fabbri.classes.*;
 
 public class OggettoGenerico extends OggettoGioco {
     public TipoOggetto tipo;
@@ -66,6 +67,7 @@ public class OggettoGenerico extends OggettoGioco {
     public TipoOggetto getTipo() { return tipo; }
     public boolean getStatoSpeciale() { return statoSpeciale; }
     public void setStatoSpeciale(boolean stato) { this.statoSpeciale = stato; }
+    
     
     @Override
     public RisultatoAzione usa(Personaggio personaggio) {

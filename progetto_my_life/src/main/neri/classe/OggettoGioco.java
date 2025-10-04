@@ -1,5 +1,6 @@
 package main.neri.classe;
 
+import main.fabbri.classes.Personaggio;
 
 /**
  * Classe base per tutti gli oggetti presenti nella casa
@@ -17,6 +18,7 @@ public abstract class OggettoGioco {
         this.stanza = stanza;
     }
     
+    public abstract RisultatoAzione usa(Personaggio personaggio);
     public String getNome() { return nome; }
     public String getDescrizione() { return descrizione; }
     public boolean isUtilizzabile() { return utilizzabile; }

@@ -6,56 +6,45 @@
 package main.giuseppetti.classes;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import main.giuseppetti.interfaces.CriterioCompletamento;
 
 /**
  *
  * @author OS
  */
 public class GestoreMissioni {
-    private List<NPC> npcs;
-    private Map<String, List<CriterioAzioneCompletata>> azioniInAttesa;
+    private List<NPC> npcs = new ArrayList<>(); // Inizializza la lista
 
-    public GestoreMissioni() {
-        this.npcs = new ArrayList<>();
-        this.azioniInAttesa = new HashMap<>();
-    }
-
-    public void aggiungiNPC(NPC npc) {
+    // Metodo per registrare NPC
+    public void registraNPC(NPC npc) {
         npcs.add(npc);
-        // Registra i criteri di azione
-        for (Missione missione : npc.getMissioniAttive()) {
-            if (missione.getCriterio() instanceof CriterioAzioneCompletata) {
-                CriterioAzioneCompletata criterio = (CriterioAzioneCompletata) missione.getCriterio();
-                String azione = criterio.getTipoAzione();
-                azioniInAttesa.computeIfAbsent(azione, k -> new ArrayList<>()).add(criterio);
-            }
-        }
     }
 
     public void giocatoreCompieAzione(String tipoAzione, String oggettoUsato) {
-        // Gestione oggetti
         for (NPC npc : npcs) {
             for (Missione missione : npc.getMissioniAttive()) {
-                if (missione.getCriterio() instanceof CriterioUsoOggetti) {
-                    CriterioUsoOggetti criterio = (CriterioUsoOggetti) missione.getCriterio();
-                    criterio.oggettoUsato(oggettoUsato);
+                for (CriterioCompletamento criterio : missione.getCriteri()) {
+                    notificaCriterio(criterio, tipoAzione, oggettoUsato);
                 }
+                
+                if (missione.verificaCompletamento()) {
+                    System.out.println("Missione completata: " + missione.getNome());
+                } 
             }
         }
-        
-        // Gestione azioni semplici
-        if (azioniInAttesa.containsKey(tipoAzione)) {
-            for (CriterioAzioneCompletata criterio : azioniInAttesa.get(tipoAzione)) {
-                criterio.segnalaAzioneCompletata(tipoAzione);
+    }
+    
+    private void notificaCriterio(CriterioCompletamento criterio, String azione, String oggetto) {
+        if (criterio instanceof CriterioUsoOggetti && oggetto != null) {
+            ((CriterioUsoOggetti) criterio).oggettoUsato(oggetto);
+        } else if (criterio instanceof CriterioAzioneCompletata && azione != null) {
+            ((CriterioAzioneCompletata) criterio).segnalaAzioneCompletata(azione);
+        } else if (criterio instanceof Sottocriteri) {
+            for (CriterioCompletamento sub : ((Sottocriteri) criterio).getSottocriteri()) {
+                notificaCriterio(sub, azione, oggetto);
             }
-        }
-        
-        // Verifica completamento
-        for (NPC npc : npcs) {
-            npc.verificaMissioni();
         }
     }
 }

@@ -1,7 +1,14 @@
 package main.fabbri.classes;
 
-// import java.util.HashMap;
-// import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import main.aboufaris.interfaces.Stanza;
+import main.giuseppetti.classes.Missione;
+import main.neri.classe.OggettoGioco;
+import main.neri.classe.RisultatoAzione;
 
 public class Personaggio {
     private String nome;
@@ -13,7 +20,8 @@ public class Personaggio {
     private int sete;
     private int energia;
     private int igiene;
-    // private Stanza stanzaCorrente;   // Posizione
+    private Stanza stanzaCorrente;   // Posizione
+    private List<Missione> missioniAttive;
     
 
     // COSTRUTTORE ------------------------------------------------------------------------
@@ -30,7 +38,9 @@ public class Personaggio {
         this.energia = 100;
         this.igiene = 100;
         
-        // this.stanzaCorrente = null;
+        this.stanzaCorrente = null;
+
+        this.missioniAttive = new ArrayList<>();
     }
 
     // GETTER E SETTER -------------------------------------------------------------------
@@ -90,20 +100,24 @@ public class Personaggio {
         return igiene; 
     }
 
+    public List<Missione> getMissioniAttive() {
+        return this.missioniAttive;
+    }
+
     // METODI ---------------------------------------------------------------
 
     public int getStatistiche() {
         return livello;
     }
     
-    /*
+    
     public String getPosizione() {
-        return stanzaCorrente.getNome();
+        return stanzaCorrente.getNomeStanza();
     }
 
     public void scegliStanza(Stanza stanza) {
         this.stanzaCorrente = stanza;
-        System.out.println("Sei entrato in: " + stanza.getNome());
+        System.out.println("Sei entrato in: " + stanza.getNomeStanza());
     }
 
     public void aumentaLivello(Missione missione) {
@@ -115,21 +129,34 @@ public class Personaggio {
 
     public String interagisci(OggettoGioco oggetto) {
         if (oggetto != null && stanzaCorrente != null && 
-            stanzaCorrente.contieneOggetto(oggetto)) {
-            oggetto.interagisci(this);
+            stanzaCorrente.hasOggettoStanza(oggetto)) {
+            oggetto.usa(this);
             return "Hai interagito con " + oggetto.getNome();
         }
+
+        return "Non puoi interagire con questo oggetto.";
     }
-    */
+    
 
     //FUNZIONE AGGIUNTA DA ALI, NON SO SE SERVE
-    /* // Metodo per applicare gli effetti delle azioni
+    // Metodo per applicare gli effetti delle azioni
     public void applicaEffetti(RisultatoAzione risultato) {
         this.fame = Math.max(0, Math.min(100, this.fame + risultato.getDeltaFame()));
         this.sete = Math.max(0, Math.min(100, this.sete + risultato.getDeltaSete()));
         this.energia = Math.max(0, Math.min(100, this.energia + risultato.getDeltaEnergia()));
         this.igiene = Math.max(0, Math.min(100, this.igiene + risultato.getDeltaIgiene()));
-    }  */
+    }  
+
+
+    // metodi per le missioni
+    public void aggiungiMissione(Missione missione) {
+        missioniAttive.add(missione);
+        System.out.println("Missione accettata: " + missione.getNome());
+    }
+
+    public void rimuoviMissione(Missione missione) {
+        missioniAttive.remove(missione);
+    }
 
     
     // FUNZIONI PRINCIPALI ----------------------------------------------------------------
@@ -143,10 +170,9 @@ public class Personaggio {
         System.out.println("Sete: " + sete + "/100");
         System.out.println("Energia: " + energia + "/100");
         System.out.println("Igiene: " + igiene + "/100");
-        // System.out.println("Posizione: " + getPosizione());
+        System.out.println("Posizione: " + getPosizione());
     }
 
-    /*
     public Map<String, Integer> getStatoCompleto() {
         Map<String, Integer> stato = new HashMap<>();
         stato.put("fame", fame);
@@ -155,5 +181,5 @@ public class Personaggio {
         stato.put("igiene", igiene);
         return stato;
     }
-    */
+
 }

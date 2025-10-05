@@ -26,6 +26,7 @@ public class OggettoGenerico extends OggettoGioco {
         STEREO("Stereo e vinili", "Per ascoltare la tua musica preferita", "Salotto"),
         DIVANO("Divano", "Per rilassarti comodamente", "Salotto"),
         LIBRERIA("Libreria", "Piena di libri interessanti da leggere", "Salotto"),
+        ALBUM("Album", "Album di fotografie da riportare alla mamma per completare la missione", "Salotto"),
         
         // Sgabuzzino
         ASPIRAPOLVERE("Aspirapolvere", "Per pulire la casa", "Sgabuzzino"),
@@ -115,6 +116,9 @@ public class OggettoGenerico extends OggettoGioco {
         case LIBRERIA -> {
             return new RisultatoAzione("Leggi un buon libro dalla libreria.", +5, 0, +10, 0);
             }
+        case ALBUM -> {
+            return new RisultatoAzione("Hai preso il vecchio album di fotografie.", 0, 0, 0, 0);
+            }
             // Sgabuzzino
         case ASPIRAPOLVERE -> {
             return new RisultatoAzione("Usi l'aspirapolvere e pulisci la stanza.", 0, 0, -20, +10);
@@ -149,12 +153,7 @@ public class OggettoGenerico extends OggettoGioco {
             }
         }
 
-
-
-
-
- 
-            }
+    }
     
     // Metodo per resettare stati speciali (es. a fine giornata)
     public void resetStato() {

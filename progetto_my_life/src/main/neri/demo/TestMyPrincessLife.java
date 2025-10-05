@@ -4,7 +4,7 @@ import java.util.*;
 import main.neri.classe.*;
 import main.neri.interfacce.*;
 import main.fabbri.classes.*;
-
+/* 
 public class TestMyPrincessLife {
     public static void main(String[] args) {
         System.out.println("=== MY PRINCESS LIFE - SISTEMA AZIONI E OGGETTI ===");
@@ -29,7 +29,7 @@ public class TestMyPrincessLife {
         System.out.println("Per " + letto.getNome() + ": " + azioniDisponibili);
     }}
     
-    /* private static void simulaGiornata(Personaggio principessa, GestoreAzioni gestore, Map<String, OggettoGenerico> casa) {
+        private static void simulaGiornata(Personaggio principessa, GestoreAzioni gestore, Map<String, OggettoGenerico> casa) {
         System.out.println("🌅 INIZIO GIORNATA");
         eseguiEMostra("🚿 DOCCIA MATTUTINA", gestore, "usa", casa.get("doccia"), principessa);
         eseguiEMostra("🚽 BAGNO", gestore, "usa", casa.get("wc"), principessa);

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import main.aboufaris.interfaces.Stanza;
+import main.fabbri.classes.*;
+
+;
 
 /**
  *
@@ -27,6 +30,9 @@ public abstract class NPC {
 
     // Metodo per il dialogo iniziale che ha ogni NPC
     public abstract String getDialogoIniziale(); 
+
+    // Metodo per il dialogo per assegnare una missione 
+    protected abstract  String getMissioneAssegnataDialogo(Missione missione);
 
     // Metodo per la risposta al completamento di una missione 
     public abstract String getReazioneCompletamentoMissione(Missione missione);
@@ -81,16 +87,24 @@ public abstract class NPC {
             return;
         }
         
+        List<Missione> missioniCompletate = new ArrayList<>();
+        
         for (Missione missione : missioniPersonaggio) {
+            // CORREZIONE: getNpcAssegnato() invece di getNPCAssegnato()
             if (missione.getNPCAssegnato().equals(this)) {
                 if (missione.verificaCompletamento()) {
-                    missione.isCompletata();
                     System.out.println(getReazioneCompletamentoMissione(missione));
                     incrementaAffinita();
+                    missioniCompletate.add(missione);
                 } else {
                     System.out.println("La missione '" + missione.getNome() + "' non è ancora completata!");
                 }
             }
+        }
+        
+        // Rimuovi le missioni completate dal personaggio
+        for (Missione missione : missioniCompletate) {
+            p.rimuoviMissione(missione);
         }
     }
 
@@ -128,7 +142,7 @@ public abstract class NPC {
         System.out.println("Affinità con " + this.relazione + " aumentata a: " + affinita);
     }
 
-    // GETTER - CORRETTI
+    // GETTER 
     public String getRelazione() {
         return this.relazione;
     }

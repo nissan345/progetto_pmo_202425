@@ -1,8 +1,8 @@
 package main.aboufaris.interfaces;
 
 import java.util.List;
-import main.giuseppetti.interfaces.NPC;
-import main.neri.interfaces.OggettoGioco;
+import main.giuseppetti.classes.NPC;
+import main.neri.classe.OggettoGioco;
 
 public interface Stanza{
     /* */

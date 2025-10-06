@@ -13,15 +13,15 @@ import main.aboufaris.interfaces.Stanza;
  *
  * @author OS
  */
-public class Madre extends NPC {
+public class Padre extends NPC {
 
-    public Madre(Stanza s) {
-        super("Madre", s);
+    public Padre(Stanza s) {
+        super("Padre", s);
     }
 
     @Override
     public String getDialogoIniziale() {
-        return "Ciao tesoro! Come sta andando la tua giornata?";
+        return "Ciao tesoro! Come sta andando la tua avventura?";
     }
 
     @Override
@@ -33,21 +33,21 @@ public class Madre extends NPC {
     @Override
     public String getReazioneCompletamentoMissione(Missione missione) {
         return "Grazie mille figliola! Hai fatto un ottimo lavoro." +
-               "'!\nSei sempre così affidabile, sono orgogliosa di te!";
+               "'!\nSei sempre così affidabile, sono orgoglioso di te!";
     }
 
-    @Override
     protected void inizializzaMissioni() {
-        Missione missioneAlbum = new Missione("Alla ricerca dell'album perduto", 
-                                   "Dovresti riportarmi il vecchio album di famiglia che ho perduto da qualche parte in casa e riportamelo", 
+       
+        Missione missionePiante = new Missione("Innaffia le piante", 
+                                   "Dovresti annaffiare le piante", 
                                                 this
                             );
-        Sottocriteri criterioAlbum = new Sottocriteri(Arrays.asList(
-            new CriterioUsoOggetti((Arrays.asList("album")))
+        Sottocriteri criterioPiante = new Sottocriteri(Arrays.asList(
+            new CriterioUsoOggetti((Arrays.asList("Innaffiatoio"))),
+            new CriterioAzioneCompletata("usa")
         ));
-        missioneAlbum.aggiungiCriterio(criterioAlbum);
-        aggiungiMissione(missioneAlbum);
+        missionePiante.aggiungiCriterio(criterioPiante);
+        aggiungiMissione(missionePiante);
     }
-
 
 }

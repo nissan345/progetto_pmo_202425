@@ -1,56 +1,64 @@
 package main.giuseppetti.classes;
 
+import java.util.ArrayList;
+import java.util.List;
 import main.giuseppetti.interfaces.CriterioCompletamento;
 
 public class Missione {
+    private final String nome;
+    private final String descrizione;
+    private final NPC npcAssegnato;
+    private List<CriterioCompletamento> criteri; 
+    private boolean completata;
 
-    private final String nome;                      // nome missione 
-    private final String descrizione;               // descrizione della missione
-    private final NPC npcAssegnato;                 // NPC a cui appartiene la missione 
-    private CriterioCompletamento criterio;         // criterio di completamento di una determinata missione
-    private boolean completata;                     // stato della missione  
-
-
-    public Missione(String nome, String descrizione, NPC npcAssegnato, CriterioCompletamento c) {
+    public Missione(String nome, String descrizione, NPC npcAssegnato) {
         this.nome = nome;
-        this.descrizione = descrizione; 
-        this.npcAssegnato = npcAssegnato; 
-        this.criterio = c; 
-        this.completata = false; 
+        this.descrizione = descrizione;
+        this.npcAssegnato = npcAssegnato;
+        this.criteri = new ArrayList<>();
+        this.completata = false;
     }
 
-    // Verifica se la missione può essere completata
+    // Aggiungi un criterio alla missione
+    public void aggiungiCriterio(CriterioCompletamento criterio) {
+        this.criteri.add(criterio);
+    }
+
+    // Verifica se TUTTI i criteri sono soddisfatti
     public boolean verificaCompletamento() {
-        if (!completata && criterio.verificaCompletamento()) {
-            completata = true;
-            npcAssegnato.incrementaAffinita();
-            return true;
+        if (completata) return true;
+        
+        for (CriterioCompletamento criterio : criteri) {
+            if (!criterio.verificaCompletamento()) {
+                return false;
+            }
         }
-        return false;
+        
+        completata = true;
+        npcAssegnato.incrementaAffinita();
+        return true;
     }
 
-    // GETTER e SETTER
-    public String getNome() { 
-        return this.nome; 
+    // GETTER
+
+    public String getNome() {
+        return this.nome;
     }
 
-    public String getDescrizione() { 
-        return this.descrizione; 
+    public String getDescrizione() {
+        return this.descrizione;
     }
 
-    public NPC getNPCAssegnato() { 
-        return this.npcAssegnato; 
+     public NPC getNPCAssegnato() {
+        return this.npcAssegnato;
+    }
+    
+    public List<CriterioCompletamento> getCriteri() {
+        return this.criteri;
     }
 
-    public boolean isCompletata() { 
-        return this.completata; 
-    }
 
-    public void setCriterio(CriterioCompletamento criterio) { 
-        this.criterio = criterio; 
-    }
-
-    public CriterioCompletamento getCriterio() {
-       return this.criterio;
+    public boolean isCompletata() {
+        return this.completata;
     }
 }

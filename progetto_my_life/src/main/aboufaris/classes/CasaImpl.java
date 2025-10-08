@@ -11,10 +11,13 @@ public class CasaImpl implements Casa{
     private Map<String, Stanza> stanze;
     private Optional<Stanza> stanzaCorrente;
 
-    public CasaImpl(Stanza nuovaStanza){
+    public CasaImpl(){
         this.stanze = new HashMap<>();
         this.stanzaCorrente = Optional.empty();
-        this.stanze.put(nuovaStanza.getNomeStanza(), nuovaStanza);
+    }
+
+    public void aggiungiStanza(Stanza s){
+        this.stanze.put(s.getNomeStanza(), s);
     }
 
     public Optional<Stanza> getStanzaCorrente(){
@@ -28,7 +31,8 @@ public class CasaImpl implements Casa{
         return stanze;
     }
 
-    public Optional<Stanza> entraInStanza(Stanza s){
+    public Optional<Stanza> entraInStanza(String nome){
+        Stanza s = this.stanze.get(nome);
         this.stanzaCorrente = Optional.of(s);
         return stanzaCorrente;
     }

@@ -2,11 +2,10 @@ package main.giuseppetti.classes;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+import java.util.stream.Collectors;
 import main.aboufaris.interfaces.Stanza;
 import main.fabbri.classes.*;
 
-;
 
 /**
  *
@@ -18,6 +17,7 @@ public abstract class NPC {
     private int affinita;
     private List<Missione> missioniDisponibili;
     private List<Missione> missioniAttive;
+    private List<OpzioniInterazione> opzioni;
 
     public NPC(final String relazione, Stanza s) {
         this.relazione = relazione;
@@ -25,7 +25,9 @@ public abstract class NPC {
         this.affinita = 0;
         this.missioniDisponibili = new ArrayList<>();
         this.missioniAttive = new ArrayList<>();
+        this.opzioni = new ArrayList<>();
         inizializzaMissioni();
+        
     }
 
     // Metodo per il dialogo iniziale che ha ogni NPC
@@ -35,77 +37,53 @@ public abstract class NPC {
     protected abstract  String getMissioneAssegnataDialogo(Missione missione);
 
     // Metodo per la risposta al completamento di una missione 
-    public abstract String getReazioneCompletamentoMissione(Missione missione);
+    public abstract String getReazioneCompletamentoMissione(Missione missione); 
 
     // Metodo astratto per inizializzare le missioni specifiche di ogni NPC
     protected abstract void inizializzaMissioni();
 
     // Interazione con il Personaggio - COMPLETA
-    public void interagisci(Personaggio p) {
-        System.out.println(this.getRelazione() + ": " + this.getDialogoIniziale());
-        mostraOpzioni(p);
-        gestisciScelta(p);
+    public String interagisci(Personaggio p) {
+        return this.getRelazione() + ": " + this.getDialogoIniziale();
     }
 
-    private void mostraOpzioni(Personaggio p) {
-        System.out.println("\n--- Opzioni ---");
-        System.out.println("1. Chiedi missione");
-        System.out.println("2. Consegna missione");
-        System.out.println("3. Esci");
+    public List<OpzioniInterazione> getOpzioniDisponibili(){
+        this.opzioni.add(OpzioniInterazione.CHIEDI_MISSIONE);
+        this.opzioni.add(OpzioniInterazione.CONSEGNA_MISSIONE);
+        this.opzioni.add(OpzioniInterazione.ESCI);
+        return opzioni;
     }
 
-    private void gestisciScelta(Personaggio p) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Scegli un'opzione (1-3): ");
-        int scelta = scanner.nextInt();
-        
-        switch(scelta) {
-            case 1:
-                Missione missione = assegnaMissione();
-                if (missione != null) {
-                    System.out.println("Nuova missione: " + missione.getNome());
-                    p.aggiungiMissione(missione);
-                } else {
-                    System.out.println("Non ci sono missioni disponibili al momento.");
-                }
-                break;
-            case 2:
-                consegnaMissione(p);
-                break;
-            case 3:
-                System.out.println("Arrivederci!");
-                break;
-            default:
-                System.out.println("Opzione non valida.");
-        }
+    // Ho messo il metodo pubblico che richiama quello privato
+    public List<String> consegnaMissione(Personaggio p){
+           return elaboraConsegnaMissione(p);
     }
-
-    private void consegnaMissione(Personaggio p) {
+    
+    
+    private List<String> elaboraConsegnaMissione(Personaggio p) {
+        List<String> messaggio = new ArrayList<>();
         List<Missione> missioniPersonaggio = p.getMissioniAttive();
         if (missioniPersonaggio.isEmpty()) {
-            System.out.println("Non hai missioni attive da consegnare.");
-            return;
+            messaggio.add("La missione non è stata registrata.");
+            return messaggio;    
         }
         
-        List<Missione> missioniCompletate = new ArrayList<>();
-        
-        for (Missione missione : missioniPersonaggio) {
-            // CORREZIONE: getNpcAssegnato() invece di getNPCAssegnato()
-            if (missione.getNPCAssegnato().equals(this)) {
-                if (missione.verificaCompletamento()) {
-                    System.out.println(getReazioneCompletamentoMissione(missione));
-                    incrementaAffinita();
-                    missioniCompletate.add(missione);
-                } else {
-                    System.out.println("La missione '" + missione.getNome() + "' non è ancora completata!");
-                }
-            }
-        }
-        
-        // Rimuovi le missioni completate dal personaggio
+        List<Missione> missioniCompletate = p.getMissioniAttive().stream()
+                                            .filter(missione -> missione.getNPCAssegnato().equals(this))
+                                            .filter(Missione::verificaCompletamento)
+                                            .collect(Collectors.toList());
+
         for (Missione missione : missioniCompletate) {
-            p.rimuoviMissione(missione);
-        }
+            // CORREZIONE: getNpcAssegnato() invece di getNPCAssegnato()
+                incrementaAffinita();
+                p.rimuoviMissione(missione);
+                messaggio.add(getReazioneCompletamentoMissione(missione) + "\nMissione"+ missione.getNome()+" completata");  
+            }
+        if(missioniCompletate.isEmpty())
+            messaggio.add("Non ci sono missioni completate con " + this.relazione);
+
+        messaggio.add("Affinità con " + this.relazione + " E' " +this.affinita);
+        return messaggio;
     }
 
     // Aggiunge una missione disponibile
@@ -139,7 +117,7 @@ public abstract class NPC {
 
     public void incrementaAffinita() {
         this.affinita += 10;
-        System.out.println("Affinità con " + this.relazione + " aumentata a: " + affinita);
+        String n = "Affinità con " + this.relazione + " aumentata a: " + affinita;
     }
 
     // GETTER 

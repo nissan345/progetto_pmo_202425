@@ -7,7 +7,6 @@ package main.giuseppetti.classes;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import main.giuseppetti.interfaces.CriterioCompletamento;
 
 /**
@@ -28,7 +27,7 @@ public class GestoreMissioni {
                 for (CriterioCompletamento criterio : missione.getCriteri()) {
                     notificaCriterio(criterio, tipoAzione, oggettoUsato);
                 }
-                
+                // Da rimuovere System.out.println()
                 if (missione.verificaCompletamento()) {
                     System.out.println("Missione completata: " + missione.getNome());
                 } 

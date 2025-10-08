@@ -8,7 +8,7 @@ public class GestoreAzioni {
      Map<String, Azione> azioni;
     
     public GestoreAzioni() {
-        this.azioni = new HashMap<>();
+        this.azioni = new LinkedHashMap<>();
         inizializzaAzioni();
     }
     

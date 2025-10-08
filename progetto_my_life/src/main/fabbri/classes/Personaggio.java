@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import main.aboufaris.interfaces.Stanza;
 import main.giuseppetti.classes.Missione;
 import main.neri.classe.OggettoGioco;
@@ -117,13 +116,13 @@ public class Personaggio {
 
     public void scegliStanza(Stanza stanza) {
         this.stanzaCorrente = stanza;
-        System.out.println("Sei entrato in: " + stanza.getNomeStanza());
+        //System.out.println("Sei entrato in: " + stanza.getNomeStanza());
     }
 
     public void aumentaLivello(Missione missione) {
         if (missione != null && missione.isCompletata()) {
             livello++;
-            System.out.println("Livello aumentato a: " + livello);
+            //System.out.println("Livello aumentato a: " + livello);
         }
     }
 
@@ -145,13 +144,27 @@ public class Personaggio {
         this.sete = Math.max(0, Math.min(100, this.sete + risultato.getDeltaSete()));
         this.energia = Math.max(0, Math.min(100, this.energia + risultato.getDeltaEnergia()));
         this.igiene = Math.max(0, Math.min(100, this.igiene + risultato.getDeltaIgiene()));
-    }  
+    }
+    
+    // FUNZIONE AGGIUNTA DALLA DIVA
+    public void decadimentoStato(){
+        this.fame = Math.max(0, this.fame-2);
+        this.sete = Math.max(0,this.sete-3);
+        this.energia = Math.max(0, this.energia-1);
+        this.igiene = Math.max(0, this.igiene-1);
+    }
 
+    public void resetStato(){
+        this.fame = 100;
+        this.sete = 100;
+        this.energia = 100;
+        this.igiene = 100;
+    }
 
     // metodi per le missioni
     public void aggiungiMissione(Missione missione) {
         missioniAttive.add(missione);
-        System.out.println("Missione accettata: " + missione.getNome());
+        //System.out.println("Missione accettata: " + missione.getNome());
     }
 
     public void rimuoviMissione(Missione missione) {
@@ -161,7 +174,7 @@ public class Personaggio {
     
     // FUNZIONI PRINCIPALI ----------------------------------------------------------------
 
-    public void stampaStato() {
+   /*  public void stampaStato() {
         System.out.println("\n STATO DI " + nome.toUpperCase());
         System.out.println("Livello: " + livello);
         System.out.println("Vestiti: " + vestiti);
@@ -171,7 +184,7 @@ public class Personaggio {
         System.out.println("Energia: " + energia + "/100");
         System.out.println("Igiene: " + igiene + "/100");
         System.out.println("Posizione: " + getPosizione());
-    }
+    }*/
 
     public Map<String, Integer> getStatoCompleto() {
         Map<String, Integer> stato = new HashMap<>();

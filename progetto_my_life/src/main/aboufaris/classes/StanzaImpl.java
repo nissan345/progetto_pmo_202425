@@ -1,20 +1,20 @@
 package main.aboufaris.classes;
 
 import java.util.List;
+import java.util.Optional;
 import main.aboufaris.interfaces.Stanza;
 import main.giuseppetti.classes.NPC;
 import main.neri.classe.OggettoGioco;
 
 public class StanzaImpl implements Stanza{
     private String nomeStanza;
-    private final List<NPC> npcInStanza;               // Indica gli oggetti presenti nella stanza
+    private Optional<NPC> npcInStanza;               // Indica gli oggetti presenti nella stanza
     private final List<OggettoGioco> oggettiInStanza;  // Indica gli NPC presenti nella stanza
     
-
-    public StanzaImpl(String nome, List<NPC> npc, List<OggettoGioco> oggetti){
+    public StanzaImpl(String nome, List<OggettoGioco> oggetti){
         this.nomeStanza = nome;
-        this.npcInStanza = npc;
         this.oggettiInStanza = oggetti;
+        this.npcInStanza = Optional.empty();
     }
 
     public String getNomeStanza(){
@@ -25,20 +25,20 @@ public class StanzaImpl implements Stanza{
         return oggettiInStanza;
     }
 
-    public List<NPC> getNpcInStanza() {
+    public Optional<NPC> getNpcInStanza() {
         return npcInStanza;
     }
 
     public boolean hasNpc(NPC n){
-        return this.npcInStanza.contains(n);
+        return this.npcInStanza.isPresent();
     }
 
     public boolean hasOggettoStanza(OggettoGioco o){
         return this.oggettiInStanza.contains(o);
     }
     
-    public void addNpc(NPC n) {
-        this.npcInStanza.add(n);
+    public void setNpc(NPC n) {
+        npcInStanza = Optional.of(n);
     };
 
     public void addOggettoStanza(OggettoGioco o){
@@ -47,10 +47,6 @@ public class StanzaImpl implements Stanza{
     
     public void removeOggettoStanza(OggettoGioco o){
         this.oggettiInStanza.remove(o);
-    };
-
-    public void removeNpc(NPC n){
-        this.npcInStanza.remove(n);
     };
 
     @Override

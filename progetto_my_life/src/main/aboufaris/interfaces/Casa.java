@@ -6,7 +6,9 @@ import java.util.Optional;
 public interface Casa{
 
     public Map<String, Stanza> getStanze();
-    public Optional<Stanza> entraInStanza(Stanza s);
+    public void aggiungiStanza(Stanza s);
+    public Optional<Stanza> getStanzaCorrente();
+    public Optional<Stanza> entraInStanza(String s);
     public Map<String, Stanza> esciDaStanza();
 
 }

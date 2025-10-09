@@ -144,5 +144,5 @@ public abstract class NPC {
     // SETTER per la posizione 
     public void setPosizione(Stanza nuovaPosizione) {
         this.posizione = nuovaPosizione;
-    }
+    }
 }

@@ -22,5 +22,6 @@ public interface Stanza{
     public void addOggettoStanza(OggettoGioco o);
     /* */
     public void removeOggettoStanza(OggettoGioco o);
+
     
 }

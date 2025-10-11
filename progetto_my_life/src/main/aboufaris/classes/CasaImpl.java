@@ -44,4 +44,8 @@ public class CasaImpl implements Casa{
         return this.stanze;
         
     }
+
+    public Stanza getStanza(String s){
+        return this.stanze.get(s);
+    }
 }

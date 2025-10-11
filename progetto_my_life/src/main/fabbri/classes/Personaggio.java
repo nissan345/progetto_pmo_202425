@@ -1,9 +1,7 @@
 package main.fabbri.classes;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import main.aboufaris.interfaces.Stanza;
 import main.giuseppetti.classes.Missione;
 import main.neri.classe.OggettoGioco;
@@ -186,13 +184,13 @@ public class Personaggio {
         System.out.println("Posizione: " + getPosizione());
     }*/
 
-    public Map<String, Integer> getStatoCompleto() {
-        Map<String, Integer> stato = new HashMap<>();
-        stato.put("fame", fame);
-        stato.put("sete", sete);
-        stato.put("energia", energia);
-        stato.put("igiene", igiene);
-        return stato;
+    @Override
+    public String toString(){
+        return  "\nFame: " + fame + "/100" +
+                "\nSete: " + sete + "/100"+
+                "\nEnergia: " + energia + "/100"+
+                "\nIgiene: "+ igiene + "/100"+
+                "\nMissioni attive: " + missioniAttive.size();
     }
-
+    
 }

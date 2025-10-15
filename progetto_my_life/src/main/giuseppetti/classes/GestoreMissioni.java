@@ -1,8 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package main.giuseppetti.classes;
 
 import java.util.ArrayList;
@@ -10,12 +5,8 @@ import java.util.List;
 
 import main.giuseppetti.interfaces.CriterioCompletamento;
 
-/**
- *
- * @author OS
- */
 public class GestoreMissioni {
-    private List<NPC> npcs = new ArrayList<>(); // Inizializza la lista
+    private List<NPC> npcs = new ArrayList<>(); 
 
     // Metodo per registrare NPC
     public void registraNPC(NPC npc) {

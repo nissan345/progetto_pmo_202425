@@ -1,18 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package main.giuseppetti.classes;
 
 import java.util.Arrays;
 
 import main.aboufaris.interfaces.Stanza;
 
-/**
- *
- * @author OS
- */
 public class Padre extends NPC {
 
     public Padre(Stanza s) {
@@ -32,7 +23,7 @@ public class Padre extends NPC {
 
     @Override
     public String getReazioneCompletamentoMissione(Missione missione) {
-        return "Grazie mille figliola! Hai fatto un ottimo lavoro." +
+        return "Grazie mille! Hai fatto un ottimo lavoro." +
                "'!\nSei sempre così affidabile, sono orgoglioso di te!";
     }
 

@@ -1,18 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package main.giuseppetti.classes;
 
 import java.util.Arrays;
 
 import main.aboufaris.interfaces.Stanza;
 
-/**
- *
- * @author OS
- */
 public class Madre extends NPC {
 
     public Madre(Stanza s) {
@@ -32,7 +23,7 @@ public class Madre extends NPC {
 
     @Override
     public String getReazioneCompletamentoMissione(Missione missione) {
-        return "Grazie mille figliola! Hai fatto un ottimo lavoro." +
+        return "Grazie mille! Hai fatto un ottimo lavoro." +
                "'!\nSei sempre così affidabile, sono orgogliosa di te!";
     }
 

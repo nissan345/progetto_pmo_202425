@@ -1,18 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package main.giuseppetti.classes;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import main.giuseppetti.interfaces.CriterioCompletamento;
 
-/**
- *
- * @author OS
- */
 public class CriterioUsoOggetti implements CriterioCompletamento{
 
     private List<String> oggettiRichiesti;

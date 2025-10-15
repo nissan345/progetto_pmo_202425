@@ -1,18 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package main.giuseppetti.classes;
 
 import java.util.Arrays;
 
 import main.aboufaris.interfaces.Stanza;
 
-/**
- *
- * @author OS
- */
 public class Fratello extends NPC {
     
     public Fratello(Stanza s) {

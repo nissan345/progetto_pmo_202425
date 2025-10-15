@@ -3,14 +3,10 @@ package main.giuseppetti.classes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import main.aboufaris.interfaces.Stanza;
-import main.fabbri.classes.*;
+import main.fabbri.classes.Personaggio;
 
-
-/**
- *
- * @author OS
- */
 public abstract class NPC {
     private final String relazione;
     private Stanza posizione; 

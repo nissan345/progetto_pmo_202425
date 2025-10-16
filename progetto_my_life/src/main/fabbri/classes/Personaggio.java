@@ -3,6 +3,8 @@ package main.fabbri.classes;
 import java.util.HashMap;
 import java.util.Map;
 
+import main.aboufaris.interfaces.Stanza;
+
 public class Personaggio {
     private String nome;
     private int livello;
@@ -14,6 +16,7 @@ public class Personaggio {
     private int sete;
     private int energia;
     private int igiene;
+    private Stanza stanzaCorrente;
 
     // COSTRUTTORE ------------------------------------------------------------------------
     public Personaggio(String nome, Vestito vestiti, Dieta dieta, Capelli capelli) {
@@ -29,6 +32,8 @@ public class Personaggio {
         this.sete = 100;
         this.energia = 100;
         this.igiene = 100;
+
+        this.stanzaCorrente = null; // Inizialmente nessuna stanza
     }
 
     // GETTER E SETTER -------------------------------------------------------------------
@@ -99,6 +104,15 @@ public class Personaggio {
     public void setIgiene(int igiene) {
         this.igiene = Math.max(0, Math.min(100, igiene));
     }
+    
+    // GETTER E SETTER PER LA POSIZIONE
+    public Stanza getStanzaCorrente() {
+        return stanzaCorrente;
+    }
+    
+    public void setStanzaCorrente(Stanza stanzaCorrente) {
+        this.stanzaCorrente = stanzaCorrente;
+    }
 
     // METODI PRINCIPALI ----------------------------------------------------------------
     public String stampaStato() {
@@ -114,6 +128,7 @@ public class Personaggio {
         stato.append("Sete: ").append(sete).append("/100\n");
         stato.append("Energia: ").append(energia).append("/100\n");
         stato.append("Igiene: ").append(igiene).append("/100\n");
+        stato.append("Posizione: ").append(getPosizione()).append("\n"); // AGGIUNTO
         
         return stato.toString();
     }
@@ -215,21 +230,52 @@ public class Personaggio {
         stato.put("igiene", igiene);
         return stato;
     }
-}
 
-/*
-    // METODI PER LE MISSIONI ------------------------------------------------
+    // METODI PER LA POSIZIONE ---------------------------------------------------------------
 
-    public void interagisciNPC(NPC npc) {
-
+    public String getPosizione() {
+        if (stanzaCorrente != null) {
+            return stanzaCorrente.getNome();
+        } else {
+            return "Nessuna stanza";
+        }
     }
 
+    public String scegliStanza(Stanza stanza) {
+        this.stanzaCorrente = stanza;
+        return "Sei entrato in: " + stanza.getNome();
+    }
+
+    // METODO PER INTERAGIRE CON GLI OGGETTI
     public String interagisciOggetto(OggettoGioco oggetto) {
         if (oggetto != null && stanzaCorrente != null && 
             stanzaCorrente.contieneOggetto(oggetto)) {
-            oggetto.interagisci(this);
-            return "Hai interagito con " + oggetto.getNome();
+            // Qui chiameremo il metodo usa dell'oggetto quando sarà implementato
+            return "Hai interagito con " + oggetto.getNome() + " in " + getPosizione();
+        } else {
+            return "Non puoi interagire con " + oggetto.getNome() + " in questa stanza.";
         }
+    }
+
+    // METODO PER VISUALIZZARE GLI OGGETTI NELLA STANZA 
+    public String mostraOggettiNellaStanza() {
+        if (stanzaCorrente != null) {
+            StringBuilder oggetti = new StringBuilder();
+            oggetti.append("Oggetti in ").append(getPosizione()).append(":\n");
+            // Supponendo che Stanza abbia un metodo getOggetti()
+            for (OggettoGioco oggetto : stanzaCorrente.getOggetti()) {
+                oggetti.append("- ").append(oggetto.getNome()).append("\n");
+            }
+            return oggetti.toString();
+        } else {
+            return "Non sei in nessuna stanza.";
+        }
+    }
+
+    // METODI PER LE MISSIONI -----------------------------------------------------------------------
+    /*
+    public void interagisciNPC(NPC npc) {
+        // Da implementare quando avremo gli NPC
     }
 
     public String aumentaLivello(Missione missione) {
@@ -237,17 +283,9 @@ public class Personaggio {
             livello++;
             return "Livello aumentato a: " + livello;
         }
+        return "Missione non completata";
     }
-    
+    */
+}
 
-    // METODI PER LA POSIZIONE ---------------------------------------------------------------
     
-    public String getPosizione() {
-        return stanzaCorrente.getNome();
-    }
-
-    public String scegliStanza(Stanza stanza) {
-        this.stanzaCorrente = stanza;
-        return "Sei entrato in: " + stanza.getNome();
-    }
-*/

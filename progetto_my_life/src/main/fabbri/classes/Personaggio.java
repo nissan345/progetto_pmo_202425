@@ -14,8 +14,6 @@ public class Personaggio {
     private int sete;
     private int energia;
     private int igiene;
-    // private Stanza stanzaCorrente;   // Posizione
-    
 
     // COSTRUTTORE ------------------------------------------------------------------------
     public Personaggio(String nome, Vestito vestiti, Dieta dieta, Capelli capelli) {
@@ -31,8 +29,6 @@ public class Personaggio {
         this.sete = 100;
         this.energia = 100;
         this.igiene = 100;
-        
-        // this.stanzaCorrente = null;
     }
 
     // GETTER E SETTER -------------------------------------------------------------------
@@ -76,16 +72,32 @@ public class Personaggio {
         return fame; 
     }
     
+    public void setFame(int fame) {
+        this.fame = Math.max(0, Math.min(100, fame));
+    }
+    
     public int getSete() { 
         return sete; 
+    }
+    
+    public void setSete(int sete) {
+        this.sete = Math.max(0, Math.min(100, sete));
     }
     
     public int getEnergia() { 
         return energia; 
     }
     
+    public void setEnergia(int energia) {
+        this.energia = Math.max(0, Math.min(100, energia));
+    }
+    
     public int getIgiene() { 
         return igiene; 
+    }
+    
+    public void setIgiene(int igiene) {
+        this.igiene = Math.max(0, Math.min(100, igiene));
     }
 
     // METODI PRINCIPALI ----------------------------------------------------------------
@@ -94,8 +106,8 @@ public class Personaggio {
         
         stato.append("\n STATO DI ").append(nome.toUpperCase()).append("\n");
         stato.append("Livello: ").append(livello).append("\n");
-        // stato.append("Vestiti: ").append(vestiti.getNome()).append("\n");
-        // stato.append("Capelli: ").append(capelli.getNome()).append("\n");
+        stato.append("Vestiti: ").append(vestiti.getNome()).append("\n");
+        stato.append("Capelli: ").append(capelli.getNome()).append("\n");
         stato.append("Dieta: ").append(dieta.getNome()).append(" - ").append(dieta.getDescrizione()).append("\n");
         stato.append("Preferenze di gusto:\n").append(preferenzeGusto.toString());
         stato.append("Fame: ").append(fame).append("/100\n");
@@ -180,41 +192,6 @@ public class Personaggio {
         return "Hai fatto la doccia e recuperato " + igieneRecuperata + " di igiene.";
     }
 
-    // METODI PER LE MISSIONI ------------------------------------------------
-    /*
-    public void interagisciNPC(NPC npc) {
-
-    }
-
-    public String interagisciOggetto(OggettoGioco oggetto) {
-        if (oggetto != null && stanzaCorrente != null && 
-            stanzaCorrente.contieneOggetto(oggetto)) {
-            oggetto.interagisci(this);
-            return "Hai interagito con " + oggetto.getNome();
-        }
-    }
-
-    public String aumentaLivello(Missione missione) {
-        if (missione != null && missione.isCompletata()) {
-            livello++;
-            return "Livello aumentato a: " + livello;
-        }
-    }
-    */
-
-    // METODI PER LA POSIZIONE ---------------------------------------------------------------
-    
-    /*
-    public String getPosizione() {
-        return stanzaCorrente.getNome();
-    }
-
-    public String scegliStanza(Stanza stanza) {
-        this.stanzaCorrente = stanza;
-        return "Sei entrato in: " + stanza.getNome();
-    }
-    */
-
     // METODI PER LA PERSONALIZZAZIONE -------------------------------------------------------
 
     // METODO PER CAMBIARE VESTITI
@@ -238,5 +215,39 @@ public class Personaggio {
         stato.put("igiene", igiene);
         return stato;
     }
-    
 }
+
+/*
+    // METODI PER LE MISSIONI ------------------------------------------------
+
+    public void interagisciNPC(NPC npc) {
+
+    }
+
+    public String interagisciOggetto(OggettoGioco oggetto) {
+        if (oggetto != null && stanzaCorrente != null && 
+            stanzaCorrente.contieneOggetto(oggetto)) {
+            oggetto.interagisci(this);
+            return "Hai interagito con " + oggetto.getNome();
+        }
+    }
+
+    public String aumentaLivello(Missione missione) {
+        if (missione != null && missione.isCompletata()) {
+            livello++;
+            return "Livello aumentato a: " + livello;
+        }
+    }
+    
+
+    // METODI PER LA POSIZIONE ---------------------------------------------------------------
+    
+    public String getPosizione() {
+        return stanzaCorrente.getNome();
+    }
+
+    public String scegliStanza(Stanza stanza) {
+        this.stanzaCorrente = stanza;
+        return "Sei entrato in: " + stanza.getNome();
+    }
+*/

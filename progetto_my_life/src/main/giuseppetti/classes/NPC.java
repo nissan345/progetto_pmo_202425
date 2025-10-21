@@ -9,136 +9,141 @@ import main.fabbri.classes.Personaggio;
 
 public abstract class NPC {
     private final String relazione;
-    private Stanza posizione; 
+    private final Stanza posizione; 
     private int affinita;
     private List<Missione> missioniDisponibili;
-    private List<Missione> missioniAttive;
     private List<OpzioniInterazione> opzioni;
 
-    public NPC(final String relazione, Stanza s) {
+    public NPC(final String relazione, final Stanza s) {
         this.relazione = relazione;
         this.posizione = s; 
         this.affinita = 0;
         this.missioniDisponibili = new ArrayList<>();
-        this.missioniAttive = new ArrayList<>();
         this.opzioni = new ArrayList<>();
         inizializzaMissioni();
-        
     }
 
-    // Metodo per il dialogo iniziale che ha ogni NPC
-    public abstract String getDialogoIniziale(); 
-
-    // Metodo per il dialogo per assegnare una missione 
-    protected abstract  String getMissioneAssegnataDialogo(Missione missione);
-
-    // Metodo per la risposta al completamento di una missione 
-    public abstract String getReazioneCompletamentoMissione(Missione missione); 
-
-    // Metodo astratto per inizializzare le missioni specifiche di ogni NPC
+    // Metodi Astratti
+    
+    // Metodo per il dialogo iniziale con un NPC
+    public abstract String getDialogoIniziale();
+    
+    // Metodo per il dialogo quando un NPC assegna una missione
+    public abstract String getMissioneAssegnataDialogo(Missione missione);
+    
+    // Metodo per il dialogo quando una missione non è stata ancora completata
+    public abstract String getDialogoMissioneInCorso(Missione missione);
+    
+    // Metodo per il dialogo quando una missione è stata completata 
+    public abstract String getDialogoCompletamentoMissione(Missione missione);
+    
+    // Metodo per l'inizializzazione della missione
     protected abstract void inizializzaMissioni();
-
-    // Interazione con il Personaggio - COMPLETA
-    public String interagisci(Personaggio p) {
-        return this.getRelazione() + ": " + this.getDialogoIniziale();
-    }
-
-    public List<OpzioniInterazione> getOpzioniDisponibili(){
-        this.opzioni.add(OpzioniInterazione.CHIEDI_MISSIONE);
-        this.opzioni.add(OpzioniInterazione.CONSEGNA_MISSIONE);
-        this.opzioni.add(OpzioniInterazione.ESCI);
-        return opzioni;
-    }
-
-    // Ho messo il metodo pubblico che richiama quello privato
-    public List<String> consegnaMissione(Personaggio p){
-           return elaboraConsegnaMissione(p);
-    }
     
+    // Metodi concreti 
     
-    private List<String> elaboraConsegnaMissione(Personaggio p) {
-        List<String> messaggio = new ArrayList<>();
-        List<Missione> missioniPersonaggio = p.getMissioniAttive();
-        if (missioniPersonaggio.isEmpty()) {
-            messaggio.add("La missione non è stata registrata.");
-            return messaggio;    
+    // Gestisce l'interazione tra personaggio e NPC
+    public List<OpzioniInterazione> getOpzioniDisponibili(Personaggio personaggio) {
+        this.opzioni.clear();
+        
+        // CHIEDI_MISSIONE: solo se non hai già una missione attiva con questo NPC
+        boolean haMissioneAttivaConQuestoNPC = haMissioneAttivaConQuestoNPC(personaggio);
+        
+        if (!missioniDisponibili.isEmpty() && !haMissioneAttivaConQuestoNPC) {
+            this.opzioni.add(OpzioniInterazione.CHIEDI_MISSIONE);
         }
         
-        List<Missione> missioniCompletate = p.getMissioniAttive().stream()
-                                            .filter(missione -> missione.getNPCAssegnato().equals(this))
-                                            .filter(Missione::verificaCompletamento)
-                                            .collect(Collectors.toList());
-
-        for (Missione missione : missioniCompletate) {
-            // CORREZIONE: getNpcAssegnato() invece di getNPCAssegnato()
-                incrementaAffinita();
-                p.rimuoviMissione(missione);
-                messaggio.add(getReazioneCompletamentoMissione(missione) + "\nMissione"+ missione.getNome()+" completata");  
-            }
-        if(missioniCompletate.isEmpty())
-            messaggio.add("Non ci sono missioni completate con " + this.relazione);
-
-        messaggio.add("Affinità con " + this.relazione + " E' " +this.affinita);
-        return messaggio;
+        // CONSEGNA_MISSIONE: solo se hai missioni completate con questo NPC
+        if (haMissioniCompletate(personaggio)) {
+            this.opzioni.add(OpzioniInterazione.CONSEGNA_MISSIONE);
+        }
+        
+        this.opzioni.add(OpzioniInterazione.ESCI);
+        return this.opzioni;
     }
 
-    // Aggiunge una missione disponibile
+    // Assegna una missione al Personaggio rimuovendola quindi dalle missioni disponibili
+    public Missione assegnaMissione(Personaggio personaggio) {
+        // Controllo di sicurezza
+        if (haMissioneAttivaConQuestoNPC(personaggio)) {
+            return null;
+        }
+        
+        if (missioniDisponibili.isEmpty()) {
+            return null;
+        }
+        
+        Missione missione = missioniDisponibili.remove(0);
+        // La missione viene aggiunta solo al personaggio
+        personaggio.aggiungiMissione(missione);
+        return missione;
+    }
+
+    public List<String> consegnaMissione(Personaggio personaggio) {
+        List<String> messaggi = new ArrayList<>();
+        
+        // Trova missioni completate di questo NPC
+        List<Missione> missioniCompletate = personaggio.getMissioniAttive().stream()
+            .filter(missione -> missione.getNPCAssegnatore().equals(this))
+            .filter(missione -> missione.verificaCompletamento(personaggio))
+            .collect(Collectors.toList());
+
+        if (missioniCompletate.isEmpty()) {
+            messaggi.add("Non ci sono missioni completate con " + this.relazione);
+            return messaggi;
+        }
+
+        // Processa la prima missione completata (dovrebbe essercene solo una)
+        Missione missione = missioniCompletate.get(0);
+        incrementaAffinita(missione.getPuntiAffinita());
+        personaggio.rimuoviMissione(missione);
+        
+        messaggi.add(getDialogoCompletamentoMissione(missione));
+        messaggi.add("Missione '" + missione.getNome() + "' completata!");
+        messaggi.add("Affinità con " + this.relazione + ": " + this.affinita + "/100");
+        
+        return messaggi;
+    }
+
+    // Metodi privati di supporto
+    
+    // Controlla se il personaggio ha una missione attiva con un determinato NPC
+    private boolean haMissioneAttivaConQuestoNPC(Personaggio personaggio) {
+        return personaggio.getMissioniAttive().stream()
+            .anyMatch(missione -> missione.getNPCAssegnatore().equals(this));
+    }
+    
+    // Controlla se il personaggio ha una missione completata relativa ad un determinato NPC
+    private boolean haMissioniCompletate(Personaggio personaggio) {
+        return personaggio.getMissioniAttive().stream()
+            .filter(missione -> missione.getNPCAssegnatore().equals(this))
+            .anyMatch(missione -> missione.verificaCompletamento(personaggio));
+    }
+    
+    // Si aggiunge una missione a quelle disponibili 
     protected void aggiungiMissione(Missione missione) {
         missioniDisponibili.add(missione);
     }
-
-    // Assegna una missione al Personaggio
-    public Missione assegnaMissione() {
-        if (!missioniDisponibili.isEmpty()) {
-            Missione missione = missioniDisponibili.remove(0);
-            missioniAttive.add(missione);
-            return missione;
-        }
-        return null;
+    
+    // Incrementa l'affinita tra un personaggio e un NPC, l'affinita va da 0 a 100
+    protected void incrementaAffinita(int puntiAffinita) {
+        this.affinita = Math.min(100, this.affinita + puntiAffinita);
     }
 
-    // Verifica il completamento di tutte le missioni attive
-    public void verificaMissioni() {
-        List<Missione> completate = new ArrayList<>();
-        
-        for (Missione missione : missioniAttive) {
-            if (missione.verificaCompletamento()) {
-                completate.add(missione);
-                incrementaAffinita();
-            }
-        }
-        
-        missioniAttive.removeAll(completate);
-    }
-
-    public void incrementaAffinita() {
-        this.affinita += 10;
-        String n = "Affinità con " + this.relazione + " aumentata a: " + affinita;
-    }
-
-    // GETTER 
-    public String getRelazione() {
-        return this.relazione;
-    }
-
-    public int getAffinita() { 
-        return this.affinita; 
-    }
-
-    public Stanza getPosizione() {
-        return this.posizione;
-    }
-
-    public List<Missione> getMissioniDisponibili() {
-        return new ArrayList<>(this.missioniDisponibili);
-    }
-
-    public List<Missione> getMissioniAttive() {
-        return new ArrayList<>(this.missioniAttive);
+    // Getter
+    public String getRelazione() { 
+    	return this.relazione; 
     }
     
-    // SETTER per la posizione 
-    public void setPosizione(Stanza nuovaPosizione) {
-        this.posizione = nuovaPosizione;
+    public int getAffinita() { 
+    	return this.affinita; 
+    }
+    
+    public Stanza getPosizione() { 
+    	return this.posizione; 
+    }
+    
+    public List<Missione> getMissioniDisponibili() { 
+        return new ArrayList<>(this.missioniDisponibili); 
     }
 }

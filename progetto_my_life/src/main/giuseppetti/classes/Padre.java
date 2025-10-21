@@ -1,7 +1,5 @@
 package main.giuseppetti.classes;
 
-import java.util.Arrays;
-
 import main.aboufaris.interfaces.Stanza;
 
 public class Padre extends NPC {
@@ -16,29 +14,37 @@ public class Padre extends NPC {
     }
 
     @Override
-    protected String getMissioneAssegnataDialogo(Missione missione) {
+    public String getMissioneAssegnataDialogo(Missione missione) {
         return "Ottimo che tu voglia aiutare! " + missione.getDescrizione() + 
                "\nSo che posso contare su di te. Torna da me quando avrai finito!";
     }
+    
+    @Override 
+    public String getDialogoMissioneInCorso(Missione missione) {
+    	switch(missione.getNome()) {
+    		case "Annaffia le piante":
+    			return "Hai già Annaffiato le piante? Ricorda che l'Innaffiatoio si trova in giardino";
+    		default:
+    			return "Come sta andando con la missione? Torna da me quando hai finito!";
+    	} 
+    }
 
     @Override
-    public String getReazioneCompletamentoMissione(Missione missione) {
+    public String getDialogoCompletamentoMissione(Missione missione) {
         return "Grazie mille! Hai fatto un ottimo lavoro." +
                "'!\nSei sempre così affidabile, sono orgoglioso di te!";
     }
 
     protected void inizializzaMissioni() {
        
-        Missione missionePiante = new Missione("Innaffia le piante", 
+        Missione missionePiante = new Missione("Annaffia le piante", 
                                    "Dovresti annaffiare le piante", 
-                                                this
+                                   this, 
+                                   15
                             );
-        Sottocriteri criterioPiante = new Sottocriteri(Arrays.asList(
-            new CriterioUsoOggetti((Arrays.asList("Innaffiatoio"))),
-            new CriterioAzioneCompletata("usa")
-        ));
-        missionePiante.aggiungiCriterio(criterioPiante);
-        aggiungiMissione(missionePiante);
+     // Condizione
+        missionePiante.aggiungiCondizione(new CondizioneAzioneOggetto("Innaffiatoio"));
+        this.aggiungiMissione(missionePiante);
     }
 
 }

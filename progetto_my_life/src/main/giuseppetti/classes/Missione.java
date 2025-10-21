@@ -2,42 +2,55 @@ package main.giuseppetti.classes;
 
 import java.util.ArrayList;
 import java.util.List;
-import main.giuseppetti.interfaces.CriterioCompletamento;
+
+import main.fabbri.classes.Personaggio;
+import main.giuseppetti.interfaces.CondizioneCompletamento;
 
 public class Missione {
     private final String nome;
     private final String descrizione;
-    private final NPC npcAssegnato;
-    private List<CriterioCompletamento> criteri; 
+    private final NPC npcAssegnatore;
+    private int puntiAffinita;
+    private List<CondizioneCompletamento> condizioni; 
     private boolean completata;
 
-    public Missione(String nome, String descrizione, NPC npcAssegnato) {
+    public Missione(String nome, String descrizione, NPC npcAssegnatore, int puntiAffinita) {
         this.nome = nome;
         this.descrizione = descrizione;
-        this.npcAssegnato = npcAssegnato;
-        this.criteri = new ArrayList<>();
+        this.npcAssegnatore = npcAssegnatore;
+        this.puntiAffinita = puntiAffinita; 
+        this.condizioni = new ArrayList<>();
         this.completata = false;
     }
-
-    // Aggiungi un criterio alla missione
-    public void aggiungiCriterio(CriterioCompletamento criterio) {
-        this.criteri.add(criterio);
-    }
-
-    // Verifica se TUTTI i criteri sono soddisfatti
-    public boolean verificaCompletamento() {
-        if (completata) return true;
+    
+    // Verifica il completamento di una missione 
+    public boolean verificaCompletamento(Personaggio personaggio) {
+    	if (personaggio == null) {
+    		return false;
+    	}
+    	
+        // Se già completata, restituisce true
+        if (completata) {
+            return true;
+        }
         
-        for (CriterioCompletamento criterio : criteri) {
-            if (!criterio.verificaCompletamento()) {
+        // Verifica tutte le condizioni 
+        for (CondizioneCompletamento condizione : condizioni) {
+            if (!condizione.verificaCompletamento(personaggio)) {
                 return false;
             }
         }
         
-        completata = true;
-        npcAssegnato.incrementaAffinita();
+        // Se tutte le condizioni sono soddisfatte, missione completata
+        this.completata = true;
         return true;
     }
+    
+    // Aggiunge le condizioni per il completamento di una missione 
+    public void aggiungiCondizione(CondizioneCompletamento condizione) {
+        this.condizioni.add(condizione);
+    }
+
 
     // GETTER
 
@@ -49,12 +62,16 @@ public class Missione {
         return this.descrizione;
     }
 
-     public NPC getNPCAssegnato() {
-        return this.npcAssegnato;
+     public NPC getNPCAssegnatore() {
+        return this.npcAssegnatore;
+    }
+     
+    public int getPuntiAffinita() {
+    	return this.puntiAffinita;
     }
     
-    public List<CriterioCompletamento> getCriteri() {
-        return this.criteri;
+    public List<CondizioneCompletamento> getCondizioni() {
+        return this.condizioni;
     }
 
 

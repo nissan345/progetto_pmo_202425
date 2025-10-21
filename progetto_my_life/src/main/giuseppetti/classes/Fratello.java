@@ -1,6 +1,5 @@
 package main.giuseppetti.classes;
 
-import java.util.Arrays;
 
 import main.aboufaris.interfaces.Stanza;
 
@@ -16,28 +15,35 @@ public class Fratello extends NPC {
     }
 
     @Override
-    protected String getMissioneAssegnataDialogo(Missione missione) {
+    public String getMissioneAssegnataDialogo(Missione missione) {
         return "Ehii " + missione.getDescrizione() + ", non dirlo a mamma e papà mi raccomando";
+    }
+    
+    @Override 
+    public String getDialogoMissioneInCorso(Missione missione) {
+    	switch(missione.getNome()) {
+    	case "Cibo per tutti":
+    		return "Stai preparando da mangiare? Ricorda di usare i fornelli!"; 
+    	default:
+    		return "Come sta andando con la missione? Torna da me quando hai finito!";
+    } 
     }
 
     @Override
-    public String getReazioneCompletamentoMissione(Missione missione) {
-        return "Grazie mille, tieni 5 euro per avermi aiutato";
+    public String getDialogoCompletamentoMissione(Missione missione) {
+        return "Grazie mille per avermi aiutato";
     }
 
     @Override
     protected void inizializzaMissioni() {
         Missione missioneCucina = new Missione("Cibo per tutti", 
-                                   "Dei miei amici vengono a casa, potresti prepare qualcosa per tutti mentre io pulisco la mia camera", 
-                                                this
+                                   "Dei nostri amici vengono a casa, potresti prepare qualcosa per tutti mentre io pulisco la mia camera", 
+                                   this, 
+                                   20
                             );
-        Sottocriteri criterioCucina = new Sottocriteri(Arrays.asList(
-            new CriterioUsoOggetti((Arrays.asList("Fornelli"))),
-            new CriterioAzioneCompletata("cucinare")
-        ));
-
-        missioneCucina.aggiungiCriterio(criterioCucina);
-        aggiungiMissione(missioneCucina);
+        // Condizione
+        missioneCucina.aggiungiCondizione(new CondizioneAzioneOggetto("Fornelli"));
+        this.aggiungiMissione(missioneCucina);
     }
 
 

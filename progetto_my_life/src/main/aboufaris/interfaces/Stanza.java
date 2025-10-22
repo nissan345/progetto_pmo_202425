@@ -3,7 +3,7 @@ package main.aboufaris.interfaces;
 import java.util.List;
 import java.util.Optional;
 import main.giuseppetti.classes.NPC;
-import main.neri.classe.OggettoGioco;
+import main.neri.classes.OggettoGioco;
 
 public interface Stanza{
     /* */

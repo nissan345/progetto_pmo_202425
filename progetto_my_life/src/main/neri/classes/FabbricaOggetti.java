@@ -1,4 +1,4 @@
-package main.neri.classe;
+package main.neri.classes;
 
 import java.util.*;
      

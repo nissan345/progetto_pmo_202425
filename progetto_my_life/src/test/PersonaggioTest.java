@@ -15,7 +15,7 @@ public class PersonaggioTest {
     private Personaggio personaggio;
     private Personaggio personaggioVegano;
 
-    // Inizializzazione dei personaggi di test ---------------------------------------------------------------------------------
+    // Inizializzazione dei soggetti di test ---------------------------------------------------------------------------------
     @Before
     public void setUp() {
         Stanza stanzaIniziale = new Stanza("Salotto");

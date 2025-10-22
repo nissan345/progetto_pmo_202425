@@ -1,39 +1,43 @@
 package main.fabbri.classes;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import java.util.ArrayList;
+import java.util.List;
 import main.aboufaris.interfaces.Stanza;
+import main.giuseppetti.classes.Missione;
+import main.neri.classe.OggettoGioco;
+import main.neri.classe.RisultatoAzione;
 
 public class Personaggio {
     private String nome;
     private int livello;
-    private Vestito vestiti;
-    private Dieta dieta;
-    private PreferenzeGusto preferenzeGusto;
-    private Capelli capelli;
+    private String vestiti;
+    private String preferenze;
+    private String capelli;
     private int fame;
     private int sete;
     private int energia;
     private int igiene;
-    private Stanza stanzaCorrente;
+    private Stanza stanzaCorrente;   // Posizione
+    private List<Missione> missioniAttive;
+    
 
     // COSTRUTTORE ------------------------------------------------------------------------
-    public Personaggio(String nome, Vestito vestiti, Dieta dieta, Capelli capelli) {
+    public Personaggio(String nome, String vestiti, String preferenze, String capelli) {
         this.nome = nome;
         this.livello = 1;
         this.vestiti = vestiti;
-        this.dieta = dieta;
+        this.preferenze = preferenze;
         this.capelli = capelli;
-        this.preferenzeGusto = new PreferenzeGusto();
         
         // Valori iniziali
         this.fame = 100;
         this.sete = 100;
         this.energia = 100;
         this.igiene = 100;
+        
+        this.stanzaCorrente = null;
 
-        this.stanzaCorrente = null; // Inizialmente nessuna stanza
+        this.missioniAttive = new ArrayList<>();
     }
 
     // GETTER E SETTER -------------------------------------------------------------------
@@ -53,239 +57,140 @@ public class Personaggio {
         this.livello = livello; 
     }
     
-    public Vestito getVestiti() { 
+    public String getVestiti() { 
         return vestiti; 
     }
-
-    public String getPreferenze() { 
-        return preferenzeGusto.toString(); 
+    
+    public void setVestiti(String vestiti) { 
+        this.vestiti = vestiti; 
     }
     
-    public void setPreferenza(Gusto gusto, PreferenzeGusto.Reazione reazione) {
-        this.preferenzeGusto.setPreferenza(gusto, reazione);
+    public String getPreferenze() { 
+        return preferenze; 
     }
-
-    public Dieta getDieta() { 
-        return dieta; 
+    
+    public void setPreferenze(String preferenze) { 
+        this.preferenze = preferenze; 
     }
-
-    public Capelli getCapelli() { 
+    
+    public String getCapelli() { 
         return capelli; 
+    }
+    
+    public void setCapelli(String capelli) { 
+        this.capelli = capelli; 
     }
     
     public int getFame() { 
         return fame; 
     }
     
-    public void setFame(int fame) {
-        this.fame = Math.max(0, Math.min(100, fame));
-    }
-    
     public int getSete() { 
         return sete; 
-    }
-    
-    public void setSete(int sete) {
-        this.sete = Math.max(0, Math.min(100, sete));
     }
     
     public int getEnergia() { 
         return energia; 
     }
     
-    public void setEnergia(int energia) {
-        this.energia = Math.max(0, Math.min(100, energia));
-    }
-    
     public int getIgiene() { 
         return igiene; 
     }
-    
-    public void setIgiene(int igiene) {
-        this.igiene = Math.max(0, Math.min(100, igiene));
+
+    public List<Missione> getMissioniAttive() {
+        return this.missioniAttive;
+    }
+
+    // METODI ---------------------------------------------------------------
+
+    public int getStatistiche() {
+        return livello;
     }
     
-    // GETTER E SETTER PER LA POSIZIONE
-    public Stanza getStanzaCorrente() {
-        return stanzaCorrente;
-    }
     
-    public void setStanzaCorrente(Stanza stanzaCorrente) {
-        this.stanzaCorrente = stanzaCorrente;
-    }
-
-    // METODI PRINCIPALI ----------------------------------------------------------------
-    public String stampaStato() {
-        StringBuilder stato = new StringBuilder();
-        
-        stato.append("\n STATO DI ").append(nome.toUpperCase()).append("\n");
-        stato.append("Livello: ").append(livello).append("\n");
-        stato.append("Vestiti: ").append(vestiti.getNome()).append("\n");
-        stato.append("Capelli: ").append(capelli.getNome()).append("\n");
-        stato.append("Dieta: ").append(dieta.getNome()).append(" - ").append(dieta.getDescrizione()).append("\n");
-        stato.append("Preferenze di gusto:\n").append(preferenzeGusto.toString());
-        stato.append("Fame: ").append(fame).append("/100\n");
-        stato.append("Sete: ").append(sete).append("/100\n");
-        stato.append("Energia: ").append(energia).append("/100\n");
-        stato.append("Igiene: ").append(igiene).append("/100\n");
-        stato.append("Posizione: ").append(getPosizione()).append("\n"); // AGGIUNTO
-        
-        return stato.toString();
-    }
-
-    // METODI PER LE ATTIVITA' QUOTIDIANE ------------------------------------------------ 
-    
-    // METODO PER MANGIARE
-    public String mangia(TipoCibo cibo) {
-        // Controllo dieta
-        if (!dieta.puoMangiare(cibo.getDietaMinima())) {
-            return "Non puoi mangiare " + cibo.getNome() + " con la tua dieta " + dieta.getNome();
-        }
-
-        int sazietaEffettiva = cibo.getValoreNutritivo();
-        String messaggio = "Hai mangiato " + cibo.getNome() + "[ Fame: +"+ cibo.getValoreNutritivo() +"]. ";
-
-        // Modifica in base al gusto
-        int modificaFame = preferenzeGusto.getModificaFame(cibo.getGusto());
-        sazietaEffettiva += modificaFame;
-
-        if (modificaFame > 0) {
-            messaggio += "Ti è piaciuto! ";
-        } else if (modificaFame < 0) {
-            messaggio += "Non ti è piaciuto. ";
-        }
-
-        // Bonus se il cibo è dolce
-        if (cibo.getGusto() == Gusto.DOLCE) {
-            sazietaEffettiva += 5;
-            messaggio += "Bonus dolcezza! ";
-        }
-
-        // Aggiorna fame
-        fame = Math.min(100, fame + sazietaEffettiva);
-
-        return messaggio;
-    }
-
-    // METODO PER BERE
-    public String bevi(Bevanda bevanda) {
-        int dissetamentoEffettivo = bevanda.getDissetamento();
-        int energiaBevanda = bevanda.getEnergiaBevanda();
-
-        this.sete = Math.min(100, this.sete + dissetamentoEffettivo);
-        this.energia = Math.min(100, this.energia + energiaBevanda);
-
-        StringBuilder messaggio = new StringBuilder("Hai bevuto " + bevanda.getNome() + " [Sete: +" + dissetamentoEffettivo);
-
-        if (energiaBevanda > 0) {
-            messaggio.append(", Energia: +").append(energiaBevanda);
-        }
-
-        messaggio.append("]");
-
-        return messaggio.toString();
-    }
-
-    // METODO PER DORMIRE (LETTO)
-    public String dormi() {
-        int energiaRecuperata = 70;
-        this.energia = Math.min(100, this.energia + energiaRecuperata);
-        return "Hai dormito e recuperato " + energiaRecuperata + " di energia.";
-    }
-
-    // METODO PER FARE UN PISOLINO (DIVANO)
-    public String faiPisolino(){
-        int energiaRecuperata = 40;
-        this.energia = Math.min(100, this.energia + energiaRecuperata);
-        return "Hai fatto un pisolino e recuperato " + energiaRecuperata + " di energia.";
-    }
-
-    // METODO PER FARE LA DOCCIA
-    public String faiDoccia() {
-        int igieneRecuperata = 40;
-        this.igiene = Math.min(100, this.igiene + igieneRecuperata);
-        return "Hai fatto la doccia e recuperato " + igieneRecuperata + " di igiene.";
-    }
-
-    // METODI PER LA PERSONALIZZAZIONE -------------------------------------------------------
-
-    // METODO PER CAMBIARE VESTITI
-    public String cambiaVestiti(Vestito nuoviVestiti) {
-        this.vestiti = nuoviVestiti;
-        return "Hai cambiato i vestiti in: " + nuoviVestiti.getNome();
-    }
-
-    // METODO PER CAMBIARE CAPELLI
-    public String cambiaCapelli(Capelli nuoviCapelli) {
-        this.capelli = nuoviCapelli;
-        return "Hai cambiato i capelli in: " + nuoviCapelli.getNome();
-    }
-
-    // METODO PER MAPPARE LO STATO COMPLETO
-    public Map<String, Integer> getStatoCompleto() {
-        Map<String, Integer> stato = new HashMap<>();
-        stato.put("fame", fame);
-        stato.put("sete", sete);
-        stato.put("energia", energia);
-        stato.put("igiene", igiene);
-        return stato;
-    }
-
-    // METODI PER LA POSIZIONE ---------------------------------------------------------------
-
     public String getPosizione() {
-        if (stanzaCorrente != null) {
-            return stanzaCorrente.getNome();
-        } else {
-            return "Nessuna stanza";
-        }
+        return stanzaCorrente.getNomeStanza();
     }
 
-    public String scegliStanza(Stanza stanza) {
+    public void scegliStanza(Stanza stanza) {
         this.stanzaCorrente = stanza;
-        return "Sei entrato in: " + stanza.getNome();
+        //System.out.println("Sei entrato in: " + stanza.getNomeStanza());
     }
 
-    // METODO PER INTERAGIRE CON GLI OGGETTI
-    public String interagisciOggetto(OggettoGioco oggetto) {
-        if (oggetto != null && stanzaCorrente != null && 
-            stanzaCorrente.contieneOggetto(oggetto)) {
-            // Qui chiameremo il metodo usa dell'oggetto quando sarà implementato
-            return "Hai interagito con " + oggetto.getNome() + " in " + getPosizione();
-        } else {
-            return "Non puoi interagire con " + oggetto.getNome() + " in questa stanza.";
-        }
-    }
-
-    // METODO PER VISUALIZZARE GLI OGGETTI NELLA STANZA 
-    public String mostraOggettiNellaStanza() {
-        if (stanzaCorrente != null) {
-            StringBuilder oggetti = new StringBuilder();
-            oggetti.append("Oggetti in ").append(getPosizione()).append(":\n");
-            // Supponendo che Stanza abbia un metodo getOggetti()
-            for (OggettoGioco oggetto : stanzaCorrente.getOggetti()) {
-                oggetti.append("- ").append(oggetto.getNome()).append("\n");
-            }
-            return oggetti.toString();
-        } else {
-            return "Non sei in nessuna stanza.";
-        }
-    }
-
-    // METODI PER LE MISSIONI -----------------------------------------------------------------------
-    /*
-    public void interagisciNPC(NPC npc) {
-        // Da implementare quando avremo gli NPC
-    }
-
-    public String aumentaLivello(Missione missione) {
+    public void aumentaLivello(Missione missione) {
         if (missione != null && missione.isCompletata()) {
             livello++;
-            return "Livello aumentato a: " + livello;
+            //System.out.println("Livello aumentato a: " + livello);
         }
-        return "Missione non completata";
     }
-    */
-}
+
+    public String interagisci(OggettoGioco oggetto) {
+        if (oggetto != null && stanzaCorrente != null && 
+            stanzaCorrente.hasOggettoStanza(oggetto)) {
+            oggetto.usa(this);
+            return "Hai interagito con " + oggetto.getNome();
+        }
+
+        return "Non puoi interagire con questo oggetto.";
+    }
+    
+
+    //FUNZIONE AGGIUNTA DA ALI, NON SO SE SERVE
+    // Metodo per applicare gli effetti delle azioni
+    public void applicaEffetti(RisultatoAzione risultato) {
+        this.fame = Math.max(0, Math.min(100, this.fame + risultato.getDeltaFame()));
+        this.sete = Math.max(0, Math.min(100, this.sete + risultato.getDeltaSete()));
+        this.energia = Math.max(0, Math.min(100, this.energia + risultato.getDeltaEnergia()));
+        this.igiene = Math.max(0, Math.min(100, this.igiene + risultato.getDeltaIgiene()));
+    }
+    
+    // FUNZIONE AGGIUNTA DALLA DIVA
+    public void decadimentoStato(){
+        this.fame = Math.max(0, this.fame-2);
+        this.sete = Math.max(0,this.sete-3);
+        this.energia = Math.max(0, this.energia-1);
+        this.igiene = Math.max(0, this.igiene-1);
+    }
+
+    public void resetStato(){
+        this.fame = 100;
+        this.sete = 100;
+        this.energia = 100;
+        this.igiene = 100;
+    }
+
+    // metodi per le missioni
+    public void aggiungiMissione(Missione missione) {
+        missioniAttive.add(missione);
+        //System.out.println("Missione accettata: " + missione.getNome());
+    }
+
+    public void rimuoviMissione(Missione missione) {
+        missioniAttive.remove(missione);
+    }
 
     
+    // FUNZIONI PRINCIPALI ----------------------------------------------------------------
+
+   /*  public void stampaStato() {
+        System.out.println("\n STATO DI " + nome.toUpperCase());
+        System.out.println("Livello: " + livello);
+        System.out.println("Vestiti: " + vestiti);
+        System.out.println("Capelli: " + capelli);
+        System.out.println("Fame: " + fame + "/100");
+        System.out.println("Sete: " + sete + "/100");
+        System.out.println("Energia: " + energia + "/100");
+        System.out.println("Igiene: " + igiene + "/100");
+        System.out.println("Posizione: " + getPosizione());
+    }*/
+
+    @Override
+    public String toString(){
+        return  "\nFame: " + fame + "/100" +
+                "\nSete: " + sete + "/100"+
+                "\nEnergia: " + energia + "/100"+
+                "\nIgiene: "+ igiene + "/100"+
+                "\nMissioni attive: " + missioniAttive.size();
+    }
+    
+}

@@ -22,4 +22,9 @@ public enum Capelli {
     // GETTER
     public String getNome() { return nome; }
     public String getDescrizione() { return descrizione; }
+
+    @Override
+    public String toString() {
+        return nome + ": " + descrizione;
+    }
 }

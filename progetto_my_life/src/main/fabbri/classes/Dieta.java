@@ -27,4 +27,9 @@ public enum Dieta {
     public boolean puoMangiare(Dieta dietaMinimaCibo) {
         return this.livello >= dietaMinimaCibo.getLivello();
     }
+
+    @Override
+    public String toString() {
+        return nome + ": " + descrizione;
+    }
 }

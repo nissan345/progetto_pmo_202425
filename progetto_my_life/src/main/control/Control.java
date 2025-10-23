@@ -1,11 +1,11 @@
 package main.control;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Timer;
-import java.util.TimerTask;
+import javax.swing.Timer;
 import main.aboufaris.classes.*;
 import main.aboufaris.interfaces.*;
 import main.fabbri.classes.*;
@@ -13,44 +13,48 @@ import main.giuseppetti.classes.*;
 import main.neri.classes.*;
 import main.view.*;
 
-public class Control {
-    // Gestire il movimento tra stanze
+public final class Control {
+    // Costanti
     private final int MISSIONI_TOTALI = 3;
     private final int SOGLIA_BASSA = 20;
     private final int SOGLIA_CRITICA = 5;
-    private final int DECADIMENTO_STATO = 12000;
+    private final int DECADIMENTO_STATO = 20000;
+    // Singleton
+    private static Control singletonController;
+
     private final Casa casa;
+    private final View view;
+    private Timer gameTimer;
     private Personaggio personaggio;
     private int contatoreMissioni;
-    private GestoreAzioni gestoreAzioni;
-    private View view;
-    private Timer gameTimer;
     
-    // Inizializzare la mappa, creando le diverse stanze
-    // Gestire il movimento tra stanze, idea: 
-    // Mi trovo su Casa -> Click su stanza -> Entro nella stanza
-    // onClickEsci -> esce dalla stanza -> view della casa
-    // Metodo che serve a creare la stanza
+    // Costruttore privato
     private Control(){
-       this.casa = new CasaImpl();
+       this.casa = CasaImpl.getCasaInstance();
        this.contatoreMissioni = 0;
-       this.gestoreAzioni = new GestoreAzioni();
        this.view = new View();
-       this.gameTimer = new Timer();
     }
 
+    // Singleton 
+    public static Control getControlInstance(){
+        if(Control.singletonController == null){
+            Control.singletonController = new Control();
+        }
+        return Control.singletonController;
+    }
+
+    // Inizio del gioco
     public void startGame(){
-        // inizializza personalizzazione personaggio
         view.mostraMenu();
         creaPersonaggioPersonalizzato();
-        // creaPersonaggio();
         creaMondo();
-        // devo vedere altra roba. 
         avviaTimerBisogni();
         view.mostraCasa();
-
     }
 
+    // METODI PER INIZIALIZZARE IL MONDO DI GIOCO
+
+    // Creazione del mondo di gioco, stanze, NPC e oggetti
     private void creaMondo(){
          // Creazione delle stanze
         Stanza bagno = new StanzaImpl("Bagno", new ArrayList<>(FabbricaOggetti.creaOggettiStanza("Bagno").values()));
@@ -59,27 +63,47 @@ public class Control {
         Stanza salotto = new StanzaImpl("Salotto", new ArrayList<>(FabbricaOggetti.creaOggettiStanza("Salotto").values()));
         Stanza giardino = new StanzaImpl("Giardino",  new ArrayList<>(FabbricaOggetti.creaOggettiStanza("Giardino").values()));  
         Stanza sgabuzzino = new StanzaImpl("Sgabuzzino", new ArrayList<>(FabbricaOggetti.creaOggettiStanza("Sgabuzzino").values()));
-        // aggiunge le stanze alla casa
+        
+        // Aggiunge le stanze alla casa
         casa.aggiungiStanza(bagno);
         casa.aggiungiStanza(camera);
         casa.aggiungiStanza(cucina);
         casa.aggiungiStanza(salotto);
         casa.aggiungiStanza(giardino);
         casa.aggiungiStanza(sgabuzzino);
-        // Crea Npc
+
+        // Creazione Npc
         Madre madre = new Madre(salotto);
         Padre padre = new Padre(giardino);
         Fratello fratello = new Fratello(cucina);
-        
+
+        // Aggiungere nelle stanze gli NPC
+        salotto.setNpc(madre);
+        giardino.setNpc(padre);
+        cucina.setNpc(fratello);
     }
 
-    
+    // Creazione del personaggio personalizzato
+    private void creaPersonaggioPersonalizzato() {
+        String nome = view.chiediNomePersonaggio();
+        Vestito vestiti = scegliOpzioneDaEnum("Scegli i vestiti", Vestito.values());
+        Dieta dieta = scegliOpzioneDaEnum("Scegli la dieta", Dieta.values());
+        Capelli capelli = scegliOpzioneDaEnum("Scegli i capelli", Capelli.values());
+        this.personaggio = new Personaggio(nome, vestiti, dieta, capelli);
+    }
 
-    // Metodo che gestisce il tempo per il decadimento dei bisogni col tempo
-    public void avviaTimerBisogni(){
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run(){
+    private <T> T scegliOpzioneDaEnum(String messaggio, T[] opzioniDisponibili){
+        List<String> opzioni = Arrays.stream(opzioniDisponibili)
+            .map(Object::toString)
+            .toList();
+        int scelta = view.mostraOpzioni(messaggio, opzioni);
+        return opzioniDisponibili[scelta];
+    }
+
+
+    // Metodo che gestisce il timer, serve per il decadimento dei bisogni
+    private void avviaTimerBisogni(){
+        gameTimer = new Timer(DECADIMENTO_STATO, e-> {
                 personaggio.decadimentoStato();
                 List<String> avvisi = controllaStatiCritici();
                 if(!avvisi.isEmpty()){
@@ -89,60 +113,13 @@ public class Control {
                 }
                 view.mostraBisogni();
                 gestisciSconfitta();
-            }
-        };
-        gameTimer.scheduleAtFixedRate(task, 0, DECADIMENTO_STATO);
-    }
-
-
-    // Metodo che verifica se i bisogni sono sotto la soglia
-    private List<String> controllaStatiCritici(){
-        List<String> avvisi = new ArrayList<>();
-
-        if(personaggio.getFame() < SOGLIA_BASSA) 
-            avvisi.add("Attenzione! " + personaggio.getNome() + " deve mangiare!");
-        if(personaggio.getEnergia() < SOGLIA_BASSA)
-            avvisi.add("Attenzione! " + personaggio.getNome() + " deve dormire!");
-        if(personaggio.getIgiene() < SOGLIA_BASSA)
-            avvisi.add("Attenzione! " + personaggio.getNome() + " deve lavarsi!");
-        
-        if(personaggio.getFame() < SOGLIA_CRITICA) 
-            avvisi.add("ALLARME! " + personaggio.getNome() + " STA PER SVENIRE DALLA FAME!");
-        if(personaggio.getEnergia() < SOGLIA_CRITICA)
-            avvisi.add("ALLARME! " + personaggio.getNome() + " STA PER PERDERE I SENSI!");
-        if(personaggio.getIgiene() < SOGLIA_CRITICA)
-            avvisi.add("ALLARME! " + personaggio.getNome() + " NON SI RIESCE A RESPIRARGLI VICINO!");
-        
-        return avvisi;
-    }
-
-    
-   
-    // Metodo che mostra su schermata tutte le missioni attive del personaggio
-    public void getMissioniAttive(){
-        List<Missione> missioni = personaggio.getMissioniAttive();
-        for(Missione m : missioni){
-            view.mostraMissioniAttive(m.getNome(), m.getDescrizione());
-        }
-    }
-
-    public void gestisciVittoria(){
-        // Si vince nel caso in cui un personaggio riesce a finire tutte le missioni
-        if(contatoreMissioni == MISSIONI_TOTALI){
-            view.mostraVittoria();
-        }
-    }
-
-    public void gestisciSconfitta(){
-        // Personaggio muore perché TUTTI i suoi bisogni sono sotto la soglia
-        if(personaggio.getEnergia() < 0 && personaggio.getFame() < 0 && personaggio.getIgiene() < 0 && personaggio.getSete()<0){
-            view.mostraSconfitta();
-            gameTimer.cancel();
-        }
+            
+        });
+        gameTimer.start();
     }
 
     public void onClickNpc(NPC n){
-        n.getDialogoIniziale();
+        view.mostraMessaggio(n.getDialogoIniziale());
     }
 
     public void onSecondClickNpc(NPC n){
@@ -153,7 +130,7 @@ public class Control {
     public void onSceltaOpzioneInterazione(OpzioniInterazione scelta, NPC npc){
         String messaggio = "";
         switch(scelta) {
-            case CHIEDI_MISSIONE:
+            case CHIEDI_MISSIONE -> {
                 Missione missione = npc.assegnaMissione(personaggio);
                 if (missione != null) {
                     messaggio = "Nuova missione: " + missione.getNome();
@@ -163,89 +140,58 @@ public class Control {
                     messaggio ="Non ci sono missioni disponibili al momento.";
                     view.mostraMessaggio(messaggio);
                 }
-            break;
-            case CONSEGNA_MISSIONE:
+            }
+            case CONSEGNA_MISSIONE -> {
                 List<String> messaggi = npc.consegnaMissione(personaggio);
-                contatoreMissioni++;
+                boolean missioniCompletata = messaggi.stream()
+                    .anyMatch(m -> m.contains("' completata!"));
+                if(missioniCompletata){
+                    contatoreMissioni++;
+                    gestisciVittoria();
+                }
                 for(String m : messaggi)
-                view.mostraMessaggio(m);
-            break;
-            case ESCI:
+                    view.mostraMessaggio(m);
+            }
+            case ESCI -> {
                 messaggio = "Arrivederci!";
                 view.mostraMessaggio(messaggio);
-            break;
-            default:
+            }
+            default -> {
                 messaggio = "Opzione non valida.";
                 view.mostraMessaggio(messaggio);
+            }
         }
     }
 
+    public void stopGame(){
+        if(gameTimer != null){
+            gameTimer.stop();
+        }
+    }
 
     public Personaggio getPersonaggio(){
       return personaggio;
     }
 
-    public boolean isSconfitta(){
-        // Personaggio muore perché TUTTI i suoi bisogni sono sotto la soglia
-        return personaggio.getEnergia() < 0 && personaggio.getFame() < 0 && personaggio.getIgiene() < 0 && personaggio.getSete()<0;
-
+    private boolean isSconfitta(){
+        // Personaggio muore perché uno dei suoi bisogni è sotto la soglia
+        return personaggio.getEnergia() < 0 || personaggio.getFame() < 0 || personaggio.getIgiene() < 0 
+        || personaggio.getSete() < 0;
     }
 
-    public void creaPersonaggioPersonalizzato() {
-        // Qui andrebbe la logica per creare un personaggio personalizzato
-        // Per ora creo un personaggio di default
-
-        String nome = view.chiediNomePersonaggio();
-        Vestito vestiti = scegliVestiti();
-        Dieta dieta = scegliDieta();
-        Capelli capelli = scegliCapelli();
-        this.personaggio = new Personaggio(nome, vestiti, dieta, capelli);
-    }
-
-    private Vestito scegliVestiti(){
-        Vestito[] vestitiDisponibili = Vestito.values();
-        String[] vestiti = new String[vestitiDisponibili.length];
-        for(int i=0; i<vestitiDisponibili.length; i++){
-            vestiti[i] = vestitiDisponibili[i].getNome() + ": " + vestitiDisponibili[i].getDescrizione();
-        }
-        int scelta = view.mostraVestitiDisponibili(vestiti);
-        return vestitiDisponibili[scelta];
-    }
-
-    private Dieta scegliDieta(){
-        Dieta[] dieteDisponibili = Dieta.values();
-        String[] diete = new String[dieteDisponibili.length];
-        for(int i=0; i<dieteDisponibili.length; i++){
-            diete[i] = dieteDisponibili[i].getNome() + ": " + dieteDisponibili[i].getDescrizione();
-        }
-        int scelta = view.mostraDieteDisponibili(diete);
-        return dieteDisponibili[scelta];
-    }
-
-    private Capelli scegliCapelli(){
-        Capelli[] capelliDisponibili = Capelli.values();
-        String[] capelli = new String[capelliDisponibili.length];
-        for(int i=0; i<capelliDisponibili.length; i++){
-            capelli[i] = capelliDisponibili[i].getNome() + ": " + capelliDisponibili[i].getDescrizione();
-        }
-        int scelta = view.mostraCapelli(capelli);
-        return capelliDisponibili[scelta];
-    }
     
-    public void aggiornaUI(){
-        /*view.mostraStatistiche();
-        view.mostraPersonaggio();
-        view.mostraStanza();
-        view.mostraCasa(); */
-        
-    }
      public void onClickEntra(String nomeStanza){
         Optional<Stanza> ris = casa.entraInStanza(nomeStanza);
+        if(ris.isEmpty()){
+            view.mostraErrore("Stanza non trovata!");
+            return;
+        }
+        view.mostraStanza(nomeStanza, ris.get());
     }
 
     public void onClickEsci(String nomeStanza){
         casa.esciDaStanza();
-        view.mostraCasa(); // metodo inventato per la view per tornare nel menu principale
+        view.mostraCasa(); // tornare nel menu principale
     }
 
     // Metodo che serve per gli effetti dell'uso dell'oggetto
@@ -253,7 +199,8 @@ public class Control {
         // Devo controllare in che stanza sono
         Optional<Stanza> stanzaCorrente = casa.getStanzaCorrente();
         if(stanzaCorrente.isEmpty()){
-            // Lanciare un'eccezione o altro
+            view.mostraMessaggio("Devi essere in una stanza per usare un oggetto");
+            return;
         }
         Stanza corrente = stanzaCorrente.get();
         // Quali sono gli oggetti disponibili nella stanza
@@ -279,6 +226,7 @@ public class Control {
         return casa.getStanzaCorrente()
             .orElseThrow(() -> new IllegalStateException("Nessuna stanza corrente"));
     }
+
     public void mostraOggettiStanzaCorrente(){
         Stanza stanzaCorrente = getStanzaCorrente();
         List<OggettoGioco> oggettiPresenti = stanzaCorrente.getOggettiInStanza();
@@ -287,7 +235,61 @@ public class Control {
 
     public void mostraNpcInStanzaCorrente(){
         Stanza stanzaCorrente = getStanzaCorrente();
-        NPC npcInStanza = stanzaCorrente.getNpcInStanza().get();
-        view.mostraNpc(npcInStanza);
+        if(stanzaCorrente.getNpcInStanza().isEmpty()){
+            view.mostraMessaggio("Non ci sono NPC in questa stanza.");
+        }else{
+            NPC npcInStanza = stanzaCorrente.getNpcInStanza().get();
+            view.mostraNpc(npcInStanza);
+        }
+       
+    }
+
+
+    // Metodo che verifica se i bisogni sono sotto la soglia
+    private List<String> controllaStatiCritici(){
+        List<String> avvisi = new ArrayList<>();
+        String nome = personaggio.getNome();
+
+        aggiungiAvvisoBisogno(avvisi, personaggio.getFame(), nome, " deve mangiare!", " STA PER SVENIRE DALLA FAME!");
+        aggiungiAvvisoBisogno(avvisi, personaggio.getEnergia(), nome, " deve dormire!", " STA PER PERDERE I SENSI!");
+        aggiungiAvvisoBisogno(avvisi, personaggio.getIgiene(), nome, " deve lavarsi!", " NON SI RIESCE A RESPIRARGLI VICINO!");
+        aggiungiAvvisoBisogno(avvisi, personaggio.getSete(), nome, " deve bere!", "  STA PER DISIDRATARSI!");
+        
+        return avvisi;
+    }
+
+    private void aggiungiAvvisoBisogno(List<String> avvisi, int valore, String nome, String messaggioBasso, String messaggioCritico){
+        if(valore < SOGLIA_CRITICA) {
+            avvisi.add("ALLARME! " + nome + " " + messaggioCritico);
+        }else if(valore < SOGLIA_BASSA) {
+            avvisi.add("Attenzione! " + nome + " " + messaggioBasso);
+        }
+    }
+
+    
+   // METODI PER IL GIOCO
+    // Metodo che mostra su schermata tutte le missioni attive del personaggio
+    public void getMissioniAttive(){
+        List<Missione> missioni = personaggio.getMissioniAttive();
+        for(Missione m : missioni){
+            view.mostraMissioniAttive(m.getNome(), m.getDescrizione());
+        }
+    }
+
+    public void gestisciVittoria(){
+        // Si vince nel caso in cui un personaggio riesce a finire tutte le missioni
+        if(contatoreMissioni == MISSIONI_TOTALI){
+            view.mostraVittoria();
+            gameTimer.stop();
+        }
+       
+    }
+
+    public void gestisciSconfitta(){
+        // Personaggio muore perché uno dei suoi bisogni è sotto la soglia
+        if(isSconfitta()){
+            view.mostraSconfitta();
+            gameTimer.stop();
+        }
     }
 }

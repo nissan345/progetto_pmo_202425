@@ -5,15 +5,22 @@ import java.util.Optional;
 import main.aboufaris.interfaces.Casa;
 import main.aboufaris.interfaces.Stanza;
 
-public class CasaImpl implements Casa{
+public final class CasaImpl implements Casa{
     
-   
+    private static CasaImpl singletonCasa;
     private Map<String, Stanza> stanze;
     private Optional<Stanza> stanzaCorrente;
 
-    public CasaImpl(){
+    private CasaImpl(){
         this.stanze = new HashMap<>();
         this.stanzaCorrente = Optional.empty();
+    }
+
+    public static CasaImpl getCasaInstance(){
+        if(CasaImpl.singletonCasa == null){
+            CasaImpl.singletonCasa = new CasaImpl();
+        }
+        return CasaImpl.singletonCasa;
     }
 
     public void aggiungiStanza(Stanza s){
@@ -21,20 +28,20 @@ public class CasaImpl implements Casa{
     }
 
     public Optional<Stanza> getStanzaCorrente(){
-        if(stanzaCorrente.isEmpty()){
-            return Optional.empty();
-        }
         return stanzaCorrente;
     }
 
     public Map<String, Stanza> getStanze(){
-        return stanze;
+        return new HashMap<>(stanze); 
     }
 
     public Optional<Stanza> entraInStanza(String nome){
         Stanza s = this.stanze.get(nome);
-        this.stanzaCorrente = Optional.of(s);
-        return stanzaCorrente;
+        if (s != null) {
+            this.stanzaCorrente = Optional.of(s);
+            return Optional.of(s);
+        }
+        return Optional.empty(); // Stanza non trovata
     }
 
     public Map<String, Stanza> esciDaStanza(){

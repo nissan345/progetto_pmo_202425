@@ -43,4 +43,16 @@ public class View {
     public int mostraCapelli(String[] values) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    public void mostraStatistiche(String stampaStato) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void mostraPersonaggio() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public int mostraOpzioni(String messaggio, List<String> of) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

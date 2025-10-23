@@ -3,7 +3,7 @@ package main.view;
 import java.util.List;
 import main.aboufaris.interfaces.*;
 import main.giuseppetti.classes.*;
-import main.neri.classe.*;
+import main.neri.classes.*;
 
 public class View {
     public int mostraAzioni(List<String> a){return 1;}
@@ -27,4 +27,20 @@ public class View {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'aggiornaStanza'");
     };
+
+    public String chiediNomePersonaggio() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public int mostraVestitiDisponibili(String[] values) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public int mostraDieteDisponibili(String[] values) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public int mostraCapelli(String[] values) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

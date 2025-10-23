@@ -5,12 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import main.aboufaris.interfaces.Stanza;
 import main.giuseppetti.classes.Missione;
 import main.giuseppetti.classes.NPC;
-import main.neri.classe.OggettoGioco;
-import main.neri.classe.RisultatoAzione;
+import main.neri.classes.OggettoGioco;
+import main.neri.classes.RisultatoAzione;
 
 public class Personaggio {
     private String nome;
@@ -356,7 +355,7 @@ public class Personaggio {
             // Esegui l'azione sull'oggetto
             RisultatoAzione risultato = oggetto.usa(this);
             
-            // ⭐⭐ REGISTRA CHE L'OGGETTO È STATO USATO ⭐⭐
+            // REGISTRA CHE L'OGGETTO È STATO USATO 
             registraUsoOggetto(oggetto.getNome());
             
             // Applica gli effetti del risultato al personaggio
@@ -369,6 +368,13 @@ public class Personaggio {
         }
         return "Non puoi interagire con questo oggetto.";
     }  
+
+    public void decadimentoStato(){
+        this.fame = Math.max(0, this.fame-2);
+        this.sete = Math.max(0,this.sete-3);
+        this.energia = Math.max(0, this.energia-1);
+        this.igiene = Math.max(0, this.igiene-1);
+    }
 }
 
     

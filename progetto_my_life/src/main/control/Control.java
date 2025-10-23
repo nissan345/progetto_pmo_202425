@@ -10,7 +10,7 @@ import main.aboufaris.classes.*;
 import main.aboufaris.interfaces.*;
 import main.fabbri.classes.*;
 import main.giuseppetti.classes.*;
-import main.neri.classe.*;
+import main.neri.classes.*;
 import main.view.*;
 
 public class Control {
@@ -21,7 +21,6 @@ public class Control {
     private final int DECADIMENTO_STATO = 12000;
     private final Casa casa;
     private Personaggio personaggio;
-    private GestoreMissioni gestoreMissioni;
     private int contatoreMissioni;
     private GestoreAzioni gestoreAzioni;
     private View view;
@@ -34,7 +33,6 @@ public class Control {
     // Metodo che serve a creare la stanza
     private Control(){
        this.casa = new CasaImpl();
-       this.gestoreMissioni = new GestoreMissioni();
        this.contatoreMissioni = 0;
        this.gestoreAzioni = new GestoreAzioni();
        this.view = new View();
@@ -72,14 +70,7 @@ public class Control {
         Madre madre = new Madre(salotto);
         Padre padre = new Padre(giardino);
         Fratello fratello = new Fratello(cucina);
-        // restrazione Npc per la gestione di missioni
-        gestoreMissioni.registraNPC(madre);
-        gestoreMissioni.registraNPC(padre);
-        gestoreMissioni.registraNPC(fratello);
-        // assegna missioni agli NPC
-        madre.assegnaMissione();
-        padre.assegnaMissione();
-        fratello.assegnaMissione(); 
+        
     }
 
     
@@ -151,11 +142,11 @@ public class Control {
     }
 
     public void onClickNpc(NPC n){
-        n.interagisci(personaggio);
+        n.getDialogoIniziale();
     }
 
     public void onSecondClickNpc(NPC n){
-        List<OpzioniInterazione> opzioni = n.getOpzioniDisponibili();
+        List<OpzioniInterazione> opzioni = n.getOpzioniDisponibili(personaggio);
         view.mostraOpzioni(opzioni); // menu che dovrebbe mostrare le opzioni che fornisce l'NPC
     }
 
@@ -163,7 +154,7 @@ public class Control {
         String messaggio = "";
         switch(scelta) {
             case CHIEDI_MISSIONE:
-                Missione missione = npc.assegnaMissione();
+                Missione missione = npc.assegnaMissione(personaggio);
                 if (missione != null) {
                     messaggio = "Nuova missione: " + missione.getNome();
                     personaggio.aggiungiMissione(missione);
@@ -197,15 +188,49 @@ public class Control {
     public boolean isSconfitta(){
         // Personaggio muore perché TUTTI i suoi bisogni sono sotto la soglia
         return personaggio.getEnergia() < 0 && personaggio.getFame() < 0 && personaggio.getIgiene() < 0 && personaggio.getSete()<0;
-            
-        
+
     }
 
     public void creaPersonaggioPersonalizzato() {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'creaPersonaggioPersonalizzato'");
+        // Qui andrebbe la logica per creare un personaggio personalizzato
+        // Per ora creo un personaggio di default
+
+        String nome = view.chiediNomePersonaggio();
+        Vestito vestiti = scegliVestiti();
+        Dieta dieta = scegliDieta();
+        Capelli capelli = scegliCapelli();
+        this.personaggio = new Personaggio(nome, vestiti, dieta, capelli);
     }
 
+    private Vestito scegliVestiti(){
+        Vestito[] vestitiDisponibili = Vestito.values();
+        String[] vestiti = new String[vestitiDisponibili.length];
+        for(int i=0; i<vestitiDisponibili.length; i++){
+            vestiti[i] = vestitiDisponibili[i].getNome() + ": " + vestitiDisponibili[i].getDescrizione();
+        }
+        int scelta = view.mostraVestitiDisponibili(vestiti);
+        return vestitiDisponibili[scelta];
+    }
+
+    private Dieta scegliDieta(){
+        Dieta[] dieteDisponibili = Dieta.values();
+        String[] diete = new String[dieteDisponibili.length];
+        for(int i=0; i<dieteDisponibili.length; i++){
+            diete[i] = dieteDisponibili[i].getNome() + ": " + dieteDisponibili[i].getDescrizione();
+        }
+        int scelta = view.mostraDieteDisponibili(diete);
+        return dieteDisponibili[scelta];
+    }
+
+    private Capelli scegliCapelli(){
+        Capelli[] capelliDisponibili = Capelli.values();
+        String[] capelli = new String[capelliDisponibili.length];
+        for(int i=0; i<capelliDisponibili.length; i++){
+            capelli[i] = capelliDisponibili[i].getNome() + ": " + capelliDisponibili[i].getDescrizione();
+        }
+        int scelta = view.mostraCapelli(capelli);
+        return capelliDisponibili[scelta];
+    }
     
     public void aggiornaUI(){
         /*view.mostraStatistiche();
@@ -225,7 +250,6 @@ public class Control {
 
     // Metodo che serve per gli effetti dell'uso dell'oggetto
     public void onClickOggetto(OggettoGioco oggettoGioco){
-        String messaggio;
         // Devo controllare in che stanza sono
         Optional<Stanza> stanzaCorrente = casa.getStanzaCorrente();
         if(stanzaCorrente.isEmpty()){
@@ -234,13 +258,8 @@ public class Control {
         Stanza corrente = stanzaCorrente.get();
         // Quali sono gli oggetti disponibili nella stanza
         if(corrente.hasOggettoStanza(oggettoGioco)){
-            List<String> azioniDisponibili = gestoreAzioni.getAzioniDisponibili(oggettoGioco, personaggio);
-            int scelta = view.mostraAzioni(azioniDisponibili);
-            String azioneDaFare = azioniDisponibili.get(scelta);
-            RisultatoAzione risultato = gestoreAzioni.eseguiAzione(azioneDaFare, oggettoGioco, personaggio);
-            personaggio.applicaEffetti(risultato);
-            view.mostraRisultato(risultato.getMessaggio());
-            view.aggiornaStatoPersonaggio(personaggio.toString()); // Con stato intendo le statistiche
+            String messaggio = personaggio.interagisciOggetto(oggettoGioco);
+            view.mostraMessaggio(messaggio);
         }else{
             view.mostraErrore("L'oggetto non si trova in stanza!");
         }

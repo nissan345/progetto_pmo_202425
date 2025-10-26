@@ -1,4 +1,4 @@
-package test;
+
 
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -25,7 +25,7 @@ public class CasaImplTest {
     // Inizializzazione dei soggetti di test ---------------------------------------------------------------------------------
     @Before
     public void setUp() {
-        casa = new CasaImpl();
+        casa = CasaImpl.getCasaInstance();
         
         List<OggettoGioco> oggettiSalotto = new ArrayList<>();
         oggettiSalotto.add(new OggettoGenerico(TipoOggetto.DIVANO));

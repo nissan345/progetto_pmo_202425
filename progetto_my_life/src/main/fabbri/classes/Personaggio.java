@@ -261,29 +261,12 @@ public class Personaggio {
 
     // METODO PER INTERAGIRE CON GLI OGGETTI
     public String interagisciOggetto(OggettoGioco oggetto) {
-        if (oggetto != null && stanzaCorrente != null && 
-            stanzaCorrente.hasOggettoStanza(oggetto)) {
-            // Qui chiameremo il metodo usa dell'oggetto quando sarà implementato
+        	oggetto.usa(this);
             return "Hai interagito con " + oggetto.getNome() + " in " + getPosizione();
-        } else {
-            return "Non puoi interagire con " + oggetto.getNome() + " in questa stanza.";
-        }
+        
     }
 
-    // METODO PER VISUALIZZARE GLI OGGETTI NELLA STANZA 
-    public String mostraOggettiNellaStanza() {
-        if (stanzaCorrente != null) {
-            StringBuilder oggetti = new StringBuilder();
-            oggetti.append("Oggetti in ").append(getPosizione()).append(":\n");
-            // Supponendo che Stanza abbia un metodo getOggetti()
-            for (OggettoGioco oggetto : stanzaCorrente.getOggettiInStanza()) {
-                oggetti.append("- ").append(oggetto.getNome()).append("\n");
-            }
-            return oggetti.toString();
-        } else {
-            return "Non sei in nessuna stanza.";
-        }
-    }
+
 
     // METODI PER LE MISSIONI -----------------------------------------------------------------------
 

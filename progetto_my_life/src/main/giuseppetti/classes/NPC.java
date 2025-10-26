@@ -51,7 +51,7 @@ public abstract class NPC {
         
         if (!missioniDisponibili.isEmpty() && !haMissioneAttivaConQuestoNPC) {
             this.opzioni.add(OpzioniInterazione.CHIEDI_MISSIONE);
-        }
+        } 
         
         // CONSEGNA_MISSIONE: solo se hai missioni completate con questo NPC
         if (haMissioniCompletate(personaggio)) {

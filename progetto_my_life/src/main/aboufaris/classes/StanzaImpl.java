@@ -34,7 +34,8 @@ public class StanzaImpl implements Stanza{
     }
 
     public boolean hasOggettoStanza(OggettoGioco o){
-        return this.oggettiInStanza.contains(o);
+        return oggettiInStanza.stream()
+                .anyMatch(oggetto -> oggetto.getNome().equals(o.getNome()));
     }
     
     public void setNpc(NPC n) {
@@ -51,6 +52,12 @@ public class StanzaImpl implements Stanza{
 
     @Override
     public String toString(){
-        return this.nomeStanza + "\nNPC presenti: " + this.npcInStanza + "\nOggetti presenti: " + this.oggettiInStanza;
+    	String stringa = null;
+    	if(this.npcInStanza.isEmpty()) {
+    		stringa = "\nOggetti presenti: " + this.oggettiInStanza;
+    	}else {
+    		stringa = this.nomeStanza + "\nNPC presenti: " + this.npcInStanza.get().getRelazione() + "\nOggetti presenti: " + this.oggettiInStanza;
+    	}
+        return stringa;
     }
 }

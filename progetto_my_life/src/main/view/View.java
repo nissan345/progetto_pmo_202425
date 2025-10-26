@@ -1,6 +1,8 @@
 package main.view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -8,6 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.swing.*;
 import main.aboufaris.interfaces.*;
+import main.control.Control;
 import main.fabbri.classes.*;
 import main.giuseppetti.classes.*;
 import main.neri.classes.*;
@@ -23,9 +26,15 @@ public class View {
     private JTextArea descrizioneArea;
     private JTextArea logArea;
     private JPanel azioniPanel;
+    private JPanel oggettiPanel;
     private DefaultListModel<String> oggettiModel;
     private JList<String> oggettiList;
     private JTextArea statoArea;
+    private Control controller;
+
+    public void setController(Control controller) {
+        this.controller = controller;
+    }
 
     // Menu iniziale
     private JDialog menuDialog;
@@ -37,7 +46,7 @@ public class View {
     private void createAndShowGUI(){
         frame = new JFrame("My Life - Interfaccia");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setPreferredSize(new Dimension(900, 600));
+        frame.setPreferredSize(new Dimension(1000, 800));
 
         // Top: stanza
         JPanel top = new JPanel(new BorderLayout());
@@ -63,12 +72,12 @@ public class View {
         logScroll.setBorder(BorderFactory.createTitledBorder("Log / Messaggi"));
         center.add(logScroll);
 
-        oggettiModel = new DefaultListModel<>();
-        oggettiList = new JList<>(oggettiModel);
-        JScrollPane objScroll = new JScrollPane(oggettiList);
-        objScroll.setBorder(BorderFactory.createTitledBorder("Oggetti in stanza"));
-        center.add(objScroll);
-
+        oggettiPanel = new JPanel();
+        oggettiPanel.setLayout(new BoxLayout(oggettiPanel, BoxLayout.Y_AXIS));
+        JScrollPane oggettiScroll = new JScrollPane(oggettiPanel);
+        oggettiScroll.setBorder(BorderFactory.createTitledBorder("Oggetti in stanza"));
+        center.add(oggettiScroll);
+        frame.getContentPane().add(center, BorderLayout.CENTER);
         // Right: stato personaggio e missioni
         JPanel right = new JPanel(new BorderLayout());
         statoArea = new JTextArea(10,20);
@@ -83,6 +92,10 @@ public class View {
         JScrollPane azioniScroll = new JScrollPane(azioniPanel);
         azioniScroll.setBorder(BorderFactory.createTitledBorder("Azioni Rapide"));
         azioniScroll.setPreferredSize(new Dimension(100,120));
+        
+        JButton mappaBtn = new JButton("Apri Mappa");
+        mappaBtn.addActionListener(e -> mostraCasa());
+        azioniPanel.add(mappaBtn);
 
         frame.getContentPane().add(top, BorderLayout.NORTH);
         frame.getContentPane().add(center, BorderLayout.CENTER);
@@ -98,7 +111,7 @@ public class View {
     public void mostraMenu(){
         SwingUtilities.invokeLater(() -> {
             menuDialog = new JDialog(frame, "Menu Iniziale", true);
-            menuDialog.setSize(400, 300);
+            menuDialog.setSize(1000, 800);
             menuDialog.setLayout(new BorderLayout());
 
             JLabel titolo = new JLabel("Benvenuto in My Life!", SwingConstants.CENTER);
@@ -139,23 +152,7 @@ public class View {
         return scelta;
     }
 
-    public void mostraStanza(String nome, Stanza stanza){
-        SwingUtilities.invokeLater(() -> {
-            stanzaLabel.setText("Stanza: " + (nome==null?"--":nome));
-            if(stanza!=null){
-                try{
-                    StringBuilder sb = new StringBuilder();
-                    sb.append("Descrizione stanza: \n");
-                    if(stanza.toString()!=null) sb.append(stanza.toString()).append('\n');
-                    descrizioneArea.setText(sb.toString());
-                }catch(Exception ex){
-                    descrizioneArea.setText("(descrizione non disponibile)");
-                }
-            } else {
-                descrizioneArea.setText("");
-            }
-        });
-    }
+  
 
     public void mostraMissioniAttive(String Nome, String Descrizione){
         SwingUtilities.invokeLater(() -> {
@@ -168,12 +165,6 @@ public class View {
         SwingUtilities.invokeLater(() -> {
             appendLog("AVVISO: " + a);
             JOptionPane.showMessageDialog(frame, a, "Avviso", JOptionPane.WARNING_MESSAGE);
-        });
-    }
-
-    public void mostraBisogni(){
-        SwingUtilities.invokeLater(() -> {
-            appendLog("Aggiornamento bisogni...");
         });
     }
 
@@ -202,21 +193,115 @@ public class View {
     }
 
     public void mostraOpzioni(List<OpzioniInterazione> opzioni){
-        SwingUtilities.invokeLater(() -> {
-            if(opzioni==null) return;
-            String txt = opzioni.stream().map(o->o.toString()).collect(Collectors.joining("\n"));
-            appendLog("Opzioni: \n" + txt);
-            JOptionPane.showMessageDialog(frame, txt, "Opzioni Interazione", JOptionPane.PLAIN_MESSAGE);
+    	SwingUtilities.invokeLater(() -> {
+            if(opzioni == null || opzioni.isEmpty()) {
+                mostraMessaggio("Nessuna opzione disponibile");
+                return;
+            }
+            
+            // Converti le opzioni in array di stringhe
+            String[] opzioniArray = opzioni.stream()
+                .map(Enum::toString)
+                .toArray(String[]::new);
+            
+            int scelta = JOptionPane.showOptionDialog(
+                frame,
+                "Scegli un'opzione di interazione:",
+                "Opzioni Interazione con NPC",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                opzioniArray,
+                opzioniArray[0]
+            );
+            
+            // Se l'utente ha selezionato un'opzione valida
+            if (scelta >= 0 && scelta < opzioni.size()) {
+                Control controller = Control.getControlInstance();
+                // 👇 Passa solo l'opzione selezionata, non l'NPC
+                controller.onSceltaOpzioneInterazione(opzioni.get(scelta));
+            } else {
+                mostraMessaggio("Interazione annullata");
+            }
+            
+            appendLog("Opzioni presentate: " + String.join(", ", opzioniArray));
         });
     }
 
-    public void mostraCasa(){
-        SwingUtilities.invokeLater(() -> appendLog("Sei a casa."));
+    
+    public void mostraCasa() {
+    	 SwingUtilities.invokeLater(() -> {
+    	        // Crea un dialog per la mappa della casa
+    	        JDialog mappaDialog = new JDialog(frame, "Mappa della Casa", true);
+    	        mappaDialog.setSize(600, 400);
+    	        mappaDialog.setLayout(new BorderLayout());
+    	        
+    	        JLabel titolo = new JLabel("Seleziona una Stanza", SwingConstants.CENTER);
+    	        titolo.setFont(new Font("Arial", Font.BOLD, 18));
+    	        mappaDialog.add(titolo, BorderLayout.NORTH);
+    	        
+    	        // Pannello centrale con la mappa (layout a griglia per le stanze)
+    	        JPanel mappaPanel = new JPanel(new GridLayout(2, 3, 10, 10)); // 2 righe, 3 colonne
+    	        mappaPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+    	        
+    	        // Lista delle stanze disponibili (puoi personalizzare questa lista)
+    	        String[] stanze = {"Bagno", "Camera da Letto", "Cucina", "Salotto", "Giardino", "Sgabuzzino"};
+    	        
+    	        for (String stanza : stanze) {
+    	            JButton stanzaBtn = new JButton(stanza);
+    	            stanzaBtn.setFont(new Font("Arial", Font.PLAIN, 14));
+    	            stanzaBtn.setPreferredSize(new Dimension(120, 60));
+    	            
+    	            // Aggiungi l'action listener per entrare nella stanza
+    	            stanzaBtn.addActionListener(e -> {
+    	                Control controller = Control.getControlInstance();
+    	                controller.onClickEntra(stanza);
+    	                mappaDialog.dispose(); // Chiudi la mappa dopo la selezione
+    	            });
+    	            
+    	            mappaPanel.add(stanzaBtn);
+    	        }
+    	        
+    	        mappaDialog.add(mappaPanel, BorderLayout.CENTER);
+    	        
+    	        // Pulsante per chiudere
+    	        JButton chiudiBtn = new JButton("Chiudi Mappa");
+    	        chiudiBtn.addActionListener(e -> mappaDialog.dispose());
+    	        mappaDialog.add(chiudiBtn, BorderLayout.SOUTH);
+    	        
+    	        mappaDialog.setLocationRelativeTo(frame);
+    	        mappaDialog.setVisible(true);
+    	    });
     }
 
-    public void mostraStanza(){
-        SwingUtilities.invokeLater(() -> appendLog("Cambio stanza."));
-    }
+    public void mostraStanza(String nome, Stanza stanza){
+    	SwingUtilities.invokeLater(() -> {
+            stanzaLabel.setText("Stanza: " + (nome==null?"--":nome));
+            if(stanza!=null){
+                try{
+                    StringBuilder sb = new StringBuilder();
+                    sb.append("Descrizione stanza: \n");
+                    if(stanza.toString()!=null) sb.append(stanza.toString()).append('\n');
+                    
+                    // Mostra info NPC nella descrizione
+                    if(stanza.getNpcInStanza().isPresent()) {
+                        NPC npc = stanza.getNpcInStanza().get();
+                        sb.append("\nNPC presente: ").append(npc.getRelazione());
+                    }
+                    
+                    descrizioneArea.setText(sb.toString());
+                }catch(Exception ex){
+                    descrizioneArea.setText("(descrizione non disponibile)");
+                }
+                
+                
+                mostraNpcInterattivi(stanza);
+                
+            } else {
+                descrizioneArea.setText("");
+            }
+        });
+}
 
     public void mostraVittoria(){
         SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(frame, "Hai vinto!", "Vittoria", JOptionPane.INFORMATION_MESSAGE));
@@ -227,25 +312,98 @@ public class View {
     }
 
     public void mostraOggettiInStanza(List<OggettoGioco> oggettiPresenti){
-        SwingUtilities.invokeLater(() -> {
-            oggettiModel.clear();
-            if(oggettiPresenti!=null){
-                for(OggettoGioco o : oggettiPresenti){
-                    try{
-                        oggettiModel.addElement(o.getNome());
-                    }catch(Exception ex){
-                        oggettiModel.addElement(o.toString());
-                    }
-                }
+    	SwingUtilities.invokeLater(() -> {
+            System.out.println("DEBUG: mostraOggettiInStanza chiamato con " + 
+                (oggettiPresenti != null ? oggettiPresenti.size() : "null") + " oggetti");
+            
+            // CONTROLLO DI SICUREZZA
+            if (oggettiPanel == null) {
+                System.err.println("ERRORE: oggettiPanel è ancora null!");
+                return;
             }
+            
+            oggettiPanel.removeAll();
+            
+            if(oggettiPresenti != null && !oggettiPresenti.isEmpty()){
+                System.out.println("DEBUG: Creazione pulsanti per oggetti:");
+                for(OggettoGioco oggetto : oggettiPresenti){
+                    System.out.println("  - " + oggetto.getNome());
+                    
+                    JButton oggettoButton = new JButton(oggetto.getNome());
+                    oggettoButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+                    oggettoButton.setMaximumSize(new Dimension(200, 30));
+                    
+                    // Aggiungi tooltip
+                    oggettoButton.setToolTipText("Clicca per usare " + oggetto.getNome());
+                    
+                    // ActionListener
+                    oggettoButton.addActionListener(e -> {
+                        if (controller != null) {
+                            controller.onClickOggetto(oggetto);
+                        } else {
+                            mostraMessaggio("Hai cliccato su: " + oggetto.getNome());
+                        }
+                    });
+                    
+                    oggettiPanel.add(oggettoButton);
+                    oggettiPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+                }
+            } else {
+                JLabel nessunOggetto = new JLabel("Nessun oggetto in questa stanza");
+                nessunOggetto.setAlignmentX(Component.LEFT_ALIGNMENT);
+                oggettiPanel.add(nessunOggetto);
+            }
+            
+            oggettiPanel.revalidate();
+            oggettiPanel.repaint();
+            System.out.println("DEBUG: Pulsanti creati e panel aggiornato");
         });
     }
+    
+    
 
     public void mostraNpc(NPC npcInStanza){
         SwingUtilities.invokeLater(() -> {
-            if(npcInStanza!=null)
-                appendLog("NPC presente: " + npcInStanza.getRelazione());
+            
         });
+    }
+    
+    public void mostraNpcInterattivi(Stanza stanza) {
+        // Pulisci i vecchi pulsanti NPC
+        Component[] components = azioniPanel.getComponents();
+        for (Component comp : components) {
+            if (comp instanceof JButton) {
+                JButton btn = (JButton) comp;
+                if (btn.getText().contains("NPC")) {
+                    azioniPanel.remove(btn);
+                }
+            }
+        }
+        
+        // Se c'è un NPC nella stanza, aggiungi pulsanti
+        if (stanza.getNpcInStanza().isPresent()) {
+            NPC npc = stanza.getNpcInStanza().get();
+            
+            // Primo click - Dialogo iniziale
+            JButton dialogoBtn = new JButton("Parla con " + npc.getRelazione());
+            dialogoBtn.addActionListener(e -> {
+                Control controller = Control.getControlInstance();
+                controller.onClickNpc(npc);
+            });
+            
+            // Secondo click - Opzioni di interazione
+            JButton opzioniBtn = new JButton("Opzioni con " + npc.getRelazione());
+            opzioniBtn.addActionListener(e -> {
+                Control controller = Control.getControlInstance();
+                controller.onSecondClickNpc(npc);
+            });
+            
+            azioniPanel.add(dialogoBtn);
+            azioniPanel.add(opzioniBtn);
+            
+            azioniPanel.revalidate();
+            azioniPanel.repaint();
+        }
     }
 
     public void aggiornaStanza(Stanza stanzaCorrente) {
@@ -285,10 +443,51 @@ public class View {
     }
 
     public String chiediNomePersonaggio() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        JPanel panel = new JPanel();
+        final JLabel label = new JLabel("Insert your Name:");
+        JTextField textField = new JTextField(20);
+        panel.add(label);
+        panel.add(textField);
+        
+        int result = JOptionPane.showConfirmDialog(
+                frame, 
+                panel, 
+                "Nome Personaggio", 
+                JOptionPane.OK_CANCEL_OPTION, 
+                JOptionPane.QUESTION_MESSAGE
+            );
+           return textField.getText().trim();
     }
 
     public int mostraOpzioniPersonalizzazione(String messaggio, List<String> opzioni) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    	if (opzioni == null || opzioni.isEmpty()) {
+            return -1;
+        }
+    	// Converti la lista in array per JOptionPane
+        String[] opzioniArray = opzioni.toArray(new String[0]);
+        
+        // Mostra il dialog di selezione
+        Object selezione = JOptionPane.showInputDialog(
+            frame,
+            messaggio,
+            "Personalizzazione Personaggio",
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            opzioniArray,
+            opzioniArray[0]  // Valore predefinito
+        );
+        
+        // Se l'utente ha cancellato o chiuso il dialog
+        if (selezione == null) {
+            return -1;
+        }
+        
+        // Trova l'indice dell'opzione selezionata
+        for (int i = 0; i < opzioniArray.length; i++) {
+            if (opzioniArray[i].equals(selezione)) {
+                return i;
+            }
+        }
+        return -1; // Non dovrebbe mai arrivare qui
     }
 }

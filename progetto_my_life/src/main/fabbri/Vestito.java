@@ -1,4 +1,4 @@
-package main.fabbri.classes;
+package main.fabbri;
 
 public enum Vestito {
     // ALTERNATIVE DI VESTITI

@@ -1,13 +1,16 @@
-package test;
+
 
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
 import main.aboufaris.interfaces.Stanza;
+import main.aboufaris.classes.*;
 import main.fabbri.classes.*;
 import main.fabbri.classes.PreferenzeGusto.Reazione;    // Questo va specificato perché è un ulteriore enum dentro PreferenzeGusto
+import main.neri.classes.FabbricaOggetti;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class PersonaggioTest {
@@ -18,7 +21,7 @@ public class PersonaggioTest {
     // Inizializzazione dei soggetti di test ---------------------------------------------------------------------------------
     @Before
     public void setUp() {
-        Stanza stanzaIniziale = new Stanza("Salotto");
+        Stanza stanzaIniziale = new StanzaImpl("Salotto", new ArrayList<>(FabbricaOggetti.creaOggettiStanza("Salotto").values()));
     
         personaggio = new Personaggio("Giocatore", Vestito.INFORMALE, Dieta.ONNIVORO, Capelli.CORTI_MOSSI);
         personaggioVegano = new Personaggio("Vegano", Vestito.SPORTIVO, Dieta.VEGANO, Capelli.LUNGHI_LISCI);

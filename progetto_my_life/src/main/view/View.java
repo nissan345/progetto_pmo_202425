@@ -1,14 +1,14 @@
-package main.neri.view;
+package main.view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.util.List;
-import javax.swing.*;
 import java.util.stream.Collectors;
-
+import javax.swing.*;
 import main.aboufaris.interfaces.*;
+import main.fabbri.classes.*;
 import main.giuseppetti.classes.*;
 import main.neri.classes.*;
 
@@ -146,7 +146,7 @@ public class View {
                 try{
                     StringBuilder sb = new StringBuilder();
                     sb.append("Descrizione stanza: \n");
-                    if(stanza.getDescrizione()!=null) sb.append(stanza.getDescrizione()).append('\n');
+                    if(stanza.toString()!=null) sb.append(stanza.toString()).append('\n');
                     descrizioneArea.setText(sb.toString());
                 }catch(Exception ex){
                     descrizioneArea.setText("(descrizione non disponibile)");
@@ -201,10 +201,10 @@ public class View {
         SwingUtilities.invokeLater(() -> appendLog(s));
     }
 
-    public void mostraOpzioni(List<OpzioniInterazione> opzinioni){
+    public void mostraOpzioni(List<OpzioniInterazione> opzioni){
         SwingUtilities.invokeLater(() -> {
-            if(opzinioni==null) return;
-            String txt = opzinioni.stream().map(o->o.toString()).collect(Collectors.joining("\n"));
+            if(opzioni==null) return;
+            String txt = opzioni.stream().map(o->o.toString()).collect(Collectors.joining("\n"));
             appendLog("Opzioni: \n" + txt);
             JOptionPane.showMessageDialog(frame, txt, "Opzioni Interazione", JOptionPane.PLAIN_MESSAGE);
         });
@@ -244,7 +244,7 @@ public class View {
     public void mostraNpc(NPC npcInStanza){
         SwingUtilities.invokeLater(() -> {
             if(npcInStanza!=null)
-                appendLog("NPC presente: " + npcInStanza.getNome());
+                appendLog("NPC presente: " + npcInStanza.getRelazione());
         });
     }
 
@@ -252,7 +252,7 @@ public class View {
         SwingUtilities.invokeLater(() -> {
             if(stanzaCorrente!=null){
                 try{
-                    mostraStanza(stanzaCorrente.getNome(), stanzaCorrente);
+                    mostraStanza(stanzaCorrente.getNomeStanza(), stanzaCorrente);
                 }catch(Exception ex){
                     stanzaLabel.setText("Stanza: (sconosciuta)");
                 }
@@ -282,5 +282,13 @@ public class View {
     private void appendLog(String s){
         logArea.append(s + "\n");
         logArea.setCaretPosition(logArea.getDocument().getLength());
+    }
+
+    public String chiediNomePersonaggio() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public int mostraOpzioniPersonalizzazione(String messaggio, List<String> opzioni) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

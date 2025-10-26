@@ -96,7 +96,7 @@ public final class Control {
         List<String> opzioni = Arrays.stream(opzioniDisponibili)
             .map(Object::toString)
             .toList();
-        int scelta = view.mostraOpzioni(messaggio, opzioni);
+        int scelta = view.mostraOpzioniPersonalizzazione(messaggio, opzioni);
         return opzioniDisponibili[scelta];
     }
 
@@ -292,4 +292,9 @@ public final class Control {
             gameTimer.stop();
         }
     }
+
+
 }
+
+
+    

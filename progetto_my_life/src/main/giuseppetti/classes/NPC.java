@@ -2,6 +2,7 @@ package main.giuseppetti.classes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import main.aboufaris.interfaces.Stanza;
@@ -45,79 +46,49 @@ public abstract class NPC {
     // Gestisce l'interazione tra personaggio e NPC
     public List<OpzioniInterazione> getOpzioniDisponibili(Personaggio personaggio) {
         this.opzioni.clear();
-        
-        // CHIEDI_MISSIONE: solo se non hai già una missione attiva con questo NPC
-        boolean haMissioneAttivaConQuestoNPC = haMissioneAttivaConQuestoNPC(personaggio);
-        
-        if (!missioniDisponibili.isEmpty() && !haMissioneAttivaConQuestoNPC) {
+
+        Optional<Missione> missioneCompletata = personaggio.getMissioneCompletataConNPC(this);
+        Optional<Missione> missioneAttiva = personaggio.getMissioneAttivaConNPC(this);
+
+        if (missioneCompletata.isPresent()) {
+            this.opzioni.add(OpzioniInterazione.CONSEGNA_MISSIONE);
+
+        } else if (missioneAttiva.isPresent()) {
+            this.opzioni.add(OpzioniInterazione.MISSIONE_IN_CORSO);
+
+        } else if (!missioniDisponibili.isEmpty()) {
             this.opzioni.add(OpzioniInterazione.CHIEDI_MISSIONE);
         }
-        
-        // CONSEGNA_MISSIONE: solo se hai missioni completate con questo NPC
-        if (haMissioniCompletate(personaggio)) {
-            this.opzioni.add(OpzioniInterazione.CONSEGNA_MISSIONE);
-        }
-        
+
         this.opzioni.add(OpzioniInterazione.ESCI);
         return this.opzioni;
     }
-
-    // Assegna una missione al Personaggio rimuovendola quindi dalle missioni disponibili
+    
     public Missione assegnaMissione(Personaggio personaggio) {
-        // Controllo di sicurezza
-        if (haMissioneAttivaConQuestoNPC(personaggio)) {
-            return null;
-        }
-        
-        if (missioniDisponibili.isEmpty()) {
-            return null;
-        }
-        
-        Missione missione = missioniDisponibili.remove(0);
-        // La missione viene aggiunta solo al personaggio
-        personaggio.aggiungiMissione(missione);
-        return missione;
+    	if(personaggio.haMissioneAttivaConNPC(this) || missioniDisponibili.isEmpty()) {
+    		return null;
+    	}
+    	Missione missione = missioniDisponibili.remove(0);
+    	personaggio.aggiungiMissione(missione);
+    	return missione;
     }
 
     public List<String> consegnaMissione(Personaggio personaggio) {
         List<String> messaggi = new ArrayList<>();
-        
-        // Trova missioni completate di questo NPC
-        List<Missione> missioniCompletate = personaggio.getMissioniAttive().stream()
-            .filter(missione -> missione.getNPCAssegnatore().equals(this))
-            .filter(missione -> missione.verificaCompletamento(personaggio))
-            .collect(Collectors.toList());
+        Optional<Missione> missioneCompletata = personaggio.getMissioneCompletataConNPC(this);
 
-        if (missioniCompletate.isEmpty()) {
+        if (missioneCompletata.isEmpty()) {
             messaggi.add("Non ci sono missioni completate con " + this.relazione);
             return messaggi;
         }
-
-        // Processa la prima missione completata (dovrebbe essercene solo una)
-        Missione missione = missioniCompletate.get(0);
+        
+        Missione missione = missioneCompletata.get();
         incrementaAffinita(missione.getPuntiAffinita());
         personaggio.rimuoviMissione(missione);
         
-        messaggi.add(getDialogoCompletamentoMissione(missione));
         messaggi.add("Missione '" + missione.getNome() + "' completata!");
         messaggi.add("Affinità con " + this.relazione + ": " + this.affinita + "/100");
-        
         return messaggi;
-    }
-
-    // Metodi privati di supporto
-    
-    // Controlla se il personaggio ha una missione attiva con un determinato NPC
-    private boolean haMissioneAttivaConQuestoNPC(Personaggio personaggio) {
-        return personaggio.getMissioniAttive().stream()
-            .anyMatch(missione -> missione.getNPCAssegnatore().equals(this));
-    }
-    
-    // Controlla se il personaggio ha una missione completata relativa ad un determinato NPC
-    private boolean haMissioniCompletate(Personaggio personaggio) {
-        return personaggio.getMissioniAttive().stream()
-            .filter(missione -> missione.getNPCAssegnatore().equals(this))
-            .anyMatch(missione -> missione.verificaCompletamento(personaggio));
     }
     
     // Si aggiunge una missione a quelle disponibili 

@@ -31,7 +31,7 @@ public final class CasaImpl implements Casa{
         return stanzaCorrente;
     }
 
-    public Map<String, Stanza> getStanze(){
+    public Map<String, Stanza> getStanze(){ 
         return new HashMap<>(stanze); 
     }
 

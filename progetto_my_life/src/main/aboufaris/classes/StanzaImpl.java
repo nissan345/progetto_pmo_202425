@@ -12,7 +12,7 @@ public class StanzaImpl implements Stanza{
     private final List<OggettoGioco> oggettiInStanza;  // Indica gli NPC presenti nella stanza
     
     public StanzaImpl(String nome, List<OggettoGioco> oggetti){
-        this.nomeStanza = nome;
+        this.nomeStanza = nome; 
         this.oggettiInStanza = oggetti;
         this.npcInStanza = Optional.empty();
     }

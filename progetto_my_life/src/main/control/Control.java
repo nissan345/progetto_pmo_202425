@@ -14,6 +14,7 @@ import main.neri.classes.*;
 import main.view.*;
 
 public final class Control {
+	
     // Costanti
     private final int MISSIONI_TOTALI = 3;
     private final int SOGLIA_BASSA = 20;
@@ -52,6 +53,7 @@ public final class Control {
         creaPersonaggioPersonalizzato();
         creaMondo();
         avviaTimerBisogni();
+        view.mostraStatistiche(personaggio.stampaStato());
         view.mostraCasa();
     }
 
@@ -60,12 +62,12 @@ public final class Control {
     // Creazione del mondo di gioco, stanze, NPC e oggetti
     private void creaMondo(){
          // Creazione delle stanze
-        Stanza bagno = new StanzaImpl("Bagno", new ArrayList<>(FabbricaOggetti.creaOggettiStanza("Bagno").values()));
-        Stanza camera = new StanzaImpl("Camera da Letto",  new ArrayList<>(FabbricaOggetti.creaOggettiStanza("Camera da Letto").values())) ;
-        Stanza cucina = new StanzaImpl("Cucina",  new ArrayList<>(FabbricaOggetti.creaOggettiStanza("Cucina").values()));
-        Stanza salotto = new StanzaImpl("Salotto", new ArrayList<>(FabbricaOggetti.creaOggettiStanza("Salotto").values()));
-        Stanza giardino = new StanzaImpl("Giardino",  new ArrayList<>(FabbricaOggetti.creaOggettiStanza("Giardino").values()));  
-        Stanza sgabuzzino = new StanzaImpl("Sgabuzzino", new ArrayList<>(FabbricaOggetti.creaOggettiStanza("Sgabuzzino").values()));
+        Stanza bagno = FabbricaOggetti.creaBagno();
+        Stanza camera = FabbricaOggetti.creaCameraDaLetto();
+        Stanza cucina = FabbricaOggetti.creaCucina();
+        Stanza salotto = FabbricaOggetti.creaSalotto();
+        Stanza giardino = FabbricaOggetti.creaGiardino();
+        Stanza sgabuzzino = FabbricaOggetti.creaSgabuzzino();
         
         // Aggiunge le stanze alla casa
         casa.aggiungiStanza(bagno);
@@ -85,15 +87,16 @@ public final class Control {
         giardino.setNpc(padre);
         cucina.setNpc(fratello);
     }
+    
     // FUNZIONA
     // Creazione del personaggio personalizzato
     private void creaPersonaggioPersonalizzato() {
         String nome = view.chiediNomePersonaggio();
         Vestito vestiti = scegliOpzioneDaEnum("Scegli i vestiti", Vestito.values());
-        Dieta dieta = scegliOpzioneDaEnum("Scegli la dieta", Dieta.values());
         Capelli capelli = scegliOpzioneDaEnum("Scegli i capelli", Capelli.values());
-        this.personaggio = new Personaggio(nome, vestiti, dieta, capelli);
+        this.personaggio = new Personaggio(nome, vestiti, capelli);
     }
+    
     // FUNZIONA
     private <T> T scegliOpzioneDaEnum(String messaggio, T[] opzioniDisponibili){
         List<String> opzioni = Arrays.stream(opzioniDisponibili)
@@ -111,27 +114,30 @@ public final class Control {
                 List<String> avvisi = controllaStatiCritici();
                 if(!avvisi.isEmpty()){
                     for(String a : avvisi){
-                        view.mostraAvviso(a);
+                        view.mostraAvviso(a); 
                     }
                 }
-                view.mostraStatistiche(this.personaggio);
+                view.mostraStatistiche(this.personaggio.stampaStato());
                 gestisciSconfitta();
             
         });
         gameTimer.start();
     }
+    
     // Mezzo funziona, devo sistemare che se si esce dalla stanza si toglie il bottone per parlare con NPC
     public void onClickNpc(NPC n){
     	this.npcCorrente = n;
         view.mostraMessaggio(n.getDialogoIniziale());
     }
+    
     //YES
     public void onSecondClickNpc(NPC n){
     	this.npcCorrente = n;
         List<OpzioniInterazione> opzioni = n.getOpzioniDisponibili(personaggio);
         view.mostraOpzioni(opzioni); // menu che dovrebbe mostrare le opzioni che fornisce l'NPC
     }
- //YES
+ 
+    //YES
     public void onSceltaOpzioneInterazione(OpzioniInterazione scelta){
     	if (npcCorrente == null) {
             view.mostraErrore("Nessun NPC selezionato!");
@@ -182,10 +188,11 @@ public final class Control {
       return personaggio;
     }
 
+    // DA VEDERE
     private boolean isSconfitta(){
         // Personaggio muore perché uno dei suoi bisogni è sotto la soglia
-        return personaggio.getEnergia() < 0 || personaggio.getFame() < 0 || personaggio.getIgiene() < 0 
-        || personaggio.getSete() < 0;
+        return personaggio.getEnergia() == 0 || personaggio.getFame() ==0 || personaggio.getIgiene() == 0 
+        || personaggio.getSete() == 0;
     }
 
     // Funziona
@@ -195,8 +202,9 @@ public final class Control {
             view.mostraErrore("Stanza non trovata!");
             return;
         }
-        personaggio.setStanzaCorrente(ris.get());
-        view.mostraStanza(nomeStanza, ris.get());
+        // Aggiornare la posizione del personaggio, affinché possa usare un oggetto
+        personaggio.scegliStanza(ris.get());
+        view.mostraStanza(nomeStanza);
         mostraOggettiStanzaCorrente();
     }
 
@@ -208,29 +216,45 @@ public final class Control {
 
     // Metodo che serve per gli effetti dell'uso dell'oggetto
     public void onClickOggetto(OggettoGioco oggettoGioco){
-        // Devo controllare in che stanza sono
-        Optional<Stanza> stanzaCorrente = casa.getStanzaCorrente();
-        if(stanzaCorrente.isEmpty()){
-            view.mostraMessaggio("Devi essere in una stanza per usare un oggetto");
+    	Stanza corrente = getStanzaCorrente();
+        if (!corrente.hasOggettoStanza(oggettoGioco)) {
+            view.mostraErrore("L'oggetto non si trova in stanza!");
             return;
         }
-        Stanza corrente = stanzaCorrente.get();
-        // Quali sono gli oggetti disponibili nella stanza
-        if(corrente.hasOggettoStanza(oggettoGioco)){
-            String messaggio = personaggio.interagisci(oggettoGioco);
-            view.mostraMessaggio(messaggio);
-        }else{
-            view.mostraErrore("L'oggetto non si trova in stanza!");
+
+        if (!oggettoGioco.richiedeScelta()) {
+            // caso semplice
+            var ra = oggettoGioco.usa(personaggio);
+            String msg = personaggio.interagisci(oggettoGioco);
+            view.mostraMessaggio(msg);
+            view.mostraStatistiche(personaggio.stampaStato());
+            return;
+        }
+
+        // caso con scelta: prima messaggio poi lista opzioni
+        var intro = oggettoGioco.usa(personaggio); // “Apri il frigorifero...”
+        if (intro != null && intro.getMessaggio() != null && !intro.getMessaggio().isEmpty()) {
+            view.mostraMessaggio(intro.getMessaggio());
+        }
+
+        var opzioni = oggettoGioco.opzioniDisponibili(personaggio);
+        Object scelta = view.mostraDialogSceltaGenerica("Scegli un'opzione", opzioni);
+        if (scelta != null) {
+            var ra = oggettoGioco.usa(personaggio, scelta);
+            personaggio.applicaRisultatoAzione(ra, oggettoGioco.getNome());
+            view.mostraStatistiche(personaggio.stampaStato());
         }
     }
 
-    // Per la visualizzazione della mappa 
+
+
+	// Per la visualizzazione della mappa 
     public void getMappaCompleta(){
         Map<String,Stanza> stanze = casa.getStanze();
         for(Map.Entry<String, Stanza> s: stanze.entrySet()){
             String nome = s.getKey();
             Stanza stanza = s.getValue();
-            view.mostraStanza(nome, stanza);
+            view.mostraStanza(nome);
         }
     }
 
@@ -242,7 +266,12 @@ public final class Control {
     public void mostraOggettiStanzaCorrente(){
         Stanza stanzaCorrente = getStanzaCorrente();
         List<OggettoGioco> oggettiPresenti = stanzaCorrente.getOggettiInStanza();
-        view.mostraOggettiInStanza(oggettiPresenti);
+        List<String> nomeOggetti = new ArrayList<>();
+        for(OggettoGioco o : oggettiPresenti) {
+        	String nomeOggetto = o.getNome() + o.getDescrizione();
+        	nomeOggetti.add(nomeOggetto);
+        }
+        view.mostraOggettiInStanza(nomeOggetti);
     }
 
     public void mostraNpcInStanzaCorrente(){
@@ -251,7 +280,7 @@ public final class Control {
             view.mostraMessaggio("Non ci sono NPC in questa stanza.");
         }else{
             NPC npcInStanza = stanzaCorrente.getNpcInStanza().get();
-            view.mostraNpc(npcInStanza);
+            view.mostraNpc(npcInStanza.getRelazione());
         }
        
     }
@@ -282,10 +311,13 @@ public final class Control {
    // METODI PER IL GIOCO
     // Metodo che mostra su schermata tutte le missioni attive del personaggio
     public void getMissioniAttive(){
-        List<Missione> missioni = personaggio.getMissioniAttive();
-        for(Missione m : missioni){
-            view.mostraMissioniAttive(m.getNome(), m.getDescrizione());
+        Optional<Missione> missione = personaggio.getMissioniAttivaConNPC(this.npcCorrente);
+        if(!missione.isEmpty()) {
+        	Missione missioneAttiva = missione.get();
+        	view.mostraMissioneAttiva(missioneAttiva.getNome(), missioneAttiva.getDescrizione());
         }
+            
+       
     }
 
     public void gestisciVittoria(){
@@ -304,6 +336,11 @@ public final class Control {
             gameTimer.stop();
         }
     }
+
+	public void onOpzioneScelta(String valueOf) {
+		// TODO Auto-generated method stub
+		
+	}
 
 
 }

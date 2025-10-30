@@ -2,45 +2,60 @@
 
 package main.fabbri.classes;
 
+import main.neri.classes.RisultatoAzione;
+
 public enum TipoCibo {
-    // CIBI VEGANI (livello 0)
-    INSALATA("Insalata", "Insalata fresca", Dieta.VEGANO, Gusto.SALATO, 25),
-    HUMMUS("Hummus", "Hummus di ceci", Dieta.VEGANO, Gusto.SALATO, 30),
-    TOFU("Tofu", "Tofu alla griglia", Dieta.VEGANO, Gusto.SALATO, 32),
-    TORTA_VEGANA("Torta vegana", "Torta al cioccolato vegana", Dieta.VEGANO, Gusto.DOLCE, 28),
+    // CIBI VEGANI 
+    INSALATA("Insalata", "Insalata fresca", 5, 0, 5),
+    HUMMUS("Hummus", "Hummus di ceci", 10, -5, 5),
+    TOFU("Tofu", "Tofu alla griglia", 10, -5, 5),
+    TORTA_VEGANA("Torta vegana", "Torta al cioccolato vegana", 15, 0, -5),
 
-    // CIBI VEGETARIANI (livello 1)
-    YOGURT("Yogurt", "Yogurt bianco", Dieta.VEGETARIANO, Gusto.DOLCE, 20),
-    UOVA("Uova", "Uova strapazzate", Dieta.VEGETARIANO, Gusto.SALATO, 30),
-    TORTA("Torta", "Torta alla frutta", Dieta.VEGETARIANO, Gusto.DOLCE, 25),
-    FORMAGGIO("Formaggio", "Formaggio stagionato", Dieta.VEGETARIANO, Gusto.SALATO, 28),
+    // CIBI VEGETARIANI 
+    YOGURT("Yogurt", "Yogurt bianco", 5, 0, 5),
+    UOVA("Uova", "Uova strapazzate", 5, 0, 5),
+    TORTA("Torta", "Torta alla frutta", 15, 0, -5),
+    FORMAGGIO("Formaggio", "Formaggio stagionato", 5, -5, 5),
 
-    // CIBI ONNIVORI (livello 2)
-    BISTECCA("Bistecca", "Bistecca alla griglia", Dieta.ONNIVORO, Gusto.SALATO, 40),
-    HAMBURGER("Hamburger", "Hamburger con patatine", Dieta.ONNIVORO, Gusto.SALATO, 35),
-    SALMONE("Salmone", "Salmone affumicato", Dieta.ONNIVORO, Gusto.SALATO, 38),
-    POLLO("Pollo", "Pollo arrosto", Dieta.ONNIVORO, Gusto.SALATO, 36);
+    // CIBI ONNIVORI 
+    BISTECCA("Bistecca", "Bistecca alla griglia", 25, -10, 10),
+    HAMBURGER("Hamburger", "Hamburger con patatine", 25, -10, 10 ),
+    SALMONE("Salmone", "Salmone affumicato", 15, -10, 5),
+    POLLO("Pollo", "Pollo arrosto", 25, -10, 10),
+	
+    // BEVANDE
+	ACQUA("Acqua", "Dissetante e rinfrescante", 0, 30, 0),
+    SUCCO("Succo di frutta", "Dolce e gustoso", 0, 20, 5),
+    FANTA("Fanta", "Gustosa e frizzante", 0, 10, 10),
+    CAFFE("Caffè", "Energizzante e amaro", 0, 5, 20);
 
     // ATTRIBUTI
     private final String nome;
     private final String descrizione;
-    private final Dieta dietaMinima;
-    private final Gusto gusto;
-    private final int valoreNutritivo;
+    private final int fame;
+	private final int sete;
+    private final int energia;
+
 
     // COSTRUTTORE
-    TipoCibo(String nome, String descrizione, Dieta dietaMinima, Gusto gusto, int valoreNutritivo) {
+    TipoCibo(String nome, String descrizione, int fame, int sete, int energia) {
         this.nome = nome;
-        this.descrizione = descrizione;
-        this.dietaMinima = dietaMinima;
-        this.gusto = gusto;
-        this.valoreNutritivo = valoreNutritivo;
+        this.descrizione = descrizione; 
+        this.fame = fame;
+        this.sete = sete;
+        this.energia = energia;
+        
     }
 
     // GETTER
     public String getNome() { return nome; }
     public String getDescrizione() { return descrizione; }
-    public Dieta getDietaMinima() { return dietaMinima; }
-    public Gusto getGusto() { return gusto; }
-    public int getValoreNutritivo() { return valoreNutritivo; }
+    public int getFame() { return fame; }
+	public int getSete() { return sete; }
+	public int getEnergia() { return energia; }
+
+	
+	public RisultatoAzione getRisultatoAzione() {
+        return new RisultatoAzione(descrizione, fame, sete, energia, 0);
+    }
 }

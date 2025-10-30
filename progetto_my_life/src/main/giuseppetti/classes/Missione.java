@@ -14,44 +14,37 @@ public class Missione {
     private List<CondizioneCompletamento> condizioni; 
     private boolean completata;
 
-    public Missione(String nome, String descrizione, NPC npcAssegnatore, int puntiAffinita) {
+    public Missione(String nome, String descrizione, NPC npcAssegnatore, int puntiAffinita, List<CondizioneCompletamento> condizioni) {
         this.nome = nome;
         this.descrizione = descrizione;
         this.npcAssegnatore = npcAssegnatore;
         this.puntiAffinita = puntiAffinita; 
-        this.condizioni = new ArrayList<>();
+        this.condizioni = new ArrayList<>(condizioni);
         this.completata = false;
     }
     
     // Verifica il completamento di una missione 
     public boolean verificaCompletamento(Personaggio personaggio) {
-    	if (personaggio == null) {
-    		return false;
-    	}
-    	
-        // Se già completata, restituisce true
         if (completata) {
             return true;
         }
         
-        // Verifica tutte le condizioni 
+        if (personaggio == null) {
+            return false;
+        }
+        
+        // Se tutte le condizioni sono soddisfatte, la missione è completata
         for (CondizioneCompletamento condizione : condizioni) {
             if (!condizione.verificaCompletamento(personaggio)) {
                 return false;
             }
         }
         
-        // Se tutte le condizioni sono soddisfatte, missione completata
+        // Marca come completata solo quando tutte le condizioni sono soddisfatte
         this.completata = true;
         return true;
     }
-    
-    // Aggiunge le condizioni per il completamento di una missione 
-    public void aggiungiCondizione(CondizioneCompletamento condizione) {
-        this.condizioni.add(condizione);
-    }
-
-
+   
     // GETTER
 
     public String getNome() {

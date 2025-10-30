@@ -7,7 +7,7 @@ public enum Vestito {
     SPORTIVO("Sportivo", "Abbigliamento comodo per attività fisica"),
     PIGIAMA("Pigiama", "Abbigliamento per dormire"),
     ESTIVO("Estivo", "Abbigliamento leggero per il caldo"),
-    INVERNALE("Invernale", "Abbigliamento caldo per il freddo");
+    INVERNALE("Invernale", "Abbigliamento caldo per il freddo"); 
 
     // ATTRIBUTI
     private final String nome;

@@ -1,6 +1,8 @@
 package main.giuseppetti.classes;
 
 
+import java.util.Arrays;
+
 import main.aboufaris.interfaces.Stanza;
 
 public class Fratello extends NPC {
@@ -8,7 +10,7 @@ public class Fratello extends NPC {
     public Fratello(Stanza s) {
         super("Fratello", s);
     }
-
+    
     @Override
     public String getDialogoIniziale() {
         return "Non mi dare fastidio";
@@ -39,10 +41,9 @@ public class Fratello extends NPC {
         Missione missioneCucina = new Missione("Cibo per tutti", 
                                    "Dei nostri amici vengono a casa, potresti prepare qualcosa per tutti mentre io pulisco la mia camera", 
                                    this, 
-                                   20
+                                   20, 
+                                   Arrays.asList(new CondizioneAzioneOggetto("Fornelli"))
                             );
-        // Condizione
-        missioneCucina.aggiungiCondizione(new CondizioneAzioneOggetto("Fornelli"));
         this.aggiungiMissione(missioneCucina);
     }
 

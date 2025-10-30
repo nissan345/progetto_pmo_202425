@@ -1,5 +1,5 @@
 package main.view;
-
+/*
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -19,9 +19,9 @@ import main.neri.classes.*;
  * Implementazione grafica minimale (Swing) per il progetto "My Life".
  * Aggiornata con metodi placeholder e un menu iniziale grafico.
  */
-public class View {
+public class View1 {
 
-    private JFrame frame;
+  /*  private JFrame frame;
     private JLabel stanzaLabel;
     private JTextArea descrizioneArea;
     private JTextArea logArea;
@@ -39,7 +39,7 @@ public class View {
     // Menu iniziale
     private JDialog menuDialog;
 
-    public View(){
+    public View1(){
         SwingUtilities.invokeLater(() -> createAndShowGUI());
     }
 
@@ -72,6 +72,8 @@ public class View {
         logScroll.setBorder(BorderFactory.createTitledBorder("Log / Messaggi"));
         center.add(logScroll);
 
+        
+        frame.getContentPane().add(center, BorderLayout.CENTER);
         oggettiPanel = new JPanel();
         oggettiPanel.setLayout(new BoxLayout(oggettiPanel, BoxLayout.Y_AXIS));
         JScrollPane oggettiScroll = new JScrollPane(oggettiPanel);
@@ -125,7 +127,7 @@ public class View {
 
             center.add(startBtn);
             center.add(infoBtn);
-            center.add(exitBtn);
+            center.add(exitBtn); 
 
             startBtn.addActionListener(e -> menuDialog.dispose());
             infoBtn.addActionListener(e -> JOptionPane.showMessageDialog(menuDialog, "Progetto realizzato per PMO dalle studentesse del gruppo.", "Crediti", JOptionPane.INFORMATION_MESSAGE));
@@ -154,7 +156,7 @@ public class View {
 
   
 
-    public void mostraMissioniAttive(String Nome, String Descrizione){
+    public void mostraMissioneAttiva(String Nome, String Descrizione){
         SwingUtilities.invokeLater(() -> {
             appendLog("Missione attiva: " + Nome + " - " + Descrizione);
             statoArea.append("Missione: " + Nome + " - " + Descrizione + "\n");
@@ -363,12 +365,11 @@ public class View {
     
 
     public void mostraNpc(NPC npcInStanza){
-        SwingUtilities.invokeLater(() -> {
-            
-        });
+     
     }
     
     public void mostraNpcInterattivi(Stanza stanza) {
+
         // Pulisci i vecchi pulsanti NPC
         Component[] components = azioniPanel.getComponents();
         for (Component comp : components) {
@@ -490,4 +491,28 @@ public class View {
         }
         return -1; // Non dovrebbe mai arrivare qui
     }
+
+
+	public Object mostraDialogSceltaGenerica(String titolo, List<?> opzioni) {
+		if (opzioni == null || opzioni.isEmpty()) {
+	        JOptionPane.showMessageDialog(null, "Nessuna opzione disponibile.");
+	        return null;
+	    }
+
+	    Object scelta = JOptionPane.showInputDialog(
+	        null,
+	        titolo,
+	        "Scelta",
+	        JOptionPane.PLAIN_MESSAGE,
+	        null,
+	        opzioni.toArray(),
+	        opzioni.get(0)
+	    );
+
+	    return scelta;
+	}
+
+	
+*/
+	
 }

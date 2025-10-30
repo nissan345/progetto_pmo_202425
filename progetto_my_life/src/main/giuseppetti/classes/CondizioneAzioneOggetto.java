@@ -14,6 +14,6 @@ public class CondizioneAzioneOggetto implements CondizioneCompletamento{
 	@Override
 	public boolean verificaCompletamento(Personaggio personaggio) {
 		return personaggio.haUsatoOggetto(nomeOggetto);
-	}
+	} 
 	   
 }

@@ -14,7 +14,7 @@ public class RisultatoAzione {
     
     public RisultatoAzione(String messaggio) {
         this(messaggio, 0, 0, 0, 0);
-    }
+    } 
     
     public RisultatoAzione(String messaggio, int deltaFame, int deltaSete, int deltaEnergia, int deltaIgiene) {
         this.messaggio = messaggio;

@@ -124,60 +124,83 @@ public final class Control {
         gameTimer.start();
     }
     
+    public void aggiornaBottoniNpc(NPC npc) {
+        // qui decidi quali label mostrare
+        String nome = npc.getRelazione();
+        String relazione = npc.getRelazione();
+
+        // passi SOLO stringhe + le azioni da eseguire
+        view.mostraNpcInterattivi(
+            nome,
+            relazione,
+            () -> onClickNpc(npc),        // primo click: dialogo
+            () -> onSecondClickNpc(npc)   // secondo click: opzioni
+        );
+    }
+    
     // Mezzo funziona, devo sistemare che se si esce dalla stanza si toglie il bottone per parlare con NPC
     public void onClickNpc(NPC n){
     	this.npcCorrente = n;
         view.mostraMessaggio(n.getDialogoIniziale());
     }
-    
-    //YES
-    public void onSecondClickNpc(NPC n){
-    	this.npcCorrente = n;
+    public void onSecondClickNpc(NPC n) {
+        this.npcCorrente = n;
+
         List<OpzioniInterazione> opzioni = n.getOpzioniDisponibili(personaggio);
-        view.mostraOpzioni(opzioni); // menu che dovrebbe mostrare le opzioni che fornisce l'NPC
+        if (opzioni == null || opzioni.isEmpty()) {
+            view.mostraMessaggio("Non ci sono opzioni di interazione.");
+            return;
+        }
+
+        // Etichette leggibili (se non ti interessa la bella label, usa op::toString)
+        List<String> labels = opzioni.stream()
+                .map(this::labelPer)   // vedi metodo sotto
+                .toList();
+
+        int idx = view.mostraOpzioniIndice(
+                "Interazione con " + n.getRelazione(),
+                "Scegli un'opzione di interazione:",
+                labels
+        );
+
+        if (idx >= 0) {
+            onSceltaOpzioneInterazione(opzioni.get(idx));
+        }
     }
- 
-    //YES
-    public void onSceltaOpzioneInterazione(OpzioniInterazione scelta){
+
+    private String labelPer(OpzioniInterazione op) {
+        return switch (op) {
+            case CHIEDI_MISSIONE -> "Chiedi missione";
+            case CONSEGNA_MISSIONE -> "Consegna missione";
+            case ESCI -> "Esci";
+        };
+    }
+
+    public void onSceltaOpzioneInterazione(OpzioniInterazione scelta) {
     	if (npcCorrente == null) {
             view.mostraErrore("Nessun NPC selezionato!");
             return;
         }
-        String messaggio = "";
-        switch(scelta) {
+        switch (scelta) {
             case CHIEDI_MISSIONE -> {
-                Missione missione = npcCorrente.assegnaMissione(personaggio);
-                if (missione != null) {
-                    messaggio = "Nuova missione: " + missione.getNome();
-                    personaggio.aggiungiMissione(missione);
-                    view.mostraMessaggio(messaggio);
+                Missione m = npcCorrente.assegnaMissione(personaggio);
+                if (m != null) {
+                    personaggio.aggiungiMissione(m);
+                    view.mostraMessaggio("Nuova missione: " + m.getNome());
                 } else {
-                    messaggio ="Non ci sono missioni disponibili al momento.";
-                    view.mostraMessaggio(messaggio);
+                    view.mostraMessaggio("Non ci sono missioni disponibili al momento.");
                 }
             }
             case CONSEGNA_MISSIONE -> {
-                List<String> messaggi = npcCorrente.consegnaMissione(personaggio);
-                boolean missioniCompletata = messaggi.stream()
-                    .anyMatch(m -> m.contains("' completata!"));
-                if(missioniCompletata){
-                    contatoreMissioni++;
-                    gestisciVittoria();
-                }
-                for(String m : messaggi)
-                    view.mostraMessaggio(m);
+                List<String> msgs = npcCorrente.consegnaMissione(personaggio);
+                boolean completata = msgs.stream().anyMatch(t -> t.contains("' completata!"));
+                if (completata) { contatoreMissioni++; gestisciVittoria(); }
+                msgs.forEach(view::mostraMessaggio);
             }
-            case ESCI -> {
-                messaggio = "Arrivederci!";
-                view.mostraMessaggio(messaggio);
-            }
-            default -> {
-                messaggio = "Opzione non valida.";
-                view.mostraMessaggio(messaggio);
-            }
+            case ESCI -> view.mostraMessaggio("Arrivederci!");
+            default -> view.mostraMessaggio("Opzione non valida.");
         }
     }
-
     public void stopGame(){
         if(gameTimer != null){
             gameTimer.stop();
@@ -204,8 +227,11 @@ public final class Control {
         }
         // Aggiornare la posizione del personaggio, affinché possa usare un oggetto
         personaggio.scegliStanza(ris.get());
-        view.mostraStanza(nomeStanza);
+        String descrizione = ris.get().toString();
+        view.mostraStanza(nomeStanza, descrizione);
+        view.clearAzioniNpc();
         mostraOggettiStanzaCorrente();
+        mostraNpcInStanzaCorrente();
     }
 
      //(Kind of))
@@ -232,13 +258,13 @@ public final class Control {
         }
 
         // caso con scelta: prima messaggio poi lista opzioni
-        var intro = oggettoGioco.usa(personaggio); // “Apri il frigorifero...”
+        var intro = oggettoGioco.usa(personaggio); 
         if (intro != null && intro.getMessaggio() != null && !intro.getMessaggio().isEmpty()) {
             view.mostraMessaggio(intro.getMessaggio());
         }
 
         var opzioni = oggettoGioco.opzioniDisponibili(personaggio);
-        Object scelta = view.mostraDialogSceltaGenerica("Scegli un'opzione", opzioni);
+        Object scelta = view.mostraDialogSceltaGenerica("Scegli un'opzione","Azioni disponibili:", opzioni);
         if (scelta != null) {
             var ra = oggettoGioco.usa(personaggio, scelta);
             personaggio.applicaRisultatoAzione(ra, oggettoGioco.getNome());
@@ -253,8 +279,9 @@ public final class Control {
         Map<String,Stanza> stanze = casa.getStanze();
         for(Map.Entry<String, Stanza> s: stanze.entrySet()){
             String nome = s.getKey();
+            String descrizione = s.getValue().toString();
             Stanza stanza = s.getValue();
-            view.mostraStanza(nome);
+            view.mostraStanza(nome, descrizione);
         }
     }
 
@@ -263,24 +290,29 @@ public final class Control {
             .orElseThrow(() -> new IllegalStateException("Nessuna stanza corrente"));
     }
 
-    public void mostraOggettiStanzaCorrente(){
-        Stanza stanzaCorrente = getStanzaCorrente();
-        List<OggettoGioco> oggettiPresenti = stanzaCorrente.getOggettiInStanza();
-        List<String> nomeOggetti = new ArrayList<>();
-        for(OggettoGioco o : oggettiPresenti) {
-        	String nomeOggetto = o.getNome() + o.getDescrizione();
-        	nomeOggetti.add(nomeOggetto);
-        }
-        view.mostraOggettiInStanza(nomeOggetti);
+    public void mostraOggettiStanzaCorrente() {
+        Stanza stanza = getStanzaCorrente();
+        List<OggettoGioco> oggettiCorrenti = stanza.getOggettiInStanza();
+
+        List<String> labels = oggettiCorrenti.stream()
+            .map(o -> o.getNome() + " - " + o.getDescrizione())
+            .toList();
+
+        view.mostraOggettiInStanza(labels, idx -> {
+            if (idx >= 0 && idx < oggettiCorrenti.size()) {
+                onClickOggetto(oggettiCorrenti.get(idx));
+            }
+        });
     }
 
     public void mostraNpcInStanzaCorrente(){
         Stanza stanzaCorrente = getStanzaCorrente();
         if(stanzaCorrente.getNpcInStanza().isEmpty()){
+        	NPC npcInStanza = null;
             view.mostraMessaggio("Non ci sono NPC in questa stanza.");
         }else{
             NPC npcInStanza = stanzaCorrente.getNpcInStanza().get();
-            view.mostraNpc(npcInStanza.getRelazione());
+            aggiornaBottoniNpc(npcInStanza);
         }
        
     }

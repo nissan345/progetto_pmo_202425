@@ -231,79 +231,8 @@ public class View1 {
     }
 
     
-    public void mostraCasa() {
-    	 SwingUtilities.invokeLater(() -> {
-    	        // Crea un dialog per la mappa della casa
-    	        JDialog mappaDialog = new JDialog(frame, "Mappa della Casa", true);
-    	        mappaDialog.setSize(600, 400);
-    	        mappaDialog.setLayout(new BorderLayout());
-    	        
-    	        JLabel titolo = new JLabel("Seleziona una Stanza", SwingConstants.CENTER);
-    	        titolo.setFont(new Font("Arial", Font.BOLD, 18));
-    	        mappaDialog.add(titolo, BorderLayout.NORTH);
-    	        
-    	        // Pannello centrale con la mappa (layout a griglia per le stanze)
-    	        JPanel mappaPanel = new JPanel(new GridLayout(2, 3, 10, 10)); // 2 righe, 3 colonne
-    	        mappaPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-    	        
-    	        // Lista delle stanze disponibili (puoi personalizzare questa lista)
-    	        String[] stanze = {"Bagno", "Camera da Letto", "Cucina", "Salotto", "Giardino", "Sgabuzzino"};
-    	        
-    	        for (String stanza : stanze) {
-    	            JButton stanzaBtn = new JButton(stanza);
-    	            stanzaBtn.setFont(new Font("Arial", Font.PLAIN, 14));
-    	            stanzaBtn.setPreferredSize(new Dimension(120, 60));
-    	            
-    	            // Aggiungi l'action listener per entrare nella stanza
-    	            stanzaBtn.addActionListener(e -> {
-    	                Control controller = Control.getControlInstance();
-    	                controller.onClickEntra(stanza);
-    	                mappaDialog.dispose(); // Chiudi la mappa dopo la selezione
-    	            });
-    	            
-    	            mappaPanel.add(stanzaBtn);
-    	        }
-    	        
-    	        mappaDialog.add(mappaPanel, BorderLayout.CENTER);
-    	        
-    	        // Pulsante per chiudere
-    	        JButton chiudiBtn = new JButton("Chiudi Mappa");
-    	        chiudiBtn.addActionListener(e -> mappaDialog.dispose());
-    	        mappaDialog.add(chiudiBtn, BorderLayout.SOUTH);
-    	        
-    	        mappaDialog.setLocationRelativeTo(frame);
-    	        mappaDialog.setVisible(true);
-    	    });
-    }
 
-    public void mostraStanza(String nome, Stanza stanza){
-    	SwingUtilities.invokeLater(() -> {
-            stanzaLabel.setText("Stanza: " + (nome==null?"--":nome));
-            if(stanza!=null){
-                try{
-                    StringBuilder sb = new StringBuilder();
-                    sb.append("Descrizione stanza: \n");
-                    if(stanza.toString()!=null) sb.append(stanza.toString()).append('\n');
-                    
-                    // Mostra info NPC nella descrizione
-                    if(stanza.getNpcInStanza().isPresent()) {
-                        NPC npc = stanza.getNpcInStanza().get();
-                        sb.append("\nNPC presente: ").append(npc.getRelazione());
-                    }
-                    
-                    descrizioneArea.setText(sb.toString());
-                }catch(Exception ex){
-                    descrizioneArea.setText("(descrizione non disponibile)");
-                }
-                
-                
-                mostraNpcInterattivi(stanza);
-                
-            } else {
-                descrizioneArea.setText("");
-            }
-        });
-}
+
 
     public void mostraVittoria(){
         SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(frame, "Hai vinto!", "Vittoria", JOptionPane.INFORMATION_MESSAGE));
@@ -364,9 +293,6 @@ public class View1 {
     
     
 
-    public void mostraNpc(NPC npcInStanza){
-     
-    }
     
     public void mostraNpcInterattivi(Stanza stanza) {
 

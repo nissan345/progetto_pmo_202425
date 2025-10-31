@@ -5,23 +5,18 @@ import java.util.Optional;
 import main.aboufaris.interfaces.Casa;
 import main.aboufaris.interfaces.Stanza;
 
-public final class CasaImpl implements Casa{
+public class CasaImpl implements Casa{
     
-    private static CasaImpl singletonCasa;
+
     private Map<String, Stanza> stanze;
     private Optional<Stanza> stanzaCorrente;
 
-    private CasaImpl(){
+    public CasaImpl(){
         this.stanze = new HashMap<>();
         this.stanzaCorrente = Optional.empty();
     }
 
-    public static CasaImpl getCasaInstance(){
-        if(CasaImpl.singletonCasa == null){
-            CasaImpl.singletonCasa = new CasaImpl();
-        }
-        return CasaImpl.singletonCasa;
-    }
+  
 
     public void aggiungiStanza(Stanza s){
         this.stanze.put(s.getNomeStanza(), s);
@@ -48,8 +43,7 @@ public final class CasaImpl implements Casa{
         if(stanzaCorrente.isEmpty()){
             throw new UnsupportedOperationException();
         }
-        return this.stanze;
-        
+        return this.stanze;        
     }
 
     public Stanza getStanza(String s){

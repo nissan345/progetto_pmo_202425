@@ -182,7 +182,7 @@ public class Personaggio {
     
 
     // Ottiene le missioni attive con un NPC specifico
-    public Optional<Missione> getMissioniAttivaConNPC(NPC npc) {
+    public Optional<Missione> getMissioneAttivaConNPC(NPC npc) {
         return missioniAttive.stream()
             .filter(missione -> missione.getNPCAssegnatore().equals(npc))
             .findFirst();

@@ -46,19 +46,20 @@ public abstract class NPC {
     // Gestisce l'interazione tra personaggio e NPC
     public List<OpzioniInterazione> getOpzioniDisponibili(Personaggio personaggio) {
         this.opzioni.clear();
-        
-        // CHIEDI_MISSIONE: solo se non hai già una missione attiva con questo NPC
-        boolean haMissioneAttivaConQuestoNPC = personaggio.haMissioneAttivaConNPC(this);
-        
-        if (!missioniDisponibili.isEmpty() && !haMissioneAttivaConQuestoNPC) {
-            this.opzioni.add(OpzioniInterazione.CHIEDI_MISSIONE);
-        } 
-        
-        if(!personaggio.getMissioneCompletataConNPC(this).isEmpty()) {
+
+        Optional<Missione> missioneCompletata = personaggio.getMissioneCompletataConNPC(this);
+        Optional<Missione> missioneAttiva = personaggio.getMissioneAttivaConNPC(this);
+
+        if (missioneCompletata.isPresent()) {
             this.opzioni.add(OpzioniInterazione.CONSEGNA_MISSIONE);
+
+        } else if (missioneAttiva.isPresent()) {
+            this.opzioni.add(OpzioniInterazione.MISSIONE_IN_CORSO);
+
+        } else if (!missioniDisponibili.isEmpty()) {
+            this.opzioni.add(OpzioniInterazione.CHIEDI_MISSIONE);
         }
-        
-        
+
         this.opzioni.add(OpzioniInterazione.ESCI);
         return this.opzioni;
     }

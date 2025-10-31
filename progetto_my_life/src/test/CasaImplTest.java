@@ -23,7 +23,7 @@ public class CasaImplTest {
     // Inizializzazione dei soggetti di test ---------------------------------------------------------------------------------
     @Before
     public void setUp() {
-        casa = CasaImpl.getCasaInstance();
+        casa = new CasaImpl();
         
         List<OggettoGioco> oggettiSalotto = new ArrayList<>();
         //oggettiSalotto.add(new OggettoGenerico(TipoOggetto.DIVANO));

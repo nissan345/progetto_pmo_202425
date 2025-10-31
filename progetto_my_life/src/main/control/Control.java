@@ -32,7 +32,7 @@ public final class Control {
     
     // Costruttore privato
     private Control(){
-       this.casa = CasaImpl.getCasaInstance();
+       this.casa = new CasaImpl();
        this.contatoreMissioni = 0;
        this.view = new View();
        this.view.setController(this);
@@ -172,6 +172,7 @@ public final class Control {
         return switch (op) {
             case CHIEDI_MISSIONE -> "Chiedi missione";
             case CONSEGNA_MISSIONE -> "Consegna missione";
+            case MISSIONE_IN_CORSO -> "Aiuto missione";
             case ESCI -> "Esci";
         };
     }
@@ -186,9 +187,17 @@ public final class Control {
                 Missione m = npcCorrente.assegnaMissione(personaggio);
                 if (m != null) {
                     personaggio.aggiungiMissione(m);
-                    view.mostraMessaggio("Nuova missione: " + m.getNome());
+                    view.mostraMessaggio("Nuova missione: " + m.getNome() + "\n" + m.getDescrizione());
                 } else {
                     view.mostraMessaggio("Non ci sono missioni disponibili al momento.");
+                }
+            }
+            case MISSIONE_IN_CORSO -> {
+                Missione m = personaggio.getMissioneAttivaConNPC(npcCorrente).get();
+                if (m != null) {
+                	view.mostraMessaggio(npcCorrente.getDialogoMissioneInCorso(m));
+                } else {
+                	view.mostraMessaggio("Non ci sono missioni attive disponibili");
                 }
             }
             case CONSEGNA_MISSIONE -> {
@@ -343,7 +352,7 @@ public final class Control {
    // METODI PER IL GIOCO
     // Metodo che mostra su schermata tutte le missioni attive del personaggio
     public void getMissioniAttive(){
-        Optional<Missione> missione = personaggio.getMissioniAttivaConNPC(this.npcCorrente);
+        Optional<Missione> missione = personaggio.getMissioneAttivaConNPC(this.npcCorrente);
         if(!missione.isEmpty()) {
         	Missione missioneAttiva = missione.get();
         	view.mostraMissioneAttiva(missioneAttiva.getNome(), missioneAttiva.getDescrizione());

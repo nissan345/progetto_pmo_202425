@@ -1,21 +1,19 @@
 package main.fabbri.classes;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import main.aboufaris.interfaces.Stanza;
 import main.giuseppetti.classes.Missione;
 import main.giuseppetti.classes.NPC;
-import main.neri.classes.Frigorifero;
+import main.neri.classes.Inventario;
 import main.neri.classes.OggettoGioco;
 import main.neri.classes.RisultatoAzione;
 
 public class Personaggio {
 	private static final int STATO_MAX = 100;
     private static final int STATO_MIN = 0;
+    private Inventario inventory = new Inventario(30);
     private String nome;
     private Vestito vestiti;
     private Capelli capelli;

@@ -6,7 +6,6 @@ import java.util.Optional;
 
 /**
  * Inventory class — manages the list of items that a player can carry.
- * Author: Ali 🌸
  */
 public class Inventario {
 

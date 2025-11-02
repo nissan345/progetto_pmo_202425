@@ -3,118 +3,117 @@ package main.giuseppetti.classes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import main.aboufaris.interfaces.Stanza;
-import main.fabbri.classes.Personaggio;
+import main.aboufaris.interfaces.Room;
+import main.fabbri.classes.Character;
 
 public abstract class NPC {
-    private final String relazione;
-    private final Stanza posizione; 
-    private int affinita;
-    private List<Missione> missioniDisponibili;
-    private List<OpzioniInterazione> opzioni;
+    private final String relationship;
+    private final Room position; 
+    private int affinity;
+    private List<Quest> availableQuests;
+    private List<InteractionOption> options;
 
-    public NPC(final String relazione, final Stanza s) {
-        this.relazione = relazione;
-        this.posizione = s; 
-        this.affinita = 0;
-        this.missioniDisponibili = new ArrayList<>();
-        this.opzioni = new ArrayList<>();
-        inizializzaMissioni();
+    public NPC(final String relationship, final Room s) {
+        this.relationship = relationship;
+        this.position = s; 
+        this.affinity = 0;
+        this.availableQuests = new ArrayList<>();
+        this.options = new ArrayList<>();
+        initializeQuests();
     }
 
-    // Metodi Astratti
+    // Abstract Methods
     
-    // Metodo per il dialogo iniziale con un NPC
-    public abstract String getDialogoIniziale();
+    // Initial dialogue with an NPC
+    public abstract String getInitialDialogue();
     
-    // Metodo per il dialogo quando un NPC assegna una missione
-    public abstract String getMissioneAssegnataDialogo(Missione missione);
+    // Dialogue when NPC assigns a quest
+    public abstract String getQuestAssignedDialogue(Quest quest);
     
-    // Metodo per il dialogo quando una missione non è stata ancora completata
-    public abstract String getDialogoMissioneInCorso(Missione missione);
+    // Dialogue when quest is still in progress
+    public abstract String getQuestInProgressDialogue(Quest quest);
     
-    // Metodo per il dialogo quando una missione è stata completata 
-    public abstract String getDialogoCompletamentoMissione(Missione missione);
+    // Dialogue when quest is completed
+    public abstract String getQuestCompletionDialogue(Quest quest);
     
-    // Metodo per l'inizializzazione della missione
-    protected abstract void inizializzaMissioni();
+    // Quest initialization method
+    protected abstract void initializeQuests();
     
-    // Metodi concreti 
+    // Concrete Methods 
     
-    // Gestisce l'interazione tra personaggio e NPC
-    public List<OpzioniInterazione> getOpzioniDisponibili(Personaggio personaggio) {
-        this.opzioni.clear();
+    // Handles character-NPC interaction
+    public List<InteractionOption> getAvailableOptions(Character character) {
+        this.options.clear();
 
-        Optional<Missione> missioneCompletata = personaggio.getMissioneCompletataConNPC(this);
-        Optional<Missione> missioneAttiva = personaggio.getMissioneAttivaConNPC(this);
+        Optional<Quest> completedQuest = character.getCompletedQuestWithNPC(this);
+        Optional<Quest> activeQuest = character.getActiveQuestWithNPC(this);
 
-        if (missioneCompletata.isPresent()) {
-            this.opzioni.add(OpzioniInterazione.CONSEGNA_MISSIONE);
+        if (completedQuest.isPresent()) {
+            this.options.add(InteractionOption.TURN_IN_QUEST);
 
-        } else if (missioneAttiva.isPresent()) {
-            this.opzioni.add(OpzioniInterazione.MISSIONE_IN_CORSO);
+        } else if (activeQuest.isPresent()) {
+            this.options.add(InteractionOption.QUEST_IN_PROGRESS);
 
-        } else if (!missioniDisponibili.isEmpty()) {
-            this.opzioni.add(OpzioniInterazione.CHIEDI_MISSIONE);
+        } else if (!availableQuests.isEmpty()) {
+            this.options.add(InteractionOption.REQUEST_QUEST);
         }
 
-        this.opzioni.add(OpzioniInterazione.ESCI);
-        return this.opzioni;
+        this.options.add(InteractionOption.EXIT);
+        return this.options;
     }
     
-    public Missione assegnaMissione(Personaggio personaggio) {
-    	if(personaggio.haMissioneAttivaConNPC(this) || missioniDisponibili.isEmpty()) {
+    public Quest assignQuest(Character character) {
+    	if(character.hasActiveQuestWithNPC(this) || availableQuests.isEmpty()) {
     		return null;
     	}
-    	Missione missione = missioniDisponibili.remove(0);
-    	personaggio.aggiungiMissione(missione);
-    	return missione;
+    	Quest quest = availableQuests.remove(0);
+    	character.addQuest(quest);
+    	return quest;
     }
 
-    public List<String> consegnaMissione(Personaggio personaggio) {
-        List<String> messaggi = new ArrayList<>();
-        Optional<Missione> missioneCompletata = personaggio.getMissioneCompletataConNPC(this);
+    public List<String> turnInQuest(Character character) {
+        List<String> messages = new ArrayList<>();
+        Optional<Quest> completedQuest = character.getCompletedQuestWithNPC(this);
 
-        if (missioneCompletata.isEmpty()) {
-            messaggi.add("Non ci sono missioni completate con " + this.relazione);
-            return messaggi;
+        if (completedQuest.isEmpty()) {
+            messages.add("Nessuna quest completata con " + this.relationship);
+            return messages;
         }
         
-        Missione missione = missioneCompletata.get();
-        incrementaAffinita(missione.getPuntiAffinita());
-        personaggio.rimuoviMissione(missione);
+        Quest quest = completedQuest.get();
+        increaseAffinity(quest.getAffinityPoints());
+        character.removeQuest(quest);
         
-        messaggi.add("Missione '" + missione.getNome() + "' completata!");
-        messaggi.add("Affinità con " + this.relazione + ": " + this.affinita + "/100");
-        return messaggi;
+        messages.add("Quest '" + quest.getName() + "' completata!");
+        messages.add("affinità con " + this.relationship + ": " + this.affinity + "/100");
+        return messages;
     }
     
-    // Si aggiunge una missione a quelle disponibili 
-    protected void aggiungiMissione(Missione missione) {
-        missioniDisponibili.add(missione);
+    // Adds a quest to available quests
+    protected void addQuest(Quest quest) {
+        availableQuests.add(quest);
     }
     
-    // Incrementa l'affinita tra un personaggio e un NPC, l'affinita va da 0 a 100
-    protected void incrementaAffinita(int puntiAffinita) {
-        this.affinita = Math.min(100, this.affinita + puntiAffinita);
+    // Increases affinity between character and NPC (0-100 range)
+    protected void increaseAffinity(int affinityPoints) {
+        this.affinity = Math.min(100, this.affinity + affinityPoints);
     }
 
-    // Getter
-    public String getRelazione() { 
-    	return this.relazione; 
+    // Getters
+    public String getRelationship() { 
+    	return this.relationship; 
     }
     
-    public int getAffinita() { 
-    	return this.affinita; 
+    public int getAffinity() { 
+    	return this.affinity; 
     }
     
-    public Stanza getPosizione() { 
-    	return this.posizione; 
+    public Room getPosition() { 
+    	return this.position; 
     }
     
-    public List<Missione> getMissioniDisponibili() { 
-        return new ArrayList<>(this.missioniDisponibili); 
+    public List<Quest> getAvailableQuests() { 
+        return new ArrayList<>(this.availableQuests); 
     }
 }

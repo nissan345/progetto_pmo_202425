@@ -2,22 +2,22 @@ package main.neri.classes;
 
 
 /**
- * Risultato di un'azione con effetti sul personaggio
+ * Risultato di un'azione con effetti sul character
  */
 public class RisultatoAzione {
-    private String messaggio;
+    private String message;
     private int deltaFame;
     private int deltaSete;
     private int deltaEnergia;
     private int deltaIgiene;
     private static final int TEMPO_AZIONE = 5; // Tutte le azioni durano 5 secondi
     
-    public RisultatoAzione(String messaggio) {
-        this(messaggio, 0, 0, 0, 0);
+    public RisultatoAzione(String message) {
+        this(message, 0, 0, 0, 0);
     } 
     
-    public RisultatoAzione(String messaggio, int deltaFame, int deltaSete, int deltaEnergia, int deltaIgiene) {
-        this.messaggio = messaggio;
+    public RisultatoAzione(String message, int deltaFame, int deltaSete, int deltaEnergia, int deltaIgiene) {
+        this.message = message;
         this.deltaFame = deltaFame;
         this.deltaSete = deltaSete;
         this.deltaEnergia = deltaEnergia;
@@ -25,7 +25,7 @@ public class RisultatoAzione {
     }
     
     // Getters
-    public String getMessaggio() { return messaggio; }
+    public String getMessaggio() { return message; }
     public int getDeltaFame() { return deltaFame; }
     public int getDeltaSete() { return deltaSete; }
     public int getDeltaEnergia() { return deltaEnergia; }

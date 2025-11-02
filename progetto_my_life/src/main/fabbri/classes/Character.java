@@ -6,14 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import main.aboufaris.interfaces.Stanza;
-import main.giuseppetti.classes.Missione;
+import main.aboufaris.interfaces.Room;
+import main.giuseppetti.classes.Quest;
 import main.giuseppetti.classes.NPC;
 import main.neri.classes.Frigorifero;
 import main.neri.classes.OggettoGioco;
 import main.neri.classes.RisultatoAzione;
 
-public class Personaggio {
+public class Character {
 	private static final int STATO_MAX = 100;
     private static final int STATO_MIN = 0;
     private String nome;
@@ -23,14 +23,14 @@ public class Personaggio {
     private int sete;
     private int energia;
     private int igiene;
-    private Stanza stanzaCorrente;
+    private Room stanzaCorrente;
 
     // Modifiche per missioni 
-    private List<Missione> missioniAttive;
+    private List<Quest> missioniAttive;
     private List<String> oggettiUsati; // Traccia gli oggetti usati
  
     // COSTRUTTORE ------------------------------------------------------------------------
-    public Personaggio(String nome, Vestito vestiti, Capelli capelli) {
+    public Character(String nome, Vestito vestiti, Capelli capelli) {
         this.nome = nome;
         this.vestiti = vestiti;
         this.capelli = capelli;  
@@ -40,7 +40,7 @@ public class Personaggio {
         this.energia = 100;
         this.igiene = 100;
 
-        this.stanzaCorrente = null; // Inizialmente nessuna stanza
+        this.stanzaCorrente = null; // Inizialmente nessuna room
         
         this.missioniAttive = new ArrayList<>();
         this.oggettiUsati = new ArrayList<>();
@@ -93,11 +93,11 @@ public class Personaggio {
     } 
     
     // GETTER E SETTER PER LA POSIZIONE
-    public Stanza getStanzaCorrente() {
+    public Room getStanzaCorrente() {
         return stanzaCorrente;
     }
     // DA VEDERE
-    public void setStanzaCorrente(Stanza stanzaCorrente) {
+    public void setStanzaCorrente(Room stanzaCorrente) {
         this.stanzaCorrente = stanzaCorrente;
     }
     // DA RIVEDERE E FORSE TOGLIERE
@@ -148,52 +148,52 @@ public class Personaggio {
         if (stanzaCorrente != null) {
             return stanzaCorrente.getNomeStanza();
         } else {
-            return "Nessuna stanza";
+            return "Nessuna room";
         }
     }
 
-    public String scegliStanza(Stanza stanza) {
-        this.stanzaCorrente = stanza;
-        return "Sei entrato in: " + stanza.getNomeStanza();
+    public String scegliStanza(Room room) {
+        this.stanzaCorrente = room;
+        return "Sei entrato in: " + room.getNomeStanza();
     }
 
 
     // METODI PER LE MISSIONI -----------------------------------------------------------------------
 
-    //Aggiunge una missione alla lista delle missioni attive
-    public void aggiungiMissione(Missione missione) {
-        if (missione != null && !missioniAttive.contains(missione)) {
-            missioniAttive.add(missione);
+    //Aggiunge una quest alla lista delle missioni attive
+    public void addQuest(Quest quest) {
+        if (quest != null && !missioniAttive.contains(quest)) {
+            missioniAttive.add(quest);
         }
     }
     
-    // Rimuove una missione completata dalla lista
+    // Rimuove una quest completata dalla lista
 
-    public void rimuoviMissione(Missione missione) {
-        missioniAttive.remove(missione);
+    public void removeQuest(Quest quest) {
+        missioniAttive.remove(quest);
     }
     
 
-    // Verifica se il personaggio ha missioni attive con un NPC specifico
-    public boolean haMissioneAttivaConNPC(NPC npc) {
+    // Verifica se il character ha missioni attive con un NPC specifico
+    public boolean hasActiveQuestWithNPC(NPC npc) {
         return missioniAttive.stream()
-            .anyMatch(missione -> missione.getNPCAssegnatore().equals(npc));
+            .anyMatch(quest -> quest.getAssignerNPC().equals(npc));
     }
     
 
     // Ottiene le missioni attive con un NPC specifico
-    public Optional<Missione> getMissioneAttivaConNPC(NPC npc) {
+    public Optional<Quest> getActiveQuestWithNPC(NPC npc) {
         return missioniAttive.stream()
-            .filter(missione -> missione.getNPCAssegnatore().equals(npc))
+            .filter(quest -> quest.getAssignerNPC().equals(npc))
             .findFirst();
     }
     
 
     // Verifica automaticamente il completamento di tutte le missioni attive con un NPC
-    public Optional<Missione> getMissioneCompletataConNPC(NPC npc) {
+    public Optional<Quest> getCompletedQuestWithNPC(NPC npc) {
 	    return missioniAttive.stream()
-	        .filter(missione -> missione.getNPCAssegnatore().equals(npc))
-	        .filter(missione -> missione.verificaCompletamento(this))
+	        .filter(quest -> quest.getAssignerNPC().equals(npc))
+	        .filter(quest -> quest.checkCompletion(this))
 	        .findFirst();
 	}
 
@@ -204,7 +204,7 @@ public class Personaggio {
     }
     
     // Verifica se un oggetto è stato usato
-    public boolean haUsatoOggetto(String nomeOggetto) {
+    public boolean hasUsedObject(String nomeOggetto) {
         return oggettiUsati.contains(nomeOggetto);
     }
      
@@ -224,7 +224,7 @@ public class Personaggio {
         this.setEnergia(this.getEnergia() + risultato.getDeltaEnergia());
         this.setIgiene(this.getIgiene() + risultato.getDeltaIgiene());
         
-        // 4. Restituisce messaggio
+        // 4. Restituisce message
         return risultato.getMessaggio();
     }
     

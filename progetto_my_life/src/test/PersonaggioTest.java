@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import main.aboufaris.interfaces.Stanza;
+import main.aboufaris.interfaces.Room;
 import main.aboufaris.classes.*;
 import main.fabbri.classes.*;
 import main.neri.classes.FabbricaOggetti;
@@ -14,43 +14,43 @@ import java.util.Map;
 
 public class PersonaggioTest {
 
-    private Personaggio personaggio;
-    private Personaggio personaggioVegano;
+    private Character character;
+    private Character personaggioVegano;
 
     // Inizializzazione dei soggetti di test ---------------------------------------------------------------------------------
     @Before
     public void setUp() {
-        //Stanza stanzaIniziale = new StanzaImpl("Salotto", new ArrayList<>(FabbricaOggetti.creaOggettiStanza("Salotto").values()));
+        //Room stanzaIniziale = new StanzaImpl("Salotto", new ArrayList<>(FabbricaOggetti.creaOggettiStanza("Salotto").values()));
     
-        //personaggio = new Personaggio("Giocatore", Vestito.INFORMALE, Dieta.ONNIVORO, Capelli.CORTI_MOSSI);
-        //personaggioVegano = new Personaggio("Vegano", Vestito.SPORTIVO, Dieta.VEGANO, Capelli.LUNGHI_LISCI);
+        //character = new Character("Giocatore", Vestito.INFORMALE, Dieta.ONNIVORO, Capelli.CORTI_MOSSI);
+        //personaggioVegano = new Character("Vegano", Vestito.SPORTIVO, Dieta.VEGANO, Capelli.LUNGHI_LISCI);
         
-       // personaggio.scegliStanza(stanzaIniziale);
-        //personaggio.setPreferenza(Gusto.DOLCE, Reazione.PIACE);
-        //personaggio.setPreferenza(Gusto.SALATO, Reazione.NON_PIACE);
+       // character.scegliStanza(stanzaIniziale);
+        //character.setPreferenza(Gusto.DOLCE, Reazione.PIACE);
+        //character.setPreferenza(Gusto.SALATO, Reazione.NON_PIACE);
         //personaggioVegano.setPreferenza(Gusto.SALATO, Reazione.PIACE);
     }
 
     // TEST PER CREAZIONE PERSONAGGIO -------------------------------------------------------------------------------------
     @Test
     public void testCreazionePersonaggio() {
-        assertEquals("Giocatore", personaggio.getNome());
-        //assertEquals(Dieta.ONNIVORO, personaggio.getDieta());
-        assertEquals(100, personaggio.getFame());
-        assertEquals(100, personaggio.getSete());
-        assertEquals(100, personaggio.getEnergia());
-        assertEquals(100, personaggio.getIgiene());
+        assertEquals("Giocatore", character.getNome());
+        //assertEquals(Dieta.ONNIVORO, character.getDieta());
+        assertEquals(100, character.getFame());
+        assertEquals(100, character.getSete());
+        assertEquals(100, character.getEnergia());
+        assertEquals(100, character.getIgiene());
     }
 
     // TEST PER MANGIARE ---------------------------------------------------------------------------------------------
     @Test
     public void testMangiare() {
-        //personaggio.setFame(50);
-        int fameIniziale = personaggio.getFame();
-        //String risultato = personaggio.mangia(TipoCibo.BISTECCA);
+        //character.setFame(50);
+        int fameIniziale = character.getFame();
+        //String risultato = character.mangia(TipoCibo.BISTECCA);
         //assertTrue(risultato.contains("Hai mangiato Bistecca"));
         //assertTrue(risultato.contains("Fame: +"));
-        assertTrue(personaggio.getFame() > fameIniziale);
+        assertTrue(character.getFame() > fameIniziale);
     }
 
     @Test
@@ -62,94 +62,94 @@ public class PersonaggioTest {
 
     @Test
     public void testMangiareConPreferenzaGusto() {
-        //personaggio.setFame(50);
-        //personaggio.setPreferenza(Gusto.SALATO, Reazione.PIACE);
-        int fameIniziale = personaggio.getFame();
-       // String risultato = personaggio.mangia(TipoCibo.BISTECCA);
+        //character.setFame(50);
+        //character.setPreferenza(Gusto.SALATO, Reazione.PIACE);
+        int fameIniziale = character.getFame();
+       // String risultato = character.mangia(TipoCibo.BISTECCA);
        // assertTrue(risultato.contains("Ti è piaciuto!"));
         // Verifica che la fame sia aumentata più del valore base grazie al bonus
-        assertTrue(personaggio.getFame() > fameIniziale + 40);
+        assertTrue(character.getFame() > fameIniziale + 40);
     }
 
     @Test
     public void testMangiareConGustoNonGradito() {
-        //personaggio.setFame(50);
-        //personaggio.setPreferenza(Gusto.SALATO, Reazione.NON_PIACE);
-        int fameIniziale = personaggio.getFame();
-        //String risultato = personaggio.mangia(TipoCibo.BISTECCA);
+        //character.setFame(50);
+        //character.setPreferenza(Gusto.SALATO, Reazione.NON_PIACE);
+        int fameIniziale = character.getFame();
+        //String risultato = character.mangia(TipoCibo.BISTECCA);
         //assertTrue(risultato.contains("Non ti è piaciuto"));
         // Verifica che la fame sia aumentata meno del valore base a causa del malus
-        assertTrue(personaggio.getFame() < fameIniziale + 40);
+        assertTrue(character.getFame() < fameIniziale + 40);
     }
 
     // TEST PER BERE -------------------------------------------------------------------------------------------------
     @Test
     public void testBere() {
-        //personaggio.setSete(50);
-       // String risultato = personaggio.bevi(Bevanda.ACQUA);
+        //character.setSete(50);
+       // String risultato = character.bevi(Bevanda.ACQUA);
         //assertTrue(risultato.contains("Hai bevuto Acqua"));
         //assertTrue(risultato.contains("Sete: +"));
-        assertEquals(90, personaggio.getSete()); // 50 + 40 = 90
+        assertEquals(90, character.getSete()); // 50 + 40 = 90
     }
 
     @Test
     public void testBereBevandaEnergizzante() {
-        //personaggio.setEnergia(50);
-        //String risultato = personaggio.bevi(Bevanda.CAFFE);
+        //character.setEnergia(50);
+        //String risultato = character.bevi(Bevanda.CAFFE);
         //assertTrue(risultato.contains("Energia: +"));
-        //assertEquals(80, personaggio.getEnergia()); // 50 + 30 = 80
+        //assertEquals(80, character.getEnergia()); // 50 + 30 = 80
     }
 
     // TEST PER DORMIRE ----------------------------------------------------------------------------------------------
     @Test
     public void testDormireLetto() {
-        //personaggio.setEnergia(20);
-        //String risultato = personaggio.dormi();
+        //character.setEnergia(20);
+        //String risultato = character.dormi();
         //assertTrue(risultato.contains("Hai dormito e recuperato "));
         //assertTrue(risultato.contains("70"));
-        assertEquals(90, personaggio.getEnergia()); // 20 + 70 = 90
+        assertEquals(90, character.getEnergia()); // 20 + 70 = 90
     }
 
     @Test
     public void testFarePisolino() {
-        //personaggio.setEnergia(50);
-        //String risultato = personaggio.faiPisolino();
+        //character.setEnergia(50);
+        //String risultato = character.faiPisolino();
         //assertTrue(risultato.contains("Hai fatto un pisolino e recuperato "));
         //assertTrue(risultato.contains("40"));
-        assertEquals(90, personaggio.getEnergia()); // 50 + 40 = 90
+        assertEquals(90, character.getEnergia()); // 50 + 40 = 90
     }
 
     // TEST PER IGIENE ------------------------------------------------------------------------------------------------
     @Test
     public void testFareDoccia() {
-        //personaggio.setIgiene(30);
-        //String risultato = personaggio.faiDoccia();
+        //character.setIgiene(30);
+        //String risultato = character.faiDoccia();
         //assertTrue(risultato.contains("Hai fatto la doccia e recuperato "));
         //assertTrue(risultato.contains("40"));
-        assertEquals(70, personaggio.getIgiene()); // 30 + 40 = 70
+        assertEquals(70, character.getIgiene()); // 30 + 40 = 70
     }
 
     // TEST PER CAMBIARE ASPETTO -------------------------------------------------------------------------------------
     @Test
     public void testCambiareVestiti() {
-        //String risultato = personaggio.cambiaVestiti(Vestito.FORMALE);
+        //String risultato = character.cambiaVestiti(Vestito.FORMALE);
         //assertTrue(risultato.contains("Hai cambiato i vestiti in: "));
         //assertTrue(risultato.contains(Vestito.FORMALE.getNome()));
-        //assertEquals(Vestito.FORMALE, personaggio.getVestiti());
+        //assertEquals(Vestito.FORMALE, character.getVestiti());
     }
 /*
     @Test
     public void testCambiareCapelli() {
-        String risultato = personaggio.cambiaCapelli(Capelli.LUNGHI_LISCI);
+        String risultato = character.cambiaCapelli(Capelli.LUNGHI_LISCI);
         assertTrue(risultato.contains("Hai cambiato i capelli in:"));
         assertTrue(risultato.contains(Capelli.LUNGHI_LISCI.getNome()));
-        assertEquals(Capelli.LUNGHI_LISCI, personaggio.getCapelli());
+        assertEquals(Capelli.LUNGHI_LISCI, character.getCapelli());
     }
 
     // TEST PER STAMPA STATO -----------------------------------------------------------------------------------------------
     @Test
     public void testStampaStato() {
-        String stato = personaggio.stampaStato();
+        String stato = character.stampaStato();
         assertTrue(stato.contains("STATO DI GIOCATORE"));
         assertTrue(stato.contains("Livello: 1"));
         assertTrue(stato.contains("Dieta: Onnivoro"));
@@ -162,7 +162,7 @@ public class PersonaggioTest {
 
     @Test
     public void testGetStatoCompleto() {
-        Map<String, Integer> stato = personaggio.getStatoCompleto();
+        Map<String, Integer> stato = character.getStatoCompleto();
         assertEquals(4, stato.size());
         assertEquals(Integer.valueOf(100), stato.get("fame"));
         assertEquals(Integer.valueOf(100), stato.get("sete"));

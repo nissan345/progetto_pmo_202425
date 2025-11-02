@@ -48,9 +48,9 @@ public class View1 {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setPreferredSize(new Dimension(1000, 800));
 
-        // Top: stanza
+        // Top: room
         JPanel top = new JPanel(new BorderLayout());
-        stanzaLabel = new JLabel("Stanza: --");
+        stanzaLabel = new JLabel("Room: --");
         stanzaLabel.setFont(stanzaLabel.getFont().deriveFont(Font.BOLD, 18f));
         top.add(stanzaLabel, BorderLayout.NORTH);
 
@@ -77,17 +77,17 @@ public class View1 {
         oggettiPanel = new JPanel();
         oggettiPanel.setLayout(new BoxLayout(oggettiPanel, BoxLayout.Y_AXIS));
         JScrollPane oggettiScroll = new JScrollPane(oggettiPanel);
-        oggettiScroll.setBorder(BorderFactory.createTitledBorder("Oggetti in stanza"));
+        oggettiScroll.setBorder(BorderFactory.createTitledBorder("Oggetti in room"));
         center.add(oggettiScroll);
         frame.getContentPane().add(center, BorderLayout.CENTER);
-        // Right: stato personaggio e missioni
+        // Right: stato character e missioni
         JPanel right = new JPanel(new BorderLayout());
         statoArea = new JTextArea(10,20);
         statoArea.setEditable(false);
         statoArea.setLineWrap(true);
         statoArea.setWrapStyleWord(true);
         right.add(new JScrollPane(statoArea), BorderLayout.CENTER);
-        right.setBorder(BorderFactory.createTitledBorder("Stato Personaggio / Missioni"));
+        right.setBorder(BorderFactory.createTitledBorder("Stato Character / Missioni"));
 
         // Bottom: azioni
         azioniPanel = new JPanel(new GridLayout(0,3,6,6));
@@ -158,8 +158,8 @@ public class View1 {
 
     public void mostraMissioneAttiva(String Nome, String Descrizione){
         SwingUtilities.invokeLater(() -> {
-            appendLog("Missione attiva: " + Nome + " - " + Descrizione);
-            statoArea.append("Missione: " + Nome + " - " + Descrizione + "\n");
+            appendLog("Quest attiva: " + Nome + " - " + Descrizione);
+            statoArea.append("Quest: " + Nome + " - " + Descrizione + "\n");
         });
     }
 
@@ -194,7 +194,7 @@ public class View1 {
         SwingUtilities.invokeLater(() -> appendLog(s));
     }
 
-    public void mostraOpzioni(List<OpzioniInterazione> opzioni){
+    public void mostraOpzioni(List<InteractionOption> opzioni){
     	SwingUtilities.invokeLater(() -> {
             if(opzioni == null || opzioni.isEmpty()) {
                 mostraMessaggio("Nessuna opzione disponibile");
@@ -280,7 +280,7 @@ public class View1 {
                     oggettiPanel.add(Box.createRigidArea(new Dimension(0, 5)));
                 }
             } else {
-                JLabel nessunOggetto = new JLabel("Nessun oggetto in questa stanza");
+                JLabel nessunOggetto = new JLabel("Nessun oggetto in questa room");
                 nessunOggetto.setAlignmentX(Component.LEFT_ALIGNMENT);
                 oggettiPanel.add(nessunOggetto);
             }
@@ -294,7 +294,7 @@ public class View1 {
     
 
     
-    public void mostraNpcInterattivi(Stanza stanza) {
+    public void mostraNpcInterattivi(Room room) {
 
         // Pulisci i vecchi pulsanti NPC
         Component[] components = azioniPanel.getComponents();
@@ -307,9 +307,9 @@ public class View1 {
             }
         }
         
-        // Se c'è un NPC nella stanza, aggiungi pulsanti
-        if (stanza.getNpcInStanza().isPresent()) {
-            NPC npc = stanza.getNpcInStanza().get();
+        // Se c'è un NPC nella room, aggiungi pulsanti
+        if (room.getNpcInStanza().isPresent()) {
+            NPC npc = room.getNpcInStanza().get();
             
             // Primo click - Dialogo iniziale
             JButton dialogoBtn = new JButton("Parla con " + npc.getRelazione());
@@ -333,20 +333,20 @@ public class View1 {
         }
     }
 
-    public void aggiornaStanza(Stanza stanzaCorrente) {
+    public void aggiornaStanza(Room stanzaCorrente) {
         SwingUtilities.invokeLater(() -> {
             if(stanzaCorrente!=null){
                 try{
                     mostraStanza(stanzaCorrente.getNomeStanza(), stanzaCorrente);
                 }catch(Exception ex){
-                    stanzaLabel.setText("Stanza: (sconosciuta)");
+                    stanzaLabel.setText("Room: (sconosciuta)");
                 }
             }
         });
     }
 
     // Placeholder per aggiornamenti futuri del controller
-    public void mostraStatistiche(Personaggio p){
+    public void mostraStatistiche(Character p){
         SwingUtilities.invokeLater(() -> {
             if(p==null) return;
             String stats = String.format("Energia: %d | Fame: %d | Igiene: %d | Sete: %d", p.getEnergia(), p.getFame(), p.getIgiene(), p.getSete());
@@ -355,10 +355,10 @@ public class View1 {
         });
     }
 
-    public void mostraPersonaggio(Personaggio p){
+    public void mostraPersonaggio(Character p){
         SwingUtilities.invokeLater(() -> {
             if(p==null) return;
-            appendLog("Personaggio: " + p.getNome() + " creato!");
+            appendLog("Character: " + p.getNome() + " creato!");
             statoArea.setText("Nome: " + p.getNome() + "\n" + "Energia: " + p.getEnergia());
         });
     }
@@ -379,14 +379,14 @@ public class View1 {
         int result = JOptionPane.showConfirmDialog(
                 frame, 
                 panel, 
-                "Nome Personaggio", 
+                "Nome Character", 
                 JOptionPane.OK_CANCEL_OPTION, 
                 JOptionPane.QUESTION_MESSAGE
             );
            return textField.getText().trim();
     }
 
-    public int mostraOpzioniPersonalizzazione(String messaggio, List<String> opzioni) {
+    public int mostraOpzioniPersonalizzazione(String message, List<String> opzioni) {
     	if (opzioni == null || opzioni.isEmpty()) {
             return -1;
         }
@@ -396,8 +396,8 @@ public class View1 {
         // Mostra il dialog di selezione
         Object selezione = JOptionPane.showInputDialog(
             frame,
-            messaggio,
-            "Personalizzazione Personaggio",
+            message,
+            "Personalizzazione Character",
             JOptionPane.QUESTION_MESSAGE,
             null,
             opzioniArray,

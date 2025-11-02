@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import main.neri.classes.OggettoGioco;
 import main.aboufaris.classes.*;
-import main.aboufaris.interfaces.Stanza;
+import main.aboufaris.interfaces.Room;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +47,7 @@ public class CasaImplTest {
         casa.aggiungiStanza(salotto);
         casa.aggiungiStanza(cucina);
         
-        Map<String, Stanza> stanze = casa.getStanze();
+        Map<String, Room> stanze = casa.getStanze();
         assertEquals(2, stanze.size());
         assertTrue(stanze.containsKey("Salotto"));
         assertTrue(stanze.containsKey("Cucina"));
@@ -60,11 +60,11 @@ public class CasaImplTest {
         casa.aggiungiStanza(salotto);
         casa.aggiungiStanza(cucina);
         
-        Optional<Stanza> stanzaEntrata = casa.entraInStanza("Cucina");
+        Optional<Room> stanzaEntrata = casa.entraInStanza("Cucina");
         assertTrue(stanzaEntrata.isPresent());
         assertEquals(cucina, stanzaEntrata.get());
         
-        Optional<Stanza> stanzaCorrente = casa.getStanzaCorrente();
+        Optional<Room> stanzaCorrente = casa.getStanzaCorrente();
         assertTrue(stanzaCorrente.isPresent());
         assertEquals(cucina, stanzaCorrente.get());
     }
@@ -75,19 +75,19 @@ public class CasaImplTest {
         casa.aggiungiStanza(cucina);
         casa.aggiungiStanza(camera);
         
-        // Entra nella prima stanza
+        // Entra nella prima room
         casa.entraInStanza("Salotto");
-        Optional<Stanza> corrente = casa.getStanzaCorrente();
+        Optional<Room> corrente = casa.getStanzaCorrente();
         assertTrue(corrente.isPresent());
         assertEquals("Salotto", corrente.get().getNomeStanza());
         
-        // Passa a un'altra stanza
+        // Passa a un'altra room
         casa.entraInStanza("Cucina");
         corrente = casa.getStanzaCorrente();
         assertTrue(corrente.isPresent());
         assertEquals("Cucina", corrente.get().getNomeStanza());
         
-        // Passa alla terza stanza
+        // Passa alla terza room
         casa.entraInStanza("Camera da letto");
         corrente = casa.getStanzaCorrente();
         assertTrue(corrente.isPresent());
@@ -100,7 +100,7 @@ public class CasaImplTest {
         casa.aggiungiStanza(cucina);
         casa.entraInStanza("Salotto");
         
-        Map<String, Stanza> stanze = casa.esciDaStanza();
+        Map<String, Room> stanze = casa.esciDaStanza();
         assertNotNull(stanze);
         assertEquals(2, stanze.size());
         // Verifica che la mappa restituita sia la stessa delle stanze della casa
@@ -121,20 +121,20 @@ public class CasaImplTest {
         casa.aggiungiStanza(cucina);
         casa.aggiungiStanza(camera);
         
-        Map<String, Stanza> stanze = casa.getStanze();
+        Map<String, Room> stanze = casa.getStanze();
         assertEquals(3, stanze.size());
         assertTrue(stanze.containsKey("Salotto"));
         assertTrue(stanze.containsKey("Cucina"));
         assertTrue(stanze.containsKey("Camera da letto"));
         
-        // Verifica che ogni stanza abbia i suoi oggetti
-        Stanza s = casa.getStanza("Salotto");
+        // Verifica che ogni room abbia i suoi oggetti
+        Room s = casa.getStanza("Salotto");
         //assertTrue(s.hasOggettoStanza(new OggettoGenerico(TipoOggetto.DIVANO)));
     }
 
     @Test
     public void testStanzaCorrenteDopoAggiunta() {
-        // Aggiungi stanza ma non entrare
+        // Aggiungi room ma non entrare
         casa.aggiungiStanza(salotto);
         assertFalse(casa.getStanzaCorrente().isPresent());
         

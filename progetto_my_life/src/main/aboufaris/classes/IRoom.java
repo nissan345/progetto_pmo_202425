@@ -2,14 +2,14 @@ package main.aboufaris.classes;
 
 import java.util.List;
 import java.util.Optional;
-import main.aboufaris.interfaces.Stanza;
+import main.aboufaris.interfaces.Room;
 import main.giuseppetti.classes.NPC;
 import main.neri.classes.OggettoGioco;
 
-public class StanzaImpl implements Stanza{
+public class StanzaImpl implements Room{
     private String nomeStanza;
-    private Optional<NPC> npcInStanza;               // Indica gli oggetti presenti nella stanza
-    private final List<OggettoGioco> oggettiInStanza;  // Indica gli NPC presenti nella stanza
+    private Optional<NPC> npcInStanza;               // Indica gli oggetti presenti nella room
+    private final List<OggettoGioco> oggettiInStanza;  // Indica gli NPC presenti nella room
     
     public StanzaImpl(String nome, List<OggettoGioco> oggetti){
         this.nomeStanza = nome; 

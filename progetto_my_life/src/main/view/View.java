@@ -4,15 +4,9 @@ import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.IntConsumer;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
-import main.aboufaris.interfaces.*;
 import main.control.Control;
-import main.fabbri.classes.Personaggio;
-import main.giuseppetti.classes.*;
-import main.neri.classes.*;
 
 public class View {
 	
@@ -61,7 +55,7 @@ public class View {
 	    JPanel top = new JPanel(new BorderLayout(6,6));
 	    top.setBorder(new EmptyBorder(0, 0, 6, 0));
 	    
-        stanzaLabel = new JLabel("Stanza: --");
+        stanzaLabel = new JLabel("Room: --");
         stanzaLabel.setFont(stanzaLabel.getFont().deriveFont(Font.BOLD, 18f));
         top.add(stanzaLabel, BorderLayout.NORTH);
 
@@ -90,11 +84,11 @@ public class View {
         logScroll.setBorder(BorderFactory.createTitledBorder("Log / Messaggi"));
         center.add(logScroll);
 
-        // Oggetti in stanza 
+        // Oggetti in room 
         oggettiPanel = new JPanel();
         oggettiPanel.setLayout(new BoxLayout(oggettiPanel, BoxLayout.Y_AXIS));
         JScrollPane oggettiScroll = new JScrollPane(oggettiPanel);
-        oggettiScroll.setBorder(BorderFactory.createTitledBorder("Oggetti in stanza"));
+        oggettiScroll.setBorder(BorderFactory.createTitledBorder("Oggetti in room"));
         center.add(oggettiScroll);
         
         return center;
@@ -121,7 +115,7 @@ public class View {
 
 	private JPanel buildRight() {
 		JPanel right = new JPanel(new BorderLayout(6, 6));
-        right.setBorder(BorderFactory.createTitledBorder("Stato Personaggio / Missioni"));
+        right.setBorder(BorderFactory.createTitledBorder("Stato Character / Missioni"));
 
         statoArea = new JTextArea(10, 20);
         statoArea.setEditable(false);
@@ -173,7 +167,7 @@ public class View {
         int result = JOptionPane.showConfirmDialog(
                 frame, 
                 panel, 
-                "Nome Personaggio", 
+                "Nome Character", 
                 JOptionPane.OK_CANCEL_OPTION, 
                 JOptionPane.QUESTION_MESSAGE
             );
@@ -181,7 +175,7 @@ public class View {
            
 	}
 	
-	public int mostraOpzioniPersonalizzazione(String messaggio, List<String> opzioni) {
+	public int mostraOpzioniPersonalizzazione(String message, List<String> opzioni) {
 		if (opzioni == null || opzioni.isEmpty()) {
             return -1;
         }
@@ -191,8 +185,8 @@ public class View {
         // Mostra il dialog di selezione
         Object selezione = JOptionPane.showInputDialog(
             frame,
-            messaggio,
-            "Personalizzazione Personaggio",
+            message,
+            "Personalizzazione Character",
             JOptionPane.QUESTION_MESSAGE,
             null,
             opzioniArray,
@@ -218,7 +212,7 @@ public class View {
         mappaDialog.setSize(600, 400);
         mappaDialog.setLayout(new BorderLayout());
         
-        JLabel titolo = new JLabel("Seleziona una Stanza", SwingConstants.CENTER);
+        JLabel titolo = new JLabel("Seleziona una Room", SwingConstants.CENTER);
         titolo.setFont(new Font("Arial", Font.BOLD, 18));
         mappaDialog.add(titolo, BorderLayout.NORTH);
         
@@ -229,15 +223,15 @@ public class View {
         // Lista delle stanze disponibili (puoi personalizzare questa lista)
         String[] stanze = {"Bagno", "Camera da Letto", "Cucina", "Salotto", "Giardino", "Sgabuzzino"};
         
-        for (String stanza : stanze) {
-            JButton stanzaBtn = new JButton(stanza);
+        for (String room : stanze) {
+            JButton stanzaBtn = new JButton(room);
             stanzaBtn.setFont(new Font("Arial", Font.PLAIN, 14));
             stanzaBtn.setPreferredSize(new Dimension(120, 60));
             
-            // Aggiungi l'action listener per entrare nella stanza
+            // Aggiungi l'action listener per entrare nella room
             stanzaBtn.addActionListener(e -> {
                 Control controller = Control.getControlInstance();
-                controller.onClickEntra(stanza);
+                controller.onClickEntra(room);
                 mappaDialog.dispose(); // Chiudi la mappa dopo la selezione
             });
             
@@ -257,9 +251,9 @@ public class View {
 	}
 
 	public void mostraStanza(String nome, String descrizione){
-		stanzaLabel.setText("Stanza: " + (nome == null ? "--" : nome));
+		stanzaLabel.setText("Room: " + (nome == null ? "--" : nome));
 	    descrizioneArea.setText(descrizione == null ? "" : descrizione);
-	    appendLog("Entrato in stanza: " + nome);
+	    appendLog("Entrato in room: " + nome);
 	}
 	public void mostraOggettiInStanza(List<String> labels, IntConsumer onClickIndex) {
 	    SwingUtilities.invokeLater(() -> {
@@ -268,7 +262,7 @@ public class View {
 	        oggettiPanel.removeAll();
 
 	        if (labels == null || labels.isEmpty()) {
-	            JLabel none = new JLabel("Nessun oggetto in questa stanza");
+	            JLabel none = new JLabel("Nessun oggetto in questa room");
 	            none.setAlignmentX(Component.LEFT_ALIGNMENT);
 	            oggettiPanel.add(none);
 	        } else {
@@ -338,8 +332,8 @@ public class View {
 	
     public void mostraMissioneAttiva(String nome, String descrizione) {
     	 SwingUtilities.invokeLater(() -> {
-             appendLog("Missione attiva: " + nome + " - " + descrizione);
-             statoArea.append("Missione: " + nome + " - " + descrizione + "\n");
+             appendLog("Quest attiva: " + nome + " - " + descrizione);
+             statoArea.append("Quest: " + nome + " - " + descrizione + "\n");
          });
     }
     public void aggiornaStatoPersonaggio(String stato){
@@ -360,7 +354,7 @@ public class View {
     	SwingUtilities.invokeLater(() -> appendLog(s));
     }
     
-    public int mostraOpzioniIndice(String titolo, String messaggio, List<String> labels) {
+    public int mostraOpzioniIndice(String titolo, String message, List<String> labels) {
         if (labels == null || labels.isEmpty()) {
             mostraMessaggio("Nessuna opzione disponibile");
             return -1;
@@ -369,7 +363,7 @@ public class View {
         String[] array = labels.toArray(String[]::new);
         int scelta = JOptionPane.showOptionDialog(
                 frame,
-                messaggio,
+                message,
                 titolo,
                 JOptionPane.DEFAULT_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
@@ -387,12 +381,12 @@ public class View {
         }
     }
     
-    public <T> Optional<T> mostraDialogSceltaGenerica(String titolo, String messaggio, List<T> opzioni) {
+    public <T> Optional<T> mostraDialogSceltaGenerica(String titolo, String message, List<T> opzioni) {
         if (opzioni == null || opzioni.isEmpty()) return Optional.empty();
         String[] labels = opzioni.stream().map(Object::toString).toArray(String[]::new);
 
         int scelta = JOptionPane.showOptionDialog(
-                frame, messaggio, titolo,
+                frame, message, titolo,
                 JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
                 null, labels, labels[0]);
 

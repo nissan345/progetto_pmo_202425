@@ -2,7 +2,7 @@ package main.neri.classes;
 
 import java.util.List;
 
-import main.fabbri.classes.Personaggio;
+import main.fabbri.classes.Character;
 
 /**
  * Classe base per tutti gli oggetti presenti nella casa
@@ -10,35 +10,35 @@ import main.fabbri.classes.Personaggio;
 public class OggettoGioco {
     protected final String nome;
     protected final String descrizione;
-    public String messaggio;
-    protected String stanza;
+    public String message;
+    protected String room;
     private boolean interazioneSpeciale;
     private int deltaFame, deltaSete, deltaEnergia, deltaIgiene;
     
     public OggettoGioco(Builder builder) {
         this.nome = builder.nome;
         this.descrizione = builder.descrizione;
-        this.stanza = builder.stanza;
+        this.room = builder.room;
         this.deltaEnergia = builder.deltaEnergia;
         this.deltaFame = builder.deltaFame;
         this.deltaIgiene = builder.deltaIgiene;
         this.deltaSete = builder.deltaSete;
-        this.messaggio = builder.messaggio;
+        this.message = builder.message;
         this.interazioneSpeciale = builder.interazioneSpeciale;
     }
       
-    public RisultatoAzione usa(Personaggio personaggio) {
-    	return new RisultatoAzione(messaggio, deltaFame, deltaSete, 
+    public RisultatoAzione usa(Character character) {
+    	return new RisultatoAzione(message, deltaFame, deltaSete, 
                 deltaEnergia, deltaIgiene);
     }
     
     public String getNome() { return nome; }
     public String getDescrizione() { return descrizione; }
-    public String getStanza() { return stanza; }
+    public String getStanza() { return room; }
    
     @Override
     public String toString() {
-        return nome + " (" + stanza + ")";
+        return nome + " (" + room + ")";
     }
     
     public boolean isInterazioneSpeciale() {
@@ -48,22 +48,22 @@ public class OggettoGioco {
     // Metodi aggiuntivi 
     public boolean richiedeScelta() { return false; }
 
-    public List<?> opzioniDisponibili(Personaggio p) { 
+    public List<?> opzioniDisponibili(Character p) { 
         return List.of(); 
     }
 
-    public RisultatoAzione usa(Personaggio p, Object opzione) {
+    public RisultatoAzione usa(Character p, Object opzione) {
         return usa(p);
     }
 
 	public static class Builder {
     	// Campi obbligatori
         private final String nome;
-        private final String stanza;
+        private final String room;
         
         // Campi opzionali con valori di default
         private String descrizione = "";
-        private String messaggio = "Usi l'oggetto.";
+        private String message = "Usi l'oggetto.";
         private boolean interazioneSpeciale = false;
         private int deltaFame = 0;
         private int deltaSete = 0;
@@ -71,9 +71,9 @@ public class OggettoGioco {
         private int deltaIgiene = 0;
         
         // Costruttore con campi obbligatori
-        public Builder(String nome, String stanza) {
+        public Builder(String nome, String room) {
             this.nome = nome;
-            this.stanza = stanza;
+            this.room = room;
         }
         
         // Metodi fluent (restituiscono this)
@@ -82,8 +82,8 @@ public class OggettoGioco {
             return this;
         }
         
-        public Builder messaggio(String val) {
-            this.messaggio = val;
+        public Builder message(String val) {
+            this.message = val;
             return this;
         }
         

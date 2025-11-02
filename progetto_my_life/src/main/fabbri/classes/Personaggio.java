@@ -13,7 +13,7 @@ import main.neri.classes.RisultatoAzione;
 public class Personaggio {
 	private static final int STATO_MAX = 100;
     private static final int STATO_MIN = 0;
-    private Inventario inventory = new Inventario(30);
+    private Inventario inventario = new Inventario(30);
     private String nome;
     private Vestito vestiti;
     private Capelli capelli;
@@ -248,12 +248,37 @@ public class Personaggio {
         }
     }
 
+    public boolean raccogliOggetto(OggettoGioco o, Stanza stanza) {
+    if (inventario.addItem(o)) {
+        stanza.getOggettiInStanza().remove(o);
+        System.out.println("Hai raccolto: " + o.getNome());
+        return true;
+    } else {
+        System.out.println("Inventario pieno!");
+        return false;
+    }
+}
+
     public void decadimentoStato(){
         this.fame = Math.max(0, this.fame-2);
         this.sete = Math.max(0,this.sete-3);
         this.energia = Math.max(0, this.energia-1);
         this.igiene = Math.max(0, this.igiene-1);
     }
+
+//METODI PER DROP E PICK DI OGGETTI
+public boolean lasciaOggetto(OggettoGioco o, Stanza stanza) {
+    if (inventario.removeItem(o.getNome()).isPresent()) {
+        stanza.getOggettiInStanza().add(o);
+        System.out.println("Hai lasciato: " + o.getNome());
+        return true;
+    } else {
+        System.out.println("Non hai questo oggetto nell'inventario!");
+        return false;
+    }
+}
+
+
 }
 
     

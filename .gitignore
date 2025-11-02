@@ -1,0 +1,13 @@
+# Eclipse
+bin/
+.settings/
+.metadata/
+*.tmp
+
+# File specifici di Eclipse
+.classpath
+.project
+
+# VSCode (se vuoi mantenere)
+.vscode/
+.yscode/

@@ -1,5 +1,7 @@
 package main.giuseppetti.classes;
 
+import java.util.Arrays;
+
 import main.aboufaris.interfaces.Stanza;
 
 public class Madre extends NPC {
@@ -7,7 +9,7 @@ public class Madre extends NPC {
     public Madre(Stanza s) {
         super("Madre", s);
     }
-
+    
     @Override
     public String getDialogoIniziale() {
         return "Ciao tesoro! Come sta andando la tua giornata?";
@@ -28,11 +30,11 @@ public class Madre extends NPC {
         		return "Come sta andando con la missione? Torna da me quando hai finito!";
         } 
     }
-
+    
     @Override
     public String getDialogoCompletamentoMissione(Missione missione) {
         return "Grazie mille! Hai fatto un ottimo lavoro." +
-               "'!\nSei sempre così affidabile, sono orgogliosa di te!";
+               "'!\nSei sempre così affidabile, sono orgoglioso di te!";
     }
 
     @Override
@@ -40,10 +42,9 @@ public class Madre extends NPC {
         Missione missioneAlbum = new Missione("L'album perduto", 
                                    "Dovresti riportarmi il vecchio album di famiglia che ho perduto da qualche parte in casa e riportamelo", 
                                    this,
-                                   15
+                                   15, 
+                                   Arrays.asList(new CondizioneAzioneOggetto("Album"))
                             );
-        // Condizione: aver usato l'album
-        missioneAlbum.aggiungiCondizione(new CondizioneAzioneOggetto("Album"));
         this.aggiungiMissione(missioneAlbum);
     }
 

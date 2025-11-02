@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import main.aboufaris.interfaces.Stanza;
 import main.giuseppetti.classes.NPC;
-import main.neri.classe.OggettoGioco;
+import main.neri.classes.OggettoGioco;
 
 public class StanzaImpl implements Stanza{
     private String nomeStanza;
@@ -12,7 +12,7 @@ public class StanzaImpl implements Stanza{
     private final List<OggettoGioco> oggettiInStanza;  // Indica gli NPC presenti nella stanza
     
     public StanzaImpl(String nome, List<OggettoGioco> oggetti){
-        this.nomeStanza = nome;
+        this.nomeStanza = nome; 
         this.oggettiInStanza = oggetti;
         this.npcInStanza = Optional.empty();
     }
@@ -34,7 +34,8 @@ public class StanzaImpl implements Stanza{
     }
 
     public boolean hasOggettoStanza(OggettoGioco o){
-        return this.oggettiInStanza.contains(o);
+        return oggettiInStanza.stream()
+                .anyMatch(oggetto -> oggetto.getNome().equals(o.getNome()));
     }
     
     public void setNpc(NPC n) {
@@ -51,6 +52,12 @@ public class StanzaImpl implements Stanza{
 
     @Override
     public String toString(){
-        return this.nomeStanza + "\nNPC presenti: " + this.npcInStanza + "\nOggetti presenti: " + this.oggettiInStanza;
+    	String stringa = null;
+    	if(this.npcInStanza.isEmpty()) {
+    		stringa = "\nOggetti presenti: " + this.oggettiInStanza;
+    	}else {
+    		stringa = this.nomeStanza + "\nNPC presenti: " + this.npcInStanza.get().getRelazione() + "\nOggetti presenti: " + this.oggettiInStanza;
+    	}
+        return stringa;
     }
 }

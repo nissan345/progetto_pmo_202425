@@ -2,7 +2,7 @@ package main.fabbri.classes;
 
 public enum Capelli {
     // ALTERNATIVE DI CAPELLI
-    CORTI_LISCI("Capelli corti e lisci", "Prattico e facile da gestire"),
+    CORTI_LISCI("Capelli corti e lisci", "Pratico e facile da gestire"),
     CORTI_MOSSI("Capelli corti e mossi", "Giovane e dinamico"),
     LUNGHI_LISCI("Capelli lunghi e lisci", "Elegante e fluente"),
     LUNGHI_MOSSI("Capelli lunghi e mossi", "Selvaggio e naturale"),
@@ -22,4 +22,9 @@ public enum Capelli {
     // GETTER
     public String getNome() { return nome; }
     public String getDescrizione() { return descrizione; }
+
+    @Override
+    public String toString() {
+        return nome + ": " + descrizione;
+    }
 }

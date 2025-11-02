@@ -2,11 +2,11 @@ package main.giuseppetti.classes;
 
 import java.util.Arrays;
 
-import main.aboufaris.interfaces.Stanza;
+import main.aboufaris.interfaces.Room;
 
 public class Madre extends NPC {
 
-    public Madre(Stanza s) {
+    public Madre(Room s) {
         super("Madre", s);
     }
     

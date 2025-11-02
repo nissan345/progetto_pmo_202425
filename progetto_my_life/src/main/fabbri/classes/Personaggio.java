@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import main.aboufaris.interfaces.Stanza;
+import main.aboufaris.interfaces.Room;
 import main.giuseppetti.classes.Missione;
 import main.giuseppetti.classes.NPC;
 import main.neri.classes.Frigorifero;
@@ -23,7 +23,7 @@ public class Personaggio {
     private int sete;
     private int energia;
     private int igiene;
-    private Stanza stanzaCorrente;
+    private Room stanzaCorrente;
 
     // Modifiche per missioni 
     private List<Missione> missioniAttive;
@@ -93,11 +93,11 @@ public class Personaggio {
     } 
     
     // GETTER E SETTER PER LA POSIZIONE
-    public Stanza getStanzaCorrente() {
+    public Room getStanzaCorrente() {
         return stanzaCorrente;
     }
     // DA VEDERE
-    public void setStanzaCorrente(Stanza stanzaCorrente) {
+    public void setStanzaCorrente(Room stanzaCorrente) {
         this.stanzaCorrente = stanzaCorrente;
     }
     // DA RIVEDERE E FORSE TOGLIERE
@@ -152,7 +152,7 @@ public class Personaggio {
         }
     }
 
-    public String scegliStanza(Stanza stanza) {
+    public String scegliStanza(Room stanza) {
         this.stanzaCorrente = stanza;
         return "Sei entrato in: " + stanza.getNomeStanza();
     }

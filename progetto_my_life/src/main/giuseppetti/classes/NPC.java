@@ -5,17 +5,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import main.aboufaris.interfaces.Stanza;
+import main.aboufaris.interfaces.Room;
 import main.fabbri.classes.Personaggio;
 
 public abstract class NPC {
     private final String relazione;
-    private final Stanza posizione; 
+    private final Room posizione; 
     private int affinita;
     private List<Missione> missioniDisponibili;
     private List<OpzioniInterazione> opzioni;
 
-    public NPC(final String relazione, final Stanza s) {
+    public NPC(final String relazione, final Room s) {
         this.relazione = relazione;
         this.posizione = s; 
         this.affinita = 0;
@@ -110,7 +110,7 @@ public abstract class NPC {
     	return this.affinita; 
     }
     
-    public Stanza getPosizione() { 
+    public Room getPosizione() { 
     	return this.posizione; 
     }
     

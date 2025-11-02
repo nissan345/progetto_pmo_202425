@@ -5,23 +5,23 @@ import java.util.Optional;
 import main.giuseppetti.classes.NPC;
 import main.neri.classes.OggettoGioco;
 
-public interface Stanza{
+public interface Room{
     /* */
-    public String getNomeStanza();
+    public String getRoomName();
     /* */
-    public List<OggettoGioco> getOggettiInStanza();
+    public List<OggettoGioco> getOggettiInRoom();
     /* */
-    public Optional<NPC> getNpcInStanza();
+    public Optional<NPC> getNpcInRoom();
     /* */
     public boolean hasNpc(NPC n);
     /* */
-    public boolean hasOggettoStanza(OggettoGioco o);
+    public boolean hasOggettoRoom(OggettoGioco o);
     /* */
     public void setNpc(NPC npc);
     /* */
-    public void addOggettoStanza(OggettoGioco o);
+    public void addOggettoRoom(OggettoGioco o);
     /* */
-    public void removeOggettoStanza(OggettoGioco o);
+    public void removeOggettoRoom(OggettoGioco o);
 
     
 }

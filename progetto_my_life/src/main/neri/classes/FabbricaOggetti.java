@@ -2,14 +2,14 @@ package main.neri.classes;
 
 import java.util.*;
 import main.aboufaris.classes.*;
-import main.aboufaris.interfaces.Stanza;
+import main.aboufaris.interfaces.Room;
      
 
 public class FabbricaOggetti { 
     
    
 	 // Camera da Letto
-        public static Stanza creaCameraDaLetto() {
+        public static Room creaCameraDaLetto() {
         	List<OggettoGioco> oggetti = List.of(
         	        new OggettoGioco.Builder("Letto", "Camera da Letto")
         	            .messaggio("Ti sdrai sul letto e riposi")
@@ -32,11 +32,11 @@ public class FabbricaOggetti {
         	 //         .isInterazioneSpeciale(true)
         	            .build()
         	    );
-            return new StanzaImpl("Camera da Letto" , oggetti);
+            return new IRoom("Camera da Letto" , oggetti);
         }
         
      // Cucina
-        public static Stanza creaCucina() {
+        public static Room creaCucina() {
         	List<OggettoGioco> oggetti = List.of(
         	        new OggettoGioco.Builder("Fornelli", "Cucina")
         	        		.messaggio("Cucini un pasto caldo")
@@ -57,11 +57,11 @@ public class FabbricaOggetti {
         	        		.energia(-10)
         	        		.build()
         			);	
-        	return new StanzaImpl("Cucina", oggetti);
+        	return new IRoom("Cucina", oggetti);
         }
        
      // Bagno
-        public static Stanza creaBagno() {
+        public static Room creaBagno() {
         	List<OggettoGioco> oggetti = List.of(
         			 new OggettoGioco.Builder("Doccia","Bagno")
         		        		.messaggio("Fai una doccia rigenerante.")
@@ -87,11 +87,11 @@ public class FabbricaOggetti {
         		        		.energia(-10)
         		        		.build()
         			);
-        			return new StanzaImpl("Bagno", oggetti);
+        			return new IRoom("Bagno", oggetti);
         }
         
      // Salotto
-        public static Stanza creaSalotto() {
+        public static Room creaSalotto() {
         	List<OggettoGioco> oggetti = List.of(
         			new OggettoGioco.Builder("Televisione","Salotto")
 	            		.messaggio("Guardi la TV e ti rilassi.")
@@ -133,13 +133,13 @@ public class FabbricaOggetti {
 	            		.energia(-5)
 	            		.build()
 	        			);
-        	return new StanzaImpl("Salotto", oggetti);
+        	return new IRoom("Salotto", oggetti);
         			
         }
         
         
      // Sgabuzzino
-       public static Stanza creaSgabuzzino() {
+       public static Room creaSgabuzzino() {
     	   List<OggettoGioco> oggetti = List.of(
     			 new OggettoGioco.Builder("Aspirapolvere","Sgabuzzino")
 	           		.messaggio("Usi l'aspirapolvere e pulisci la stanza.")
@@ -148,12 +148,12 @@ public class FabbricaOggetti {
 	           		.igiene(0)
 	           		.energia(-20)
 	           		.build());
-    	   return new StanzaImpl("Sgabuzzino", oggetti);
+    	   return new IRoom("Sgabuzzino", oggetti);
        }
         
                 
        // Giardino
-       public static Stanza creaGiardino() {
+       public static Room creaGiardino() {
     	   List<OggettoGioco> oggetti = List.of(
     			   new OggettoGioco.Builder("Innaffiatoio","Giardino")
 		           		.messaggio("Innaffi le piante: ora sono più verdi")
@@ -186,6 +186,6 @@ public class FabbricaOggetti {
 		           		.igiene(-20)
 		           		.energia(-5)
 		           		.build());
-          return new StanzaImpl("Giardino", oggetti);
+          return new IRoom("Giardino", oggetti);
        }
 }

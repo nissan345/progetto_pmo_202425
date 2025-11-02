@@ -16,15 +16,15 @@ import main.view.*;
 public final class Control {
 	
     // Costanti
-    private final int MISSIONI_TOTALI = 3;
+    private final int MISSIONI_TOTALI = 4;
     private final int SOGLIA_BASSA = 20;
     private final int SOGLIA_CRITICA = 5;
     private final int DECADIMENTO_STATO = 20000;
     // Singleton
     private static Control singletonController;
 
-    private final Casa casa;
     private final View view;
+    private House casa;
     private Timer gameTimer;
     private Personaggio personaggio;
     private int contatoreMissioni;
@@ -32,7 +32,7 @@ public final class Control {
     
     // Costruttore privato
     private Control(){
-       this.casa = new CasaImpl();
+       this.casa = new House();
        this.contatoreMissioni = 0;
        this.view = new View();
        this.view.setController(this);
@@ -62,20 +62,20 @@ public final class Control {
     // Creazione del mondo di gioco, stanze, NPC e oggetti
     private void creaMondo(){
          // Creazione delle stanze
-        Stanza bagno = FabbricaOggetti.creaBagno();
-        Stanza camera = FabbricaOggetti.creaCameraDaLetto();
-        Stanza cucina = FabbricaOggetti.creaCucina();
-        Stanza salotto = FabbricaOggetti.creaSalotto();
-        Stanza giardino = FabbricaOggetti.creaGiardino();
-        Stanza sgabuzzino = FabbricaOggetti.creaSgabuzzino();
+        Room bagno = FabbricaOggetti.creaBagno();
+        Room camera = FabbricaOggetti.creaCameraDaLetto();
+        Room cucina = FabbricaOggetti.creaCucina();
+        Room salotto = FabbricaOggetti.creaSalotto();
+        Room giardino = FabbricaOggetti.creaGiardino();
+        Room sgabuzzino = FabbricaOggetti.creaSgabuzzino();
         
         // Aggiunge le stanze alla casa
-        casa.aggiungiStanza(bagno);
-        casa.aggiungiStanza(camera);
-        casa.aggiungiStanza(cucina);
-        casa.aggiungiStanza(salotto);
-        casa.aggiungiStanza(giardino);
-        casa.aggiungiStanza(sgabuzzino);
+        casa.addRoom(bagno);
+        casa.addRoom(camera);
+        casa.addRoom(cucina);
+        casa.addRoom(salotto);
+        casa.addRoom(giardino);
+        casa.addRoom(sgabuzzino);
 
         // Creazione Npc
         Madre madre = new Madre(salotto);
@@ -229,7 +229,7 @@ public final class Control {
 
     // Funziona
      public void onClickEntra(String nomeStanza){
-        Optional<Stanza> ris = casa.entraInStanza(nomeStanza);
+        Optional<Room> ris = casa.enterRoom(nomeStanza);
         if(ris.isEmpty()){
             view.mostraErrore("Stanza non trovata!");
             return;
@@ -245,14 +245,14 @@ public final class Control {
 
      //(Kind of))
     public void onClickEsci(String nomeStanza){
-        casa.esciDaStanza();
+        casa.exitRoom();
         view.mostraCasa(); // tornare nel menu principale
     }
 
     // Metodo che serve per gli effetti dell'uso dell'oggetto
     public void onClickOggetto(OggettoGioco oggettoGioco){
-    	Stanza corrente = getStanzaCorrente();
-        if (!corrente.hasOggettoStanza(oggettoGioco)) {
+    	Room corrente = getStanzaCorrente();
+        if (!corrente.hasOggettoRoom(oggettoGioco)) {
             view.mostraErrore("L'oggetto non si trova in stanza!");
             return;
         }
@@ -285,23 +285,23 @@ public final class Control {
 
 	// Per la visualizzazione della mappa 
     public void getMappaCompleta(){
-        Map<String,Stanza> stanze = casa.getStanze();
-        for(Map.Entry<String, Stanza> s: stanze.entrySet()){
+        Map<String,Room> stanze = casa.getRooms();
+        for(Map.Entry<String, Room> s: stanze.entrySet()){
             String nome = s.getKey();
             String descrizione = s.getValue().toString();
-            Stanza stanza = s.getValue();
+            Room stanza = s.getValue();
             view.mostraStanza(nome, descrizione);
         }
     }
 
-    private Stanza getStanzaCorrente(){
-        return casa.getStanzaCorrente()
+    private Room getStanzaCorrente(){
+        return casa.getCurrentRoom()
             .orElseThrow(() -> new IllegalStateException("Nessuna stanza corrente"));
     }
 
     public void mostraOggettiStanzaCorrente() {
-        Stanza stanza = getStanzaCorrente();
-        List<OggettoGioco> oggettiCorrenti = stanza.getOggettiInStanza();
+        Room stanza = getStanzaCorrente();
+        List<OggettoGioco> oggettiCorrenti = stanza.getOggettiInRoom();
 
         List<String> labels = oggettiCorrenti.stream()
             .map(o -> o.getNome() + " - " + o.getDescrizione())
@@ -315,12 +315,12 @@ public final class Control {
     }
 
     public void mostraNpcInStanzaCorrente(){
-        Stanza stanzaCorrente = getStanzaCorrente();
-        if(stanzaCorrente.getNpcInStanza().isEmpty()){
+        Room stanzaCorrente = getStanzaCorrente();
+        if(stanzaCorrente.getNpcInRoom().isEmpty()){
         	NPC npcInStanza = null;
             view.mostraMessaggio("Non ci sono NPC in questa stanza.");
         }else{
-            NPC npcInStanza = stanzaCorrente.getNpcInStanza().get();
+            NPC npcInStanza = stanzaCorrente.getNpcInRoom().get();
             aggiornaBottoniNpc(npcInStanza);
         }
        

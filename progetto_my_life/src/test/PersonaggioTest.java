@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import main.aboufaris.interfaces.Stanza;
+import main.aboufaris.interfaces.Room;
 import main.aboufaris.classes.*;
 import main.fabbri.classes.*;
 import main.neri.classes.FabbricaOggetti;

@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import main.neri.classes.OggettoGioco;
 import main.aboufaris.classes.*;
-import main.aboufaris.interfaces.Stanza;
+import main.aboufaris.interfaces.Room;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,30 +15,30 @@ import java.util.Optional;
 
 public class CasaImplTest {
 
-    private CasaImpl casa;
-    private StanzaImpl salotto;
-    private StanzaImpl cucina;
-    private StanzaImpl camera;
+    private House casa;
+    private IRoom salotto;
+    private IRoom cucina;
+    private IRoom camera;
 
     // Inizializzazione dei soggetti di test ---------------------------------------------------------------------------------
     @Before
     public void setUp() {
-        casa = new CasaImpl();
+        casa = new House();
         
         List<OggettoGioco> oggettiSalotto = new ArrayList<>();
         //oggettiSalotto.add(new OggettoGenerico(TipoOggetto.DIVANO));
         //oggettiSalotto.add(new OggettoGenerico(TipoOggetto.TELEVISIONE));
-        salotto = new StanzaImpl("Salotto", oggettiSalotto);
+        salotto = new IRoom("Salotto", oggettiSalotto);
         
         List<OggettoGioco> oggettiCucina = new ArrayList<>();
         //oggettiCucina.add(new OggettoGenerico(TipoOggetto.FRIGORIFERO));
         //oggettiCucina.add(new OggettoGenerico(TipoOggetto.FORNELLI));
-        cucina = new StanzaImpl("Cucina", oggettiCucina);
+        cucina = new IRoom("Cucina", oggettiCucina);
         
         List<OggettoGioco> oggettiCamera = new ArrayList<>();
         //oggettiCamera.add(new OggettoGenerico(TipoOggetto.LETTO));
         //oggettiCamera.add(new OggettoGenerico(TipoOggetto.ARMADIO));
-        camera = new StanzaImpl("Camera da letto", oggettiCamera);
+        camera = new IRoom("Camera da letto", oggettiCamera);
     }
 
     // TEST PER CREARE LE STANZE ----------------------------------------------------------------------------------------------
@@ -47,7 +47,7 @@ public class CasaImplTest {
         casa.aggiungiStanza(salotto);
         casa.aggiungiStanza(cucina);
         
-        Map<String, Stanza> stanze = casa.getStanze();
+        Map<String, Room> stanze = casa.getStanze();
         assertEquals(2, stanze.size());
         assertTrue(stanze.containsKey("Salotto"));
         assertTrue(stanze.containsKey("Cucina"));
@@ -60,11 +60,11 @@ public class CasaImplTest {
         casa.aggiungiStanza(salotto);
         casa.aggiungiStanza(cucina);
         
-        Optional<Stanza> stanzaEntrata = casa.entraInStanza("Cucina");
+        Optional<Room> stanzaEntrata = casa.entraInStanza("Cucina");
         assertTrue(stanzaEntrata.isPresent());
         assertEquals(cucina, stanzaEntrata.get());
         
-        Optional<Stanza> stanzaCorrente = casa.getStanzaCorrente();
+        Optional<Room> stanzaCorrente = casa.getStanzaCorrente();
         assertTrue(stanzaCorrente.isPresent());
         assertEquals(cucina, stanzaCorrente.get());
     }
@@ -77,7 +77,7 @@ public class CasaImplTest {
         
         // Entra nella prima stanza
         casa.entraInStanza("Salotto");
-        Optional<Stanza> corrente = casa.getStanzaCorrente();
+        Optional<Room> corrente = casa.getStanzaCorrente();
         assertTrue(corrente.isPresent());
         assertEquals("Salotto", corrente.get().getNomeStanza());
         
@@ -100,7 +100,7 @@ public class CasaImplTest {
         casa.aggiungiStanza(cucina);
         casa.entraInStanza("Salotto");
         
-        Map<String, Stanza> stanze = casa.esciDaStanza();
+        Map<String, Room> stanze = casa.esciDaStanza();
         assertNotNull(stanze);
         assertEquals(2, stanze.size());
         // Verifica che la mappa restituita sia la stessa delle stanze della casa
@@ -121,14 +121,14 @@ public class CasaImplTest {
         casa.aggiungiStanza(cucina);
         casa.aggiungiStanza(camera);
         
-        Map<String, Stanza> stanze = casa.getStanze();
+        Map<String, Room> stanze = casa.getStanze();
         assertEquals(3, stanze.size());
         assertTrue(stanze.containsKey("Salotto"));
         assertTrue(stanze.containsKey("Cucina"));
         assertTrue(stanze.containsKey("Camera da letto"));
         
         // Verifica che ogni stanza abbia i suoi oggetti
-        Stanza s = casa.getStanza("Salotto");
+        Room s = casa.getStanza("Salotto");
         //assertTrue(s.hasOggettoStanza(new OggettoGenerico(TipoOggetto.DIVANO)));
     }
 

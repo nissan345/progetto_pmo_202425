@@ -3,11 +3,11 @@ package main.giuseppetti.classes;
 
 import java.util.Arrays;
 
-import main.aboufaris.interfaces.Stanza;
+import main.aboufaris.interfaces.Room;
 
 public class Fratello extends NPC {
     
-    public Fratello(Stanza s) {
+    public Fratello(Room s) {
         super("Fratello", s);
     }
     

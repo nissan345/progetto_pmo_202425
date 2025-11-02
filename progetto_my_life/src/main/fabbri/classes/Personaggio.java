@@ -146,7 +146,7 @@ public class Personaggio {
 
     public String getPosizione() {
         if (stanzaCorrente != null) {
-            return stanzaCorrente.getNomeStanza();
+            return stanzaCorrente.getRoomName();
         } else {
             return "Nessuna stanza";
         }
@@ -154,7 +154,7 @@ public class Personaggio {
 
     public String scegliStanza(Room stanza) {
         this.stanzaCorrente = stanza;
-        return "Sei entrato in: " + stanza.getNomeStanza();
+        return "Sei entrato in: " + stanza.getRoomName();
     }
 
 

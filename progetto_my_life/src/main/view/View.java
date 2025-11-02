@@ -17,7 +17,7 @@ import main.neri.classes.*;
 public class View {
 	
 	private JFrame frame;
-    private JLabel stanzaLabel;
+    private JLabel roomLabel;
     private JTextArea descriptionArea;
     private JTextArea logArea;
     private JTextArea oggettiArea;
@@ -61,9 +61,9 @@ public class View {
 	    JPanel top = new JPanel(new BorderLayout(6,6));
 	    top.setBorder(new EmptyBorder(0, 0, 6, 0));
 	    
-        stanzaLabel = new JLabel("Room: --");
-        stanzaLabel.setFont(stanzaLabel.getFont().deriveFont(Font.BOLD, 18f));
-        top.add(stanzaLabel, BorderLayout.NORTH);
+        roomLabel = new JLabel("Room: --");
+        roomLabel.setFont(roomLabel.getFont().deriveFont(Font.BOLD, 18f));
+        top.add(roomLabel, BorderLayout.NORTH);
 
         descriptionArea = new JTextArea(4, 40);
         descriptionArea.setLineWrap(true);
@@ -90,11 +90,11 @@ public class View {
         logScroll.setBorder(BorderFactory.createTitledBorder("Log / Messaggi"));
         center.add(logScroll);
 
-        // Oggetti in stanza 
+        // Oggetti in room 
         oggettiPanel = new JPanel();
         oggettiPanel.setLayout(new BoxLayout(oggettiPanel, BoxLayout.Y_AXIS));
         JScrollPane oggettiScroll = new JScrollPane(oggettiPanel);
-        oggettiScroll.setBorder(BorderFactory.createTitledBorder("Oggetti in stanza"));
+        oggettiScroll.setBorder(BorderFactory.createTitledBorder("Oggetti in room"));
         center.add(oggettiScroll);
         
         return center;
@@ -121,7 +121,7 @@ public class View {
 
 	private JPanel buildRight() {
 		JPanel right = new JPanel(new BorderLayout(6, 6));
-        right.setBorder(BorderFactory.createTitledBorder("Stato Personaggio / Missioni"));
+        right.setBorder(BorderFactory.createTitledBorder("Stato Personaggio / Questi"));
 
         stateArea = new JTextArea(10, 20);
         stateArea.setEditable(false);
@@ -229,19 +229,19 @@ public class View {
         // Lista delle stanze disponibili (puoi personalizzare questa lista)
         String[] stanze = {"Bagno", "Camera da Letto", "Cucina", "Salotto", "Giardino", "Sgabuzzino"};
         
-        for (String stanza : stanze) {
-            JButton stanzaBtn = new JButton(stanza);
-            stanzaBtn.setFont(new Font("Arial", Font.PLAIN, 14));
-            stanzaBtn.setPreferredSize(new Dimension(120, 60));
+        for (String room : stanze) {
+            JButton roomBtn = new JButton(room);
+            roomBtn.setFont(new Font("Arial", Font.PLAIN, 14));
+            roomBtn.setPreferredSize(new Dimension(120, 60));
             
-            // Aggiungi l'action listener per entrare nella stanza
-            stanzaBtn.addActionListener(e -> {
+            // Aggiungi l'action listener per entrare nella room
+            roomBtn.addActionListener(e -> {
                 Control controller = Control.getControlInstance();
-                controller.onClickEntra(stanza);
+                controller.onClickEntra(room);
                 mappaDialog.dispose(); // Chiudi la mappa dopo la selezione
             });
             
-            mappaPanel.add(stanzaBtn);
+            mappaPanel.add(roomBtn);
         }
         
         mappaDialog.add(mappaPanel, BorderLayout.CENTER);
@@ -257,9 +257,9 @@ public class View {
 	}
 
 	public void mostraRoom(String name, String description){
-		stanzaLabel.setText("Room: " + (name == null ? "--" : name));
+		roomLabel.setText("Room: " + (name == null ? "--" : name));
 	    descriptionArea.setText(description == null ? "" : description);
-	    appendLog("Entrato in stanza: " + name);
+	    appendLog("Entrato in room: " + name);
 	}
 	public void mostraOggettiInRoom(List<String> labels, IntConsumer onClickIndex) {
 	    SwingUtilities.invokeLater(() -> {
@@ -268,7 +268,7 @@ public class View {
 	        oggettiPanel.removeAll();
 
 	        if (labels == null || labels.isEmpty()) {
-	            JLabel none = new JLabel("Nessun oggetto in questa stanza");
+	            JLabel none = new JLabel("Nessun oggetto in questa room");
 	            none.setAlignmentX(Component.LEFT_ALIGNMENT);
 	            oggettiPanel.add(none);
 	        } else {
@@ -336,10 +336,10 @@ public class View {
 
 	public int mostraAzioni(List<String> a){return 1;}
 	
-    public void mostraMissionAttiva(String name, String description) {
+    public void mostraQuestAttiva(String name, String description) {
     	 SwingUtilities.invokeLater(() -> {
-             appendLog("Mission attiva: " + name + " - " + description);
-             stateArea.append("Mission: " + name + " - " + description + "\n");
+             appendLog("Quest attiva: " + name + " - " + description);
+             stateArea.append("Quest: " + name + " - " + description + "\n");
          });
     }
     public void aggiornaStatoPersonaggio(String state){

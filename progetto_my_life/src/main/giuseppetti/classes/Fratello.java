@@ -17,34 +17,34 @@ public class Fratello extends NPC {
     }
 
     @Override
-    public String getMissionAssegnataDialogo(Mission mission) {
-        return "Ehii " + mission.getDescription() + ", non dirlo a mamma e papà mi raccomando";
+    public String getQuestAssegnataDialogo(Quest quest) {
+        return "Ehii " + quest.getDescription() + ", non dirlo a mamma e papà mi raccomando";
     }
     
     @Override 
-    public String getDialogoMissionInCorso(Mission mission) {
-    	switch(mission.getName()) {
+    public String getDialogoQuestInCorso(Quest quest) {
+    	switch(quest.getName()) {
     	case "Cibo per tutti":
     		return "Stai preparando da mangiare? Ricorda di usare i fornelli!"; 
     	default:
-    		return "Come sta andando con la mission? Torna da me quando hai finito!";
+    		return "Come sta andando con la quest? Torna da me quando hai finito!";
     } 
     }
 
     @Override
-    public String getDialogoCompletamentoMission(Mission mission) {
+    public String getDialogoCompletamentoQuest(Quest quest) {
         return "Grazie mille per avermi aiutato";
     }
 
     @Override
-    protected void inizializzaMissioni() {
-        Mission missionCucina = new Mission("Cibo per tutti", 
+    protected void inizializzaQuesti() {
+        Quest questCucina = new Quest("Cibo per tutti", 
                                    "Dei nostri amici vengono a casa, potresti prepare qualcosa per tutti mentre io pulisco la mia camera", 
                                    this, 
                                    20, 
                                    Arrays.asList(new CondizioneAzioneOggetto("Fornelli"))
                             );
-        this.addMission(missionCucina);
+        this.addQuest(questCucina);
     }
 
 

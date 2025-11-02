@@ -22,7 +22,7 @@ import main.neri.classes.*;
 public class View1 {
 
   /*  private JFrame frame;
-    private JLabel stanzaLabel;
+    private JLabel roomLabel;
     private JTextArea descriptionArea;
     private JTextArea logArea;
     private JPanel azioniPanel;
@@ -48,11 +48,11 @@ public class View1 {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setPreferredSize(new Dimension(1000, 800));
 
-        // Top: stanza
+        // Top: room
         JPanel top = new JPanel(new BorderLayout());
-        stanzaLabel = new JLabel("Room: --");
-        stanzaLabel.setFont(stanzaLabel.getFont().deriveFont(Font.BOLD, 18f));
-        top.add(stanzaLabel, BorderLayout.NORTH);
+        roomLabel = new JLabel("Room: --");
+        roomLabel.setFont(roomLabel.getFont().deriveFont(Font.BOLD, 18f));
+        top.add(roomLabel, BorderLayout.NORTH);
 
         descriptionArea = new JTextArea(4, 40);
         descriptionArea.setLineWrap(true);
@@ -77,17 +77,17 @@ public class View1 {
         oggettiPanel = new JPanel();
         oggettiPanel.setLayout(new BoxLayout(oggettiPanel, BoxLayout.Y_AXIS));
         JScrollPane oggettiScroll = new JScrollPane(oggettiPanel);
-        oggettiScroll.setBorder(BorderFactory.createTitledBorder("Oggetti in stanza"));
+        oggettiScroll.setBorder(BorderFactory.createTitledBorder("Oggetti in room"));
         center.add(oggettiScroll);
         frame.getContentPane().add(center, BorderLayout.CENTER);
-        // Right: state personaggio e missioni
+        // Right: state personaggio e questi
         JPanel right = new JPanel(new BorderLayout());
         stateArea = new JTextArea(10,20);
         stateArea.setEditable(false);
         stateArea.setLineWrap(true);
         stateArea.setWrapStyleWord(true);
         right.add(new JScrollPane(stateArea), BorderLayout.CENTER);
-        right.setBorder(BorderFactory.createTitledBorder("Stato Personaggio / Missioni"));
+        right.setBorder(BorderFactory.createTitledBorder("Stato Personaggio / Questi"));
 
         // Bottom: azioni
         azioniPanel = new JPanel(new GridLayout(0,3,6,6));
@@ -156,10 +156,10 @@ public class View1 {
 
   
 
-    public void mostraMissionAttiva(String Name, String Description){
+    public void mostraQuestAttiva(String Name, String Description){
         SwingUtilities.invokeLater(() -> {
-            appendLog("Mission attiva: " + Name + " - " + Description);
-            stateArea.append("Mission: " + Name + " - " + Description + "\n");
+            appendLog("Quest attiva: " + Name + " - " + Description);
+            stateArea.append("Quest: " + Name + " - " + Description + "\n");
         });
     }
 
@@ -280,7 +280,7 @@ public class View1 {
                     oggettiPanel.add(Box.createRigidArea(new Dimension(0, 5)));
                 }
             } else {
-                JLabel nessunOggetto = new JLabel("Nessun oggetto in questa stanza");
+                JLabel nessunOggetto = new JLabel("Nessun oggetto in questa room");
                 nessunOggetto.setAlignmentX(Component.LEFT_ALIGNMENT);
                 oggettiPanel.add(nessunOggetto);
             }
@@ -294,7 +294,7 @@ public class View1 {
     
 
     
-    public void mostraNpcInterattivi(Room stanza) {
+    public void mostraNpcInterattivi(Room room) {
 
         // Pulisci i vecchi pulsanti NPC
         Component[] components = azioniPanel.getComponents();
@@ -307,9 +307,9 @@ public class View1 {
             }
         }
         
-        // Se c'è un NPC nella stanza, aggiungi pulsanti
-        if (stanza.getNpcInRoom().isPresent()) {
-            NPC npc = stanza.getNpcInRoom().get();
+        // Se c'è un NPC nella room, aggiungi pulsanti
+        if (room.getNpcInRoom().isPresent()) {
+            NPC npc = room.getNpcInRoom().get();
             
             // Primo click - Dialogo iniziale
             JButton dialogoBtn = new JButton("Parla con " + npc.getRelazione());
@@ -339,7 +339,7 @@ public class View1 {
                 try{
                     mostraRoom(currentRoom.getNameRoom(), currentRoom);
                 }catch(Exception ex){
-                    stanzaLabel.setText("Room: (sconosciuta)");
+                    roomLabel.setText("Room: (sconosciuta)");
                 }
             }
         });

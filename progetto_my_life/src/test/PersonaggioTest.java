@@ -24,21 +24,21 @@ public class PersonaggioTest {
     @Before
     public void setUp() {
 <<<<<<< Updated upstream
-        Stanza stanzaIniziale = new Stanza("Salotto");
+        Stanza roomIniziale = new Stanza("Salotto");
 =======
-        //Room stanzaIniziale = new RoomImpl("Salotto", new ArrayList<>(FabbricaOggetti.creaOggettiRoom("Salotto").values()));
+        //Room roomIniziale = new RoomImpl("Salotto", new ArrayList<>(FabbricaOggetti.creaOggettiRoom("Salotto").values()));
 >>>>>>> Stashed changes
     
         personaggio = new Personaggio("Giocatore", Vestito.INFORMALE, Dieta.ONNIVORO, Capelli.CORTI_MOSSI);
         personaggioVegano = new Personaggio("Vegano", Vestito.SPORTIVO, Dieta.VEGANO, Capelli.LUNGHI_LISCI);
         
 <<<<<<< Updated upstream
-        personaggio.scegliStanza(stanzaIniziale);
+        personaggio.scegliStanza(roomIniziale);
         personaggio.setPreferenza(Gusto.DOLCE, Reazione.PIACE);
         personaggio.setPreferenza(Gusto.SALATO, Reazione.NON_PIACE);
         personaggioVegano.setPreferenza(Gusto.SALATO, Reazione.PIACE);
 =======
-       // personaggio.pickCurrentRoom(stanzaIniziale);
+       // personaggio.pickCurrentRoom(roomIniziale);
         //personaggio.setPreferenza(Gusto.DOLCE, Reazione.PIACE);
         //personaggio.setPreferenza(Gusto.SALATO, Reazione.NON_PIACE);
         //personaggioVegano.setPreferenza(Gusto.SALATO, Reazione.PIACE);

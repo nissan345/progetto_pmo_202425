@@ -60,9 +60,9 @@ public class CasaImplTest {
         casa.aggiungiRoom(salotto);
         casa.aggiungiRoom(cucina);
         
-        Optional<Room> stanzaEntrata = casa.entraInRoom("Cucina");
-        assertTrue(stanzaEntrata.isPresent());
-        assertEquals(cucina, stanzaEntrata.get());
+        Optional<Room> roomEntrata = casa.entraInRoom("Cucina");
+        assertTrue(roomEntrata.isPresent());
+        assertEquals(cucina, roomEntrata.get());
         
         Optional<Room> currentRoom = casa.getCurrentRoom();
         assertTrue(currentRoom.isPresent());
@@ -75,19 +75,19 @@ public class CasaImplTest {
         casa.aggiungiRoom(cucina);
         casa.aggiungiRoom(camera);
         
-        // Entra nella prima stanza
+        // Entra nella prima room
         casa.entraInRoom("Salotto");
         Optional<Room> corrente = casa.getCurrentRoom();
         assertTrue(corrente.isPresent());
         assertEquals("Salotto", corrente.get().getNameRoom());
         
-        // Passa a un'altra stanza
+        // Passa a un'altra room
         casa.entraInRoom("Cucina");
         corrente = casa.getCurrentRoom();
         assertTrue(corrente.isPresent());
         assertEquals("Cucina", corrente.get().getNameRoom());
         
-        // Passa alla terza stanza
+        // Passa alla terza room
         casa.entraInRoom("Camera da letto");
         corrente = casa.getCurrentRoom();
         assertTrue(corrente.isPresent());
@@ -127,14 +127,14 @@ public class CasaImplTest {
         assertTrue(stanze.containsKey("Cucina"));
         assertTrue(stanze.containsKey("Camera da letto"));
         
-        // Verifica che ogni stanza abbia i suoi oggetti
+        // Verifica che ogni room abbia i suoi oggetti
         Room s = casa.getRoom("Salotto");
         //assertTrue(s.hasOggettoRoom(new OggettoGenerico(TipoOggetto.DIVANO)));
     }
 
     @Test
     public void testCurrentRoomDopoAggiunta() {
-        // Aggiungi stanza ma non entrare
+        // Aggiungi room ma non entrare
         casa.aggiungiRoom(salotto);
         assertFalse(casa.getCurrentRoom().isPresent());
         

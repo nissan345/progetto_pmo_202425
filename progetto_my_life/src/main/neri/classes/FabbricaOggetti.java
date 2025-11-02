@@ -142,7 +142,7 @@ public class FabbricaOggetti {
        public static Room creaSgabuzzino() {
     	   List<OggettoGioco> oggetti = List.of(
     			 new OggettoGioco.Builder("Aspirapolvere","Sgabuzzino")
-	           		.messaggio("Usi l'aspirapolvere e pulisci la stanza.")
+	           		.messaggio("Usi l'aspirapolvere e pulisci la room.")
 	           		.hunger(0)
 	           		.thirst(0)
 	           		.hygiene(0)

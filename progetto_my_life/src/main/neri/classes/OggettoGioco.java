@@ -11,14 +11,14 @@ public class OggettoGioco {
     protected final String name;
     protected final String description;
     public String messaggio;
-    protected String stanza;
+    protected String room;
     private boolean interazioneSpeciale;
     private int deltaHunger, deltaThirst, deltaEnergy, deltaHygiene;
     
     public OggettoGioco(Builder builder) {
         this.name = builder.name;
         this.description = builder.description;
-        this.stanza = builder.stanza;
+        this.room = builder.room;
         this.deltaEnergy = builder.deltaEnergy;
         this.deltaHunger = builder.deltaHunger;
         this.deltaHygiene = builder.deltaHygiene;
@@ -34,11 +34,11 @@ public class OggettoGioco {
     
     public String getName() { return name; }
     public String getDescription() { return description; }
-    public String getRoom() { return stanza; }
+    public String getRoom() { return room; }
    
     @Override
     public String toString() {
-        return name + " (" + stanza + ")";
+        return name + " (" + room + ")";
     }
     
     public boolean isInterazioneSpeciale() {
@@ -59,7 +59,7 @@ public class OggettoGioco {
 	public static class Builder {
     	// Campi obbligatori
         private final String name;
-        private final String stanza;
+        private final String room;
         
         // Campi opzionali con valori di default
         private String description = "";
@@ -71,9 +71,9 @@ public class OggettoGioco {
         private int deltaHygiene = 0;
         
         // Costruttore con campi obbligatori
-        public Builder(String name, String stanza) {
+        public Builder(String name, String room) {
             this.name = name;
-            this.stanza = stanza;
+            this.room = room;
         }
         
         // Metodi fluent (restituiscono this)

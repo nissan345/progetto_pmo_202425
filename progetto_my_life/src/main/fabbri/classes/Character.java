@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import main.aboufaris.interfaces.Room;
-import main.giuseppetti.classes.Mission;
+import main.giuseppetti.classes.Quest;
 import main.giuseppetti.classes.NPC;
 import main.neri.classes.OggettoGioco;
 import main.neri.classes.RisultatoAzione;
@@ -21,8 +21,8 @@ public class Character {
     private int hygiene;
     private Room currentRoom;
 
-    // Modifiche per missioni 
-    private List<Mission> ongoingMissions;
+    // Modifiche per questi 
+    private List<Quest> ongoingQuests;
     private List<String> oggettiUsati; // Traccia gli oggetti usati
  
     // COSTRUTTORE ------------------------------------------------------------------------
@@ -36,9 +36,9 @@ public class Character {
         this.energy = 100;
         this.hygiene = 100;
 
-        this.currentRoom = null; // Inizialmente nessuna stanza
+        this.currentRoom = null; // Inizialmente nessuna room
         
-        this.ongoingMissions = new ArrayList<>();
+        this.ongoingQuests = new ArrayList<>();
         this.oggettiUsati = new ArrayList<>();
     }
 
@@ -78,7 +78,7 @@ public class Character {
         if (currentRoom != null) {
             return currentRoom.getNameRoom();
         } else {
-            return "Nessuna stanza";
+            return "Nessuna room";
         }
     }
     
@@ -99,9 +99,9 @@ public class Character {
         this.hygiene = Math.max(MIN_STATE, Math.min(MAX_STATE, hygiene));
     } 
         
-    public String pickCurrentRoom(Room stanza) {
-        this.currentRoom = stanza;
-        return "Sei entrato in: " + stanza.getNameRoom();
+    public String pickCurrentRoom(Room room) {
+        this.currentRoom = room;
+        return "Sei entrato in: " + room.getNameRoom();
     }
 
     
@@ -113,10 +113,10 @@ public class Character {
         state.append("\n STATO DI ").append(name.toUpperCase()).append("\n");
         state.append("Vestiti: ").append(outfit.getName()).append("\n");
         state.append("Capelli: ").append(hair.getName()).append("\n");
-        state.append("Hunger: ").append(hunger).append("/100\n");
-        state.append("Thirst: ").append(thirst).append("/100\n");
-        state.append("Energy: ").append(energy).append("/100\n");
-        state.append("Hygiene: ").append(hygiene).append("/100\n");
+        state.append("Fame: ").append(hunger).append("/100\n");
+        state.append("Sete: ").append(thirst).append("/100\n");
+        state.append("Energia: ").append(energy).append("/100\n");
+        state.append("Igiene: ").append(hygiene).append("/100\n");
         state.append("Posizione: ").append(getCurrentRoom()).append("\n");
         
         return state.toString();
@@ -150,36 +150,36 @@ public class Character {
   
     // METODI PER LE MISSIONI -----------------------------------------------------------------------
 
-    //Aggiunge una mission alla lista delle missioni attive
-    public void addMission(Mission mission) {
-        if (mission != null && !ongoingMissions.contains(mission)) {
-            ongoingMissions.add(mission);
+    //Aggiunge una quest alla lista delle questi attive
+    public void addQuest(Quest quest) {
+        if (quest != null && !ongoingQuests.contains(quest)) {
+            ongoingQuests.add(quest);
         }
     }
     
-    // Rimuove una mission completata dalla lista delle missioni attive
-    public void removeMission(Mission mission) {
-        ongoingMissions.remove(mission);
+    // Rimuove una quest completata dalla lista delle questi attive
+    public void removeQuest(Quest quest) {
+        ongoingQuests.remove(quest);
     }
 
-    // Verifica se il personaggio ha missioni attive con un NPC specifico
-    public boolean hasOngoingMissionWithNPC(NPC npc) {
-        return ongoingMissions.stream()
-            .anyMatch(mission -> mission.getAssigningNPC().equals(npc));
+    // Verifica se il personaggio ha questi attive con un NPC specifico
+    public boolean hasOngoingQuestWithNPC(NPC npc) {
+        return ongoingQuests.stream()
+            .anyMatch(quest -> quest.getAssigningNPC().equals(npc));
     }
 
-    // Ottiene le missioni attive con un NPC specifico
-    public Optional<Mission> getOngoingMissionWithNPC(NPC npc) {
-        return ongoingMissions.stream()
-            .filter(mission -> mission.getAssigningNPC().equals(npc))
+    // Ottiene le questi attive con un NPC specifico
+    public Optional<Quest> getOngoingQuestWithNPC(NPC npc) {
+        return ongoingQuests.stream()
+            .filter(quest -> quest.getAssigningNPC().equals(npc))
             .findFirst();
     }
     
-    // Verifica automaticamente il completamento di tutte le missioni attive con un NPC
-    public Optional<Mission> getCompletedMissionWithNPC(NPC npc) {
-	    return ongoingMissions.stream()
-	        .filter(mission -> mission.getAssigningNPC().equals(npc))
-	        .filter(mission -> mission.verificaCompletamento(this))
+    // Verifica automaticamente il completamento di tutte le questi attive con un NPC
+    public Optional<Quest> getCompletedQuestWithNPC(NPC npc) {
+	    return ongoingQuests.stream()
+	        .filter(quest -> quest.getAssigningNPC().equals(npc))
+	        .filter(quest -> quest.verificaCompletamento(this))
 	        .findFirst();
 	}
 

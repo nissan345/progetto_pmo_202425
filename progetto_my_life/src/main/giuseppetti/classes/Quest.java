@@ -6,7 +6,7 @@ import java.util.List;
 import main.fabbri.classes.Character;
 import main.giuseppetti.interfaces.CondizioneCompletamento;
 
-public class Mission {
+public class Quest {
     private final String name;
     private final String description;
     private final NPC npcAssegnatore;
@@ -14,7 +14,7 @@ public class Mission {
     private List<CondizioneCompletamento> condizioni; 
     private boolean completata;
 
-    public Mission(String name, String description, NPC npcAssegnatore, int puntiAffinita, List<CondizioneCompletamento> condizioni) {
+    public Quest(String name, String description, NPC npcAssegnatore, int puntiAffinita, List<CondizioneCompletamento> condizioni) {
         this.name = name;
         this.description = description;
         this.npcAssegnatore = npcAssegnatore;
@@ -23,7 +23,7 @@ public class Mission {
         this.completata = false;
     }
     
-    // Verifica il completamento di una mission 
+    // Verifica il completamento di una quest 
     public boolean verificaCompletamento(Character personaggio) {
         if (completata) {
             return true;
@@ -33,7 +33,7 @@ public class Mission {
             return false;
         }
         
-        // Se tutte le condizioni sono soddisfatte, la mission è completata
+        // Se tutte le condizioni sono soddisfatte, la quest è completata
         for (CondizioneCompletamento condizione : condizioni) {
             if (!condizione.verificaCompletamento(personaggio)) {
                 return false;

@@ -16,40 +16,40 @@ public class Padre extends NPC {
     }
 
     @Override
-    public String getMissionAssegnataDialogo(Mission mission) {
-        return "Ottimo che tu voglia aiutare! " + mission.getDescription() + 
+    public String getQuestAssegnataDialogo(Quest quest) {
+        return "Ottimo che tu voglia aiutare! " + quest.getDescription() + 
                "\nSo che posso contare su di te. Torna da me quando avrai finito!";
     }
     
     @Override 
-    public String getDialogoMissionInCorso(Mission mission) {
-    	switch(mission.getName()) {
+    public String getDialogoQuestInCorso(Quest quest) {
+    	switch(quest.getName()) {
     		case "Annaffia le piante":
     			return "Hai già Annaffiato le piante? Ricorda che l'Innaffiatoio si trova in giardino";
     		case "Festa a sorpresa": 
     			return "Com'è andata con i preparativi per la festa a sorpresa? Ricordati di: pulire con l'aspirapolvere, cucinare ai fornelli e mettere la musica con lo stereo!";
     		default:
-    			return "Come sta andando con la mission? Torna da me quando hai finito!";
+    			return "Come sta andando con la quest? Torna da me quando hai finito!";
     	} 
     }
     
     @Override
-    public String getDialogoCompletamentoMission(Mission mission) {
+    public String getDialogoCompletamentoQuest(Quest quest) {
         return "Grazie mille! Hai fatto un ottimo lavoro." +
                "'!\nSei sempre così affidabile, sono orgoglioso di te!";
     }
 
-    protected void inizializzaMissioni() {
+    protected void inizializzaQuesti() {
        
-        Mission missionPiante = new Mission("Innaffia le piante", 
+        Quest questPiante = new Quest("Innaffia le piante", 
                                    "Dovresti innaffiare le piante", 
                                    this, 
                                    15, 
                                    Arrays.asList(new CondizioneAzioneOggetto("Innaffatoio"))
                             );
-        this.addMission(missionPiante);
+        this.addQuest(questPiante);
         
-        Mission missionFestaSorpresa = new Mission("Festa a sorpresa", 
+        Quest questFestaSorpresa = new Quest("Festa a sorpresa", 
         											  "Dovresti preparare una festa a sorpresa per la mamma, fai delle pulizie in casa e metti della musica in Salotto", 
         											  this, 
         											  30, 
@@ -57,7 +57,7 @@ public class Padre extends NPC {
         													        new CondizioneAzioneOggetto("Fornelli"), 
         													        new CondizioneAzioneOggetto("Stereo e vinili"))
         		);
-        this.addMission(missionFestaSorpresa);
+        this.addQuest(questFestaSorpresa);
     }
 
 }

@@ -8,8 +8,8 @@ import main.neri.classes.OggettoGioco;
 
 public class RoomImpl implements Room{
     private String nameRoom;
-    private Optional<NPC> npcInRoom;               // Indica gli oggetti presenti nella stanza
-    private final List<OggettoGioco> oggettiInRoom;  // Indica gli NPC presenti nella stanza
+    private Optional<NPC> npcInRoom;               // Indica gli oggetti presenti nella room
+    private final List<OggettoGioco> oggettiInRoom;  // Indica gli NPC presenti nella room
     
     public RoomImpl(String name, List<OggettoGioco> oggetti){
         this.nameRoom = name; 

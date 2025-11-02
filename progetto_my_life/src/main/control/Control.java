@@ -27,13 +27,13 @@ public final class Control {
     private final View view;
     private Timer gameTimer;
     private Character personaggio;
-    private int contatoreMissioni;
+    private int contatoreQuesti;
     private NPC npcCorrente;
     
     // Costruttore privato
     private Control(){
        this.casa = new CasaImpl();
-       this.contatoreMissioni = 0;
+       this.contatoreQuesti = 0;
        this.view = new View();
        this.view.setController(this);
        this.npcCorrente = null;
@@ -138,7 +138,7 @@ public final class Control {
         );
     }
     
-    // Mezzo funziona, devo sistemare che se si esce dalla stanza si toglie il bottone per parlare con NPC
+    // Mezzo funziona, devo sistemare che se si esce dalla room si toglie il bottone per parlare con NPC
     public void onClickNpc(NPC n){
     	this.npcCorrente = n;
         view.mostraMessaggio(n.getDialogoIniziale());
@@ -170,9 +170,9 @@ public final class Control {
 
     private String labelPer(OpzioniInterazione op) {
         return switch (op) {
-            case CHIEDI_MISSIONE -> "Chiedi mission";
-            case CONSEGNA_MISSIONE -> "Consegna mission";
-            case MISSIONE_IN_CORSO -> "Aiuto mission";
+            case CHIEDI_MISSIONE -> "Chiedi quest";
+            case CONSEGNA_MISSIONE -> "Consegna quest";
+            case MISSIONE_IN_CORSO -> "Aiuto quest";
             case ESCI -> "Esci";
         };
     }
@@ -184,26 +184,26 @@ public final class Control {
         }
         switch (scelta) {
             case CHIEDI_MISSIONE -> {
-                Mission m = npcCorrente.assegnaMission(personaggio);
+                Quest m = npcCorrente.assegnaQuest(personaggio);
                 if (m != null) {
-                    personaggio.addMission(m);
-                    view.mostraMessaggio("Nuova mission: " + m.getName() + "\n" + m.getDescription());
+                    personaggio.addQuest(m);
+                    view.mostraMessaggio("Nuova quest: " + m.getName() + "\n" + m.getDescription());
                 } else {
-                    view.mostraMessaggio("Non ci sono missioni disponibili al momento.");
+                    view.mostraMessaggio("Non ci sono questi disponibili al momento.");
                 }
             }
             case MISSIONE_IN_CORSO -> {
-                Mission m = personaggio.getOngoingMissionWithNPC(npcCorrente).get();
+                Quest m = personaggio.getOngoingQuestWithNPC(npcCorrente).get();
                 if (m != null) {
-                	view.mostraMessaggio(npcCorrente.getDialogoMissionInCorso(m));
+                	view.mostraMessaggio(npcCorrente.getDialogoQuestInCorso(m));
                 } else {
-                	view.mostraMessaggio("Non ci sono missioni attive disponibili");
+                	view.mostraMessaggio("Non ci sono questi attive disponibili");
                 }
             }
             case CONSEGNA_MISSIONE -> {
-                List<String> msgs = npcCorrente.consegnaMission(personaggio);
+                List<String> msgs = npcCorrente.consegnaQuest(personaggio);
                 boolean completata = msgs.stream().anyMatch(t -> t.contains("' completata!"));
-                if (completata) { contatoreMissioni++; gestisciVittoria(); }
+                if (completata) { contatoreQuesti++; gestisciVittoria(); }
                 msgs.forEach(view::mostraMessaggio);
             }
             case ESCI -> view.mostraMessaggio("Arrivederci!");
@@ -253,7 +253,7 @@ public final class Control {
     public void onClickOggetto(OggettoGioco oggettoGioco){
     	Room corrente = getCurrentRoom();
         if (!corrente.hasOggettoRoom(oggettoGioco)) {
-            view.mostraErrore("L'oggetto non si trova in stanza!");
+            view.mostraErrore("L'oggetto non si trova in room!");
             return;
         }
 
@@ -289,19 +289,19 @@ public final class Control {
         for(Map.Entry<String, Room> s: stanze.entrySet()){
             String name = s.getKey();
             String description = s.getValue().toString();
-            Room stanza = s.getValue();
+            Room room = s.getValue();
             view.mostraRoom(name, description);
         }
     }
 
     private Room getCurrentRoom(){
         return casa.getCurrentRoom()
-            .orElseThrow(() -> new IllegalStateException("Nessuna stanza corrente"));
+            .orElseThrow(() -> new IllegalStateException("Nessuna room corrente"));
     }
 
     public void mostraOggettiCurrentRoom() {
-        Room stanza = getCurrentRoom();
-        List<OggettoGioco> oggettiCorrenti = stanza.getOggettiInRoom();
+        Room room = getCurrentRoom();
+        List<OggettoGioco> oggettiCorrenti = room.getOggettiInRoom();
 
         List<String> labels = oggettiCorrenti.stream()
             .map(o -> o.getName() + " - " + o.getDescription())
@@ -318,7 +318,7 @@ public final class Control {
         Room currentRoom = getCurrentRoom();
         if(currentRoom.getNpcInRoom().isEmpty()){
         	NPC npcInRoom = null;
-            view.mostraMessaggio("Non ci sono NPC in questa stanza.");
+            view.mostraMessaggio("Non ci sono NPC in questa room.");
         }else{
             NPC npcInRoom = currentRoom.getNpcInRoom().get();
             aggiornaBottoniNpc(npcInRoom);
@@ -350,20 +350,20 @@ public final class Control {
 
     
    // METODI PER IL GIOCO
-    // Metodo che mostra su schermata tutte le missioni attive del personaggio
-    public void getMissioniAttive(){
-        Optional<Mission> mission = personaggio.getOngoingMissionWithNPC(this.npcCorrente);
-        if(!mission.isEmpty()) {
-        	Mission missionAttiva = mission.get();
-        	view.mostraMissionAttiva(missionAttiva.getName(), missionAttiva.getDescription());
+    // Metodo che mostra su schermata tutte le questi attive del personaggio
+    public void getQuestiAttive(){
+        Optional<Quest> quest = personaggio.getOngoingQuestWithNPC(this.npcCorrente);
+        if(!quest.isEmpty()) {
+        	Quest questAttiva = quest.get();
+        	view.mostraQuestAttiva(questAttiva.getName(), questAttiva.getDescription());
         }
             
        
     }
 
     public void gestisciVittoria(){
-        // Si vince nel caso in cui un personaggio riesce a finire tutte le missioni
-        if(contatoreMissioni == MISSIONI_TOTALI){
+        // Si vince nel caso in cui un personaggio riesce a finire tutte le questi
+        if(contatoreQuesti == MISSIONI_TOTALI){
             view.mostraVittoria();
             gameTimer.stop();
         }

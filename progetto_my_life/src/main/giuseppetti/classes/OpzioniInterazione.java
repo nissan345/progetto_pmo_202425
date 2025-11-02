@@ -2,9 +2,9 @@ package main.giuseppetti.classes;
 
 public enum OpzioniInterazione{
 
-    CHIEDI_MISSIONE("Chiedi mission"),
-    CONSEGNA_MISSIONE("Consegna mission"),
-    MISSIONE_IN_CORSO("Mission in corso"),
+    CHIEDI_MISSIONE("Chiedi quest"),
+    CONSEGNA_MISSIONE("Consegna quest"),
+    MISSIONE_IN_CORSO("Quest in corso"),
     ESCI("Esci");
 
     private final String messaggio;

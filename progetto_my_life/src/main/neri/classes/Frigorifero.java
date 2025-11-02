@@ -1,11 +1,8 @@
 package main.neri.classes;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
 import main.fabbri.classes.*;
 
 public class Frigorifero extends OggettoGioco{
@@ -13,7 +10,7 @@ public class Frigorifero extends OggettoGioco{
 private final Map<TipoCibo, RisultatoAzione> effettiCibi;
     
     public Frigorifero() {
-        super(new Builder("Frigorifero", "Cucina")
+        super(new Builder("Frigorifero", "Cucina", 90)
                 .messaggio("Apri il frigorifero... Scegli cosa mangiare!"));
         
         this.effettiCibi = new HashMap<>();

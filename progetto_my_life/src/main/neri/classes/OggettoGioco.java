@@ -1,7 +1,6 @@
 package main.neri.classes;
 
 import java.util.List;
-
 import main.fabbri.classes.Personaggio;
 
 /**
@@ -10,6 +9,7 @@ import main.fabbri.classes.Personaggio;
 public class OggettoGioco {
     protected final String nome;
     protected final String descrizione;
+    protected final int dimensione;
     public String messaggio;
     protected String stanza;
     private boolean interazioneSpeciale;
@@ -18,6 +18,7 @@ public class OggettoGioco {
     public OggettoGioco(Builder builder) {
         this.nome = builder.nome;
         this.descrizione = builder.descrizione;
+        this.dimensione = builder.dimensione;
         this.stanza = builder.stanza;
         this.deltaEnergia = builder.deltaEnergia;
         this.deltaFame = builder.deltaFame;
@@ -34,6 +35,7 @@ public class OggettoGioco {
     
     public String getNome() { return nome; }
     public String getDescrizione() { return descrizione; }
+    public int getDimensione() { return dimensione; }
     public String getStanza() { return stanza; }
    
     @Override
@@ -60,6 +62,7 @@ public class OggettoGioco {
     	// Campi obbligatori
         private final String nome;
         private final String stanza;
+        private final int dimensione;
         
         // Campi opzionali con valori di default
         private String descrizione = "";
@@ -71,9 +74,10 @@ public class OggettoGioco {
         private int deltaIgiene = 0;
         
         // Costruttore con campi obbligatori
-        public Builder(String nome, String stanza) {
+        public Builder(String nome, String stanza, int dimensione) {
             this.nome = nome;
             this.stanza = stanza;
+            this.dimensione = dimensione;
         }
         
         // Metodi fluent (restituiscono this)

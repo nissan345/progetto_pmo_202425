@@ -248,6 +248,14 @@ public class Personaggio {
         }
     }
 
+    public void decadimentoStato(){
+        this.fame = Math.max(0, this.fame-2);
+        this.sete = Math.max(0,this.sete-3);
+        this.energia = Math.max(0, this.energia-1);
+        this.igiene = Math.max(0, this.igiene-1);
+    }
+
+    //METODI PER DROP E PICK DI OGGETTI
     public boolean raccogliOggetto(OggettoGioco o, Stanza stanza) {
     if (inventario.addItem(o)) {
         stanza.getOggettiInStanza().remove(o);
@@ -259,14 +267,6 @@ public class Personaggio {
     }
 }
 
-    public void decadimentoStato(){
-        this.fame = Math.max(0, this.fame-2);
-        this.sete = Math.max(0,this.sete-3);
-        this.energia = Math.max(0, this.energia-1);
-        this.igiene = Math.max(0, this.igiene-1);
-    }
-
-//METODI PER DROP E PICK DI OGGETTI
 public boolean lasciaOggetto(OggettoGioco o, Stanza stanza) {
     if (inventario.removeItem(o.getNome()).isPresent()) {
         stanza.getOggettiInStanza().add(o);

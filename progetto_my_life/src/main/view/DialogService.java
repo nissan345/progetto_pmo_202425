@@ -7,7 +7,8 @@ import java.util.function.Function;
 
 public interface DialogService {
 
-	String chiediNome(String titolo, String prompt);
+
+	String chiediName(String titolo, String prompt);
 
 	<T> Optional<T> scegli(String titolo,
 			List<T> opzioni,

@@ -13,26 +13,27 @@ public class FabbricaOggetti {
         	List<OggettoGioco> oggetti = List.of(
         	        new OggettoGioco.Builder("Letto", "Camera da Letto")
         	            .message("Ti sdrai sul letto e riposi")
-        	            .energia(40)
-        	            .igiene(-10)
+        	            .energy(40)
+        	            .hygiene(-10)
         	            .build(), 
         	            
         	        new OggettoGioco.Builder("Computer", "Camera da Letto")
         	            .message("Giochi al computer.")
-        	            .fame(-10)
-        	            .sete(-5)
-        	            .energia(-20)
-        	            .igiene(-5)
+        	            .hunger(-10)
+        	            .thirst(-5)
+        	            .energy(-20)
+        	            .hygiene(-5)
         	            .build(),
         	            
         	        new OggettoGioco.Builder("Armadio", "Camera da Letto")
         	            .message("Provi dei nuovi outfit!")
-        	            .energia(-10)
-        	            .igiene(20)
+        	            .energy(-10)
+        	            .hygiene(20)
         	 //         .isInterazioneSpeciale(true)
         	            .build()
         	    );
-            return new StanzaImpl("Camera da Letto" , oggetti);
+            return new IRoom("Camera da Letto" , oggetti);
+
         }
         
      // Cucina
@@ -40,10 +41,10 @@ public class FabbricaOggetti {
         	List<OggettoGioco> oggetti = List.of(
         	        new OggettoGioco.Builder("Fornelli", "Cucina")
         	        		.message("Cucini un pasto caldo")
-        	        		.fame(20)
-        	        		.sete(0)
-        	        		.igiene(-5)
-        	        		.energia(-10)
+        	        		.hunger(20)
+        	        		.thirst(0)
+        	        		.hygiene(-5)
+        	        		.energy(-10)
         	     //   		.isInterazioneSpeciale(true)
         	        		.build(),
         	        		
@@ -51,13 +52,13 @@ public class FabbricaOggetti {
         	        
         	        new OggettoGioco.Builder("Lavandino", "Cucina")
         	        		.message("Lava i piatti")
-        	        		.fame(0)
-        	        		.sete(0)
-        	        		.igiene(0)
-        	        		.energia(-10)
+        	        		.hunger(0)
+        	        		.thirst(0)
+        	        		.hygiene(0)
+        	        		.energy(-10)
         	        		.build()
         			);	
-        	return new StanzaImpl("Cucina", oggetti);
+        	return new IRoom("Cucina", oggetti);
         }
        
      // Bagno
@@ -65,29 +66,30 @@ public class FabbricaOggetti {
         	List<OggettoGioco> oggetti = List.of(
         			 new OggettoGioco.Builder("Doccia","Bagno")
         		        		.message("Fai una doccia rigenerante.")
-        		        		.fame(0)
-        		        		.sete(0)
-        		        		.igiene(40)
-        		        		.energia(10)
+        		        		.hunger(0)
+        		        		.thirst(0)
+        		        		.hygiene(40)
+        		        		.energy(10)
         		        		.build(),
         		        
         		        new OggettoGioco.Builder("WC","Bagno")
         		        		.message("Ti senti sollevata dopo essere andata al bagno.")
-        		        		.fame(0)
-        		        		.sete(0)
-        		        		.igiene(5)
-        		        		.energia(5)
+        		        		.hunger(0)
+        		        		.thirst(0)
+        		        		.hygiene(5)
+        		        		.energy(5)
         		        		.build(),
         		        
         		        new OggettoGioco.Builder("Lavatrice","Bagno")
-        		        		.message("Metti i vestiti in lavatrice. La casa è più ordinata!")
-        		        		.fame(0)
-        		        		.sete(0)
-        		        		.igiene(0)
-        		        		.energia(-10)
+        		        		.message("Metti i outfit in lavatrice. La casa è più ordinata!")
+        		        		.hunger(0)
+        		        		.thirst(0)
+        		        		.hygiene(0)
+        		        		.energy(-10)
         		        		.build()
         			);
-        			return new StanzaImpl("Bagno", oggetti);
+        			return new IRoom("Bagno", oggetti);
+
         }
         
      // Salotto
@@ -95,45 +97,45 @@ public class FabbricaOggetti {
         	List<OggettoGioco> oggetti = List.of(
         			new OggettoGioco.Builder("Televisione","Salotto")
 	            		.message("Guardi la TV e ti rilassi.")
-	            		.fame(-5)
-	            		.sete(-5)
-	            		.igiene(-5)
-	            		.energia(10)
+	            		.hunger(-5)
+	            		.thirst(-5)
+	            		.hygiene(-5)
+	            		.energy(10)
 	            		.build(),
             
             new OggettoGioco.Builder("Stereo","Salotto")
 	            		.message("Ascolti Billie Eilish.")
-	            		.fame(0)
-	            		.sete(0)
-	            		.igiene(0)
-	            		.energia(10)
+	            		.hunger(0)
+	            		.thirst(0)
+	            		.hygiene(0)
+	            		.energy(10)
 	            		.build(),
             
             new OggettoGioco.Builder("Divano","Salotto")
 	            		.message("Ti siedi sul divano e ti riposi un po'.")
-	            		.fame(0)
-	            		.sete(0)
-	            		.igiene(0)
-	            		.energia(-15)
+	            		.hunger(0)
+	            		.thirst(0)
+	            		.hygiene(0)
+	            		.energy(-15)
 	            		.build(),
             
            new OggettoGioco.Builder("Libreria","Salotto")
 	            		.message("Hai appena letto Harry Potter e la pietra filosofale!")
-	            		.fame(-5)
-	            		.sete(0)
-	            		.igiene(0)
-	            		.energia(-10)
+	            		.hunger(-5)
+	            		.thirst(0)
+	            		.hygiene(0)
+	            		.energy(-10)
 	            		.build(),
             
             new OggettoGioco.Builder("Album","Salotto")
 	            		.message("Hai preso il vecchio album di fotografie")
-	            		.fame(0)
-	            		.sete(0)
-	            		.igiene(0)
-	            		.energia(-5)
+	            		.hunger(0)
+	            		.thirst(0)
+	            		.hygiene(0)
+	            		.energy(-5)
 	            		.build()
 	        			);
-        	return new StanzaImpl("Salotto", oggetti);
+        	return new IRoom("Salotto", oggetti);
         			
         }
         
@@ -143,13 +145,14 @@ public class FabbricaOggetti {
     	   List<OggettoGioco> oggetti = List.of(
     			 new OggettoGioco.Builder("Aspirapolvere","Sgabuzzino")
 	           		.message("Usi l'aspirapolvere e pulisci la room.")
-	           		.fame(0)
-	           		.sete(0)
-	           		.igiene(0)
-	           		.energia(-20)
+	           		.hunger(0)
+	           		.thirst(0)
+	           		.hygiene(0)
+	           		.energy(-20)
 	           		.build());
-    	   return new StanzaImpl("Sgabuzzino", oggetti);
-       }
+    	   return new IRoom("Sgabuzzino", oggetti);
+
+    	   }
         
                 
        // Giardino
@@ -157,35 +160,36 @@ public class FabbricaOggetti {
     	   List<OggettoGioco> oggetti = List.of(
     			   new OggettoGioco.Builder("Innaffiatoio","Giardino")
 		           		.message("Innaffi le piante: ora sono più verdi")
-		           		.fame(0)
-		           		.sete(0)
-		           		.igiene(0)
-		           		.energia(-10)
+		           		.hunger(0)
+		           		.thirst(0)
+		           		.hygiene(0)
+		           		.energy(-10)
 		           		.build(),
            
 	           		new OggettoGioco.Builder("Palla","Giardino")
 		           		.message("Giochi con la palla e fai un po' di esercizio.")
-		           		.fame(-10)
-		           		.sete(-5)
-		           		.igiene(-15)
-		           		.energia(-5)
+		           		.hunger(-10)
+		           		.thirst(-5)
+		           		.hygiene(-15)
+		           		.energy(-5)
 		           		.build(),
            
 	           		new OggettoGioco.Builder("Altalena","Giardino")
 		           		.message("Ti dondoli sull'altalena, ti diverti e ti rilassi.")
-		           		.fame(0)
-		           		.sete(0)
-		           		.igiene(-15)
-		           		.energia(0)
+		           		.hunger(0)
+		           		.thirst(0)
+		           		.hygiene(-15)
+		           		.energy(0)
 		           		.build(),
            
 	           		new OggettoGioco.Builder("Macchina","Giardino")
 		           		.message("Prendi la macchina e fai un giro.")
-		           		.fame(-15)
-		           		.sete(-15)
-		           		.igiene(-20)
-		           		.energia(-5)
+		           		.hunger(-15)
+		           		.thirst(-15)
+		           		.hygiene(-20)
+		           		.energy(-5)
 		           		.build());
-          return new StanzaImpl("Giardino", oggetti);
+          return new IRoom("Giardino", oggetti);
+
        }
 }

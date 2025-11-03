@@ -8,14 +8,20 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import main.control.Control;
 
+import main.fabbri.classes.MainCharacter;
+
+import main.giuseppetti.classes.*;
+import main.neri.classes.*;
+
 public class View {
 	
 	private JFrame frame;
-    private JLabel stanzaLabel;
-    private JTextArea descrizioneArea;
+
+    private JLabel roomLabel;
+    private JTextArea descriptionArea;
     private JTextArea logArea;
     private JTextArea oggettiArea;
-    private JTextArea statoArea;
+    private JTextArea stateArea;
     private JPanel azioniPanel;
     private JPanel azioniFissePanel;
     private JPanel azioniContextPanel;
@@ -54,18 +60,17 @@ public class View {
 	private JPanel buildTop() {
 	    JPanel top = new JPanel(new BorderLayout(6,6));
 	    top.setBorder(new EmptyBorder(0, 0, 6, 0));
-	    
-        stanzaLabel = new JLabel("Room: --");
-        stanzaLabel.setFont(stanzaLabel.getFont().deriveFont(Font.BOLD, 18f));
-        top.add(stanzaLabel, BorderLayout.NORTH);
+        roomLabel = new JLabel("Room: --");
+        roomLabel.setFont(roomLabel.getFont().deriveFont(Font.BOLD, 18f));
+        top.add(roomLabel, BorderLayout.NORTH);
 
-        descrizioneArea = new JTextArea(4, 40);
-        descrizioneArea.setLineWrap(true);
-        descrizioneArea.setWrapStyleWord(true);
-        descrizioneArea.setEditable(false);
+        descriptionArea = new JTextArea(4, 40);
+        descriptionArea.setLineWrap(true);
+        descriptionArea.setWrapStyleWord(true);
+        descriptionArea.setEditable(false);
         
-        JScrollPane descScroll = new JScrollPane(descrizioneArea);
-        descScroll.setBorder(BorderFactory.createTitledBorder("Descrizione"));
+        JScrollPane descScroll = new JScrollPane(descriptionArea);
+        descScroll.setBorder(BorderFactory.createTitledBorder("Description"));
         top.add(descScroll, BorderLayout.CENTER);
 
 	    return top;
@@ -115,15 +120,15 @@ public class View {
 
 	private JPanel buildRight() {
 		JPanel right = new JPanel(new BorderLayout(6, 6));
-        right.setBorder(BorderFactory.createTitledBorder("Stato Character / Missioni"));
+        right.setBorder(BorderFactory.createTitledBorder("Stato MainCharacter / Questi"));
 
-        statoArea = new JTextArea(10, 20);
-        statoArea.setEditable(false);
-        statoArea.setLineWrap(true);
-        statoArea.setWrapStyleWord(true);
-        statoArea.setBackground(Color.WHITE);
+        stateArea = new JTextArea(10, 20);
+        stateArea.setEditable(false);
+        stateArea.setLineWrap(true);
+        stateArea.setWrapStyleWord(true);
+        stateArea.setBackground(Color.WHITE);
 
-        right.add(new JScrollPane(statoArea), BorderLayout.CENTER);
+        right.add(new JScrollPane(stateArea), BorderLayout.CENTER);
         return right;
 	}	
 	
@@ -157,7 +162,9 @@ public class View {
 	}
 	
 	
-	public String chiediNomePersonaggio() {
+
+	public String chiediNameMainCharacter() {
+
 		JPanel panel = new JPanel();
         final JLabel label = new JLabel("Insert your Name:");
         JTextField textField = new JTextField(20);
@@ -167,7 +174,9 @@ public class View {
         int result = JOptionPane.showConfirmDialog(
                 frame, 
                 panel, 
-                "Nome Character", 
+
+                "Name MainCharacter", 
+
                 JOptionPane.OK_CANCEL_OPTION, 
                 JOptionPane.QUESTION_MESSAGE
             );
@@ -185,8 +194,8 @@ public class View {
         // Mostra il dialog di selezione
         Object selezione = JOptionPane.showInputDialog(
             frame,
-            message,
-            "Personalizzazione Character",
+            messaggio,
+            "Personalizzazione MainCharacter",
             JOptionPane.QUESTION_MESSAGE,
             null,
             opzioniArray,
@@ -212,7 +221,9 @@ public class View {
         mappaDialog.setSize(600, 400);
         mappaDialog.setLayout(new BorderLayout());
         
+
         JLabel titolo = new JLabel("Seleziona una Room", SwingConstants.CENTER);
+
         titolo.setFont(new Font("Arial", Font.BOLD, 18));
         mappaDialog.add(titolo, BorderLayout.NORTH);
         
@@ -223,19 +234,22 @@ public class View {
         // Lista delle stanze disponibili (puoi personalizzare questa lista)
         String[] stanze = {"Bagno", "Camera da Letto", "Cucina", "Salotto", "Giardino", "Sgabuzzino"};
         
+
+
         for (String room : stanze) {
-            JButton stanzaBtn = new JButton(room);
-            stanzaBtn.setFont(new Font("Arial", Font.PLAIN, 14));
-            stanzaBtn.setPreferredSize(new Dimension(120, 60));
+            JButton roomBtn = new JButton(room);
+            roomBtn.setFont(new Font("Arial", Font.PLAIN, 14));
+            roomBtn.setPreferredSize(new Dimension(120, 60));
             
             // Aggiungi l'action listener per entrare nella room
-            stanzaBtn.addActionListener(e -> {
+            roomBtn.addActionListener(e -> {
                 Control controller = Control.getControlInstance();
                 controller.onClickEntra(room);
                 mappaDialog.dispose(); // Chiudi la mappa dopo la selezione
             });
             
-            mappaPanel.add(stanzaBtn);
+            mappaPanel.add(roomBtn);
+
         }
         
         mappaDialog.add(mappaPanel, BorderLayout.CENTER);
@@ -250,19 +264,23 @@ public class View {
         
 	}
 
-	public void mostraStanza(String nome, String descrizione){
-		stanzaLabel.setText("Room: " + (nome == null ? "--" : nome));
-	    descrizioneArea.setText(descrizione == null ? "" : descrizione);
-	    appendLog("Entrato in room: " + nome);
+
+	public void mostraRoom(String name, String description){
+		roomLabel.setText("Room: " + (name == null ? "--" : name));
+	    descriptionArea.setText(description == null ? "" : description);
+	    appendLog("Entrato in room: " + name);
 	}
-	public void mostraOggettiInStanza(List<String> labels, IntConsumer onClickIndex) {
+	public void mostraOggettiInRoom(List<String> labels, IntConsumer onClickIndex) {
+
 	    SwingUtilities.invokeLater(() -> {
 	        if (oggettiPanel == null) return;
 
 	        oggettiPanel.removeAll();
 
 	        if (labels == null || labels.isEmpty()) {
+
 	            JLabel none = new JLabel("Nessun oggetto in questa room");
+
 	            none.setAlignmentX(Component.LEFT_ALIGNMENT);
 	            oggettiPanel.add(none);
 	        } else {
@@ -306,14 +324,17 @@ public class View {
 	    });
 	}
 	
-	public void mostraNpcInterattivi(String nomeNpc,
+
+	public void mostraNpcInterattivi(String nameNpc,
+
             String relazioneNpc,
             Runnable onDialogo,
             Runnable onOpzioni) {
 		SwingUtilities.invokeLater(() -> {
 		azioniContextPanel.removeAll();
 		
-		JButton dialogoBtn = new JButton("Parla con " + nomeNpc);
+		JButton dialogoBtn = new JButton("Parla con " + nameNpc);
+
 		dialogoBtn.addActionListener(e -> { if (onDialogo != null) onDialogo.run(); });
 		
 		JButton opzioniBtn = new JButton("Opzioni con " + relazioneNpc);
@@ -330,21 +351,23 @@ public class View {
 
 	public int mostraAzioni(List<String> a){return 1;}
 	
-    public void mostraMissioneAttiva(String nome, String descrizione) {
+
+    public void mostraQuestAttiva(String name, String description) {
     	 SwingUtilities.invokeLater(() -> {
-             appendLog("Quest attiva: " + nome + " - " + descrizione);
-             statoArea.append("Quest: " + nome + " - " + descrizione + "\n");
+             appendLog("Quest attiva: " + name + " - " + description);
+             stateArea.append("Quest: " + name + " - " + description + "\n");
          });
     }
-    public void aggiornaStatoPersonaggio(String stato){
+    public void aggiornaStatoMainCharacter(String state){
     	SwingUtilities.invokeLater(() -> {
-            statoArea.setText(stato);
+            stateArea.setText(state);
         });
     }
     
-    public void mostraStatistiche(String stato) {
+    public void mostraStatistiche(String state) {
     	SwingUtilities.invokeLater(() -> {
-            statoArea.setText(stato);
+            stateArea.setText(state);
+
         });
     }
     

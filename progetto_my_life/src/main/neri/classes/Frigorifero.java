@@ -10,7 +10,8 @@ import main.fabbri.classes.*;
 
 public class Frigorifero extends OggettoGioco{
 	
-private final Map<TipoCibo, RisultatoAzione> effettiCibi;
+private final Map<FoodType, RisultatoAzione> effettiCibi;
+
     
     public Frigorifero() {
         super(new Builder("Frigorifero", "Cucina")
@@ -18,12 +19,13 @@ private final Map<TipoCibo, RisultatoAzione> effettiCibi;
         
         this.effettiCibi = new HashMap<>();
         // Inizializza tutti i cibi con i loro effetti
-        for (TipoCibo cibo : TipoCibo.values()) {
+
+        for (FoodType cibo : FoodType.values()) {
             effettiCibi.put(cibo, new RisultatoAzione(
-                cibo.getDescrizione(), 
-                cibo.getFame(), 
-                cibo.getSete(), 
-                cibo.getEnergia(),
+                cibo.getDescription(), 
+                cibo.getHunger(), 
+                cibo.getThirst(), 
+                cibo.getEnergy(),
                 0
             ));
         }
@@ -33,14 +35,15 @@ private final Map<TipoCibo, RisultatoAzione> effettiCibi;
     public boolean richiedeScelta() { return true; }
 
     @Override
-    public java.util.List<TipoCibo> opzioniDisponibili(Character p) { return new ArrayList<>(effettiCibi.keySet()); }
+    public java.util.List<FoodType> opzioniDisponibili(MainCharacter p) { return new ArrayList<>(effettiCibi.keySet()); }
 
     @Override
-    public RisultatoAzione usa(Character p) { return new RisultatoAzione("Apri il frigorifero... Scegli cosa mangiare!"); }
+    public RisultatoAzione usa(MainCharacter p) { return new RisultatoAzione("Apri il frigorifero... Scegli cosa mangiare!"); }
 
     @Override
-    public RisultatoAzione usa(Character p, Object opzione) {
-        TipoCibo cibo = (TipoCibo) opzione;
-        return effettiCibi.getOrDefault(cibo, new RisultatoAzione(cibo.getDescrizione(), cibo.getFame(), cibo.getSete(), cibo.getEnergia(), 0));
+    public RisultatoAzione usa(MainCharacter p, Object opzione) {
+        FoodType cibo = (FoodType) opzione;
+        return effettiCibi.getOrDefault(cibo, new RisultatoAzione(cibo.getDescription(), cibo.getHunger(), cibo.getThirst(), cibo.getEnergy(), 0));
+
     }
 }

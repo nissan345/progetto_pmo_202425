@@ -7,7 +7,9 @@ import main.neri.classes.OggettoGioco;
 
 public interface Room{
     /* */
+
     public String getRoomName();
+
     /* */
     public List<OggettoGioco> getOggettiInRoom();
     /* */
@@ -23,5 +25,4 @@ public interface Room{
     /* */
     public void removeOggettoRoom(OggettoGioco o);
 
-    
 }

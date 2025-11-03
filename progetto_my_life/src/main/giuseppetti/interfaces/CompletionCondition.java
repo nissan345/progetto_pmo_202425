@@ -1,9 +1,9 @@
 package main.giuseppetti.interfaces;
 
-import main.fabbri.classes.Character;
-import main.giuseppetti.classes.Quest; 
+
+import main.fabbri.classes.MainCharacter;
 
 public interface CompletionCondition {
 	
-	public boolean checkCompletion(Character character, Quest quest);
+	public boolean checkCompletion(MainCharacter character);
 }

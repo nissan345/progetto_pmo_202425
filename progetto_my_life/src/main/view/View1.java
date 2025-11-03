@@ -22,14 +22,23 @@ import main.neri.classes.*;
 public class View1 {
 
   /*  private JFrame frame;
+<<<<<<< HEAD
     private JLabel stanzaLabel;
     private JTextArea descrizioneArea;
+=======
+    private JLabel roomLabel;
+    private JTextArea descriptionArea;
+>>>>>>> nicxole
     private JTextArea logArea;
     private JPanel azioniPanel;
     private JPanel oggettiPanel;
     private DefaultListModel<String> oggettiModel;
     private JList<String> oggettiList;
+<<<<<<< HEAD
     private JTextArea statoArea;
+=======
+    private JTextArea stateArea;
+>>>>>>> nicxole
     private Control controller;
 
     public void setController(Control controller) {
@@ -48,6 +57,7 @@ public class View1 {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setPreferredSize(new Dimension(1000, 800));
 
+<<<<<<< HEAD
         // Top: room
         JPanel top = new JPanel(new BorderLayout());
         stanzaLabel = new JLabel("Room: --");
@@ -59,6 +69,19 @@ public class View1 {
         descrizioneArea.setWrapStyleWord(true);
         descrizioneArea.setEditable(false);
         JScrollPane descScroll = new JScrollPane(descrizioneArea);
+=======
+        // Top: room
+        JPanel top = new JPanel(new BorderLayout());
+        roomLabel = new JLabel("Room: --");
+        roomLabel.setFont(roomLabel.getFont().deriveFont(Font.BOLD, 18f));
+        top.add(roomLabel, BorderLayout.NORTH);
+
+        descriptionArea = new JTextArea(4, 40);
+        descriptionArea.setLineWrap(true);
+        descriptionArea.setWrapStyleWord(true);
+        descriptionArea.setEditable(false);
+        JScrollPane descScroll = new JScrollPane(descriptionArea);
+>>>>>>> nicxole
         top.add(descScroll, BorderLayout.CENTER);
 
         // Center: log + oggetti
@@ -77,7 +100,7 @@ public class View1 {
         oggettiPanel = new JPanel();
         oggettiPanel.setLayout(new BoxLayout(oggettiPanel, BoxLayout.Y_AXIS));
         JScrollPane oggettiScroll = new JScrollPane(oggettiPanel);
-        oggettiScroll.setBorder(BorderFactory.createTitledBorder("Oggetti in room"));
+        oggettiScroll.setBorder(BorderFactory.createTitledBorder("Oggetti in stanza"));
         center.add(oggettiScroll);
         frame.getContentPane().add(center, BorderLayout.CENTER);
         // Right: stato character e missioni
@@ -87,7 +110,7 @@ public class View1 {
         statoArea.setLineWrap(true);
         statoArea.setWrapStyleWord(true);
         right.add(new JScrollPane(statoArea), BorderLayout.CENTER);
-        right.setBorder(BorderFactory.createTitledBorder("Stato Character / Missioni"));
+        right.setBorder(BorderFactory.createTitledBorder("Stato Personaggio / Missioni"));
 
         // Bottom: azioni
         azioniPanel = new JPanel(new GridLayout(0,3,6,6));
@@ -156,10 +179,11 @@ public class View1 {
 
   
 
+<<<<<<< HEAD
     public void mostraMissioneAttiva(String Nome, String Descrizione){
         SwingUtilities.invokeLater(() -> {
-            appendLog("Quest attiva: " + Nome + " - " + Descrizione);
-            statoArea.append("Quest: " + Nome + " - " + Descrizione + "\n");
+            appendLog("Missione attiva: " + Nome + " - " + Descrizione);
+            statoArea.append("Missione: " + Nome + " - " + Descrizione + "\n");
         });
     }
 
@@ -184,9 +208,15 @@ public class View1 {
         });
     }
 
-    public void aggiornaStatoPersonaggio(String stato){
+<<<<<<< HEAD
+    public void aggiornaStatoMainCharacter(String stato){
         SwingUtilities.invokeLater(() -> {
             statoArea.setText(stato);
+=======
+    public void aggiornaStatoMainCharacter(String state){
+        SwingUtilities.invokeLater(() -> {
+            stateArea.setText(state);
+>>>>>>> nicxole
         });
     }
 
@@ -242,9 +272,15 @@ public class View1 {
         SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(frame, "Hai perso...", "Sconfitta", JOptionPane.INFORMATION_MESSAGE));
     }
 
+<<<<<<< HEAD
     public void mostraOggettiInStanza(List<OggettoGioco> oggettiPresenti){
     	SwingUtilities.invokeLater(() -> {
             System.out.println("DEBUG: mostraOggettiInStanza chiamato con " + 
+=======
+    public void mostraOggettiInRoom(List<OggettoGioco> oggettiPresenti){
+    	SwingUtilities.invokeLater(() -> {
+            System.out.println("DEBUG: mostraOggettiInRoom chiamato con " + 
+>>>>>>> nicxole
                 (oggettiPresenti != null ? oggettiPresenti.size() : "null") + " oggetti");
             
             // CONTROLLO DI SICUREZZA
@@ -258,21 +294,35 @@ public class View1 {
             if(oggettiPresenti != null && !oggettiPresenti.isEmpty()){
                 System.out.println("DEBUG: Creazione pulsanti per oggetti:");
                 for(OggettoGioco oggetto : oggettiPresenti){
+<<<<<<< HEAD
                     System.out.println("  - " + oggetto.getNome());
                     
                     JButton oggettoButton = new JButton(oggetto.getNome());
+=======
+                    System.out.println("  - " + oggetto.getName());
+                    
+                    JButton oggettoButton = new JButton(oggetto.getName());
+>>>>>>> nicxole
                     oggettoButton.setAlignmentX(Component.LEFT_ALIGNMENT);
                     oggettoButton.setMaximumSize(new Dimension(200, 30));
                     
                     // Aggiungi tooltip
+<<<<<<< HEAD
                     oggettoButton.setToolTipText("Clicca per usare " + oggetto.getNome());
+=======
+                    oggettoButton.setToolTipText("Clicca per usare " + oggetto.getName());
+>>>>>>> nicxole
                     
                     // ActionListener
                     oggettoButton.addActionListener(e -> {
                         if (controller != null) {
                             controller.onClickOggetto(oggetto);
                         } else {
+<<<<<<< HEAD
                             mostraMessaggio("Hai cliccato su: " + oggetto.getNome());
+=======
+                            mostraMessaggio("Hai cliccato su: " + oggetto.getName());
+>>>>>>> nicxole
                         }
                     });
                     
@@ -280,7 +330,7 @@ public class View1 {
                     oggettiPanel.add(Box.createRigidArea(new Dimension(0, 5)));
                 }
             } else {
-                JLabel nessunOggetto = new JLabel("Nessun oggetto in questa room");
+                JLabel nessunOggetto = new JLabel("Nessun oggetto in questa stanza");
                 nessunOggetto.setAlignmentX(Component.LEFT_ALIGNMENT);
                 oggettiPanel.add(nessunOggetto);
             }
@@ -294,7 +344,7 @@ public class View1 {
     
 
     
-    public void mostraNpcInterattivi(Room room) {
+    public void mostraNpcInterattivi(Stanza stanza) {
 
         // Pulisci i vecchi pulsanti NPC
         Component[] components = azioniPanel.getComponents();
@@ -307,19 +357,19 @@ public class View1 {
             }
         }
         
-        // Se c'è un NPC nella room, aggiungi pulsanti
-        if (room.getNpcInStanza().isPresent()) {
-            NPC npc = room.getNpcInStanza().get();
+        // Se c'è un NPC nella stanza, aggiungi pulsanti
+        if (stanza.getNpcInStanza().isPresent()) {
+            NPC npc = stanza.getNpcInStanza().get();
             
             // Primo click - Dialogo iniziale
-            JButton dialogoBtn = new JButton("Parla con " + npc.getRelazione());
+            JButton dialogoBtn = new JButton("Parla con " + npc.getRelationship());
             dialogoBtn.addActionListener(e -> {
                 Control controller = Control.getControlInstance();
                 controller.onClickNpc(npc);
             });
             
             // Secondo click - Opzioni di interazione
-            JButton opzioniBtn = new JButton("Opzioni con " + npc.getRelazione());
+            JButton opzioniBtn = new JButton("Opzioni con " + npc.getRelationship());
             opzioniBtn.addActionListener(e -> {
                 Control controller = Control.getControlInstance();
                 controller.onSecondClickNpc(npc);
@@ -333,33 +383,43 @@ public class View1 {
         }
     }
 
-    public void aggiornaStanza(Room stanzaCorrente) {
+    public void aggiornaStanza(Stanza stanzaCorrente) {
         SwingUtilities.invokeLater(() -> {
             if(stanzaCorrente!=null){
                 try{
                     mostraStanza(stanzaCorrente.getNomeStanza(), stanzaCorrente);
                 }catch(Exception ex){
-                    stanzaLabel.setText("Room: (sconosciuta)");
+                    stanzaLabel.setText("Stanza: (sconosciuta)");
                 }
             }
         });
     }
 
     // Placeholder per aggiornamenti futuri del controller
-    public void mostraStatistiche(Character p){
+    public void mostraStatistiche(Personaggio p){
         SwingUtilities.invokeLater(() -> {
             if(p==null) return;
+<<<<<<< HEAD
             String stats = String.format("Energia: %d | Fame: %d | Igiene: %d | Sete: %d", p.getEnergia(), p.getFame(), p.getIgiene(), p.getSete());
             statoArea.append("\n" + stats + "\n");
             appendLog("Statistiche aggiornate per " + p.getNome());
+=======
+            String stats = String.format("Energy: %d | Hunger: %d | Hygiene: %d | Thirst: %d", p.getEnergy(), p.getHunger(), p.getHygiene(), p.getThirst());
+            stateArea.append("\n" + stats + "\n");
+            appendLog("Statistiche aggiornate per " + p.getName());
+>>>>>>> nicxole
         });
     }
 
-    public void mostraPersonaggio(Character p){
+    public void mostraPersonaggio(Personaggio p){
         SwingUtilities.invokeLater(() -> {
             if(p==null) return;
-            appendLog("Character: " + p.getNome() + " creato!");
+            appendLog("Personaggio: " + p.getNome() + " creato!");
             statoArea.setText("Nome: " + p.getNome() + "\n" + "Energia: " + p.getEnergia());
+=======
+            appendLog("MainCharacter: " + p.getName() + " creato!");
+            stateArea.setText("Name: " + p.getName() + "\n" + "Energy: " + p.getEnergy());
+>>>>>>> nicxole
         });
     }
 
@@ -369,7 +429,11 @@ public class View1 {
         logArea.setCaretPosition(logArea.getDocument().getLength());
     }
 
-    public String chiediNomePersonaggio() {
+<<<<<<< HEAD
+    public String chiediNomeMainCharacter() {
+=======
+    public String chiediNameMainCharacter() {
+>>>>>>> nicxole
         JPanel panel = new JPanel();
         final JLabel label = new JLabel("Insert your Name:");
         JTextField textField = new JTextField(20);
@@ -379,7 +443,7 @@ public class View1 {
         int result = JOptionPane.showConfirmDialog(
                 frame, 
                 panel, 
-                "Nome Character", 
+                "Nome Personaggio", 
                 JOptionPane.OK_CANCEL_OPTION, 
                 JOptionPane.QUESTION_MESSAGE
             );
@@ -396,8 +460,8 @@ public class View1 {
         // Mostra il dialog di selezione
         Object selezione = JOptionPane.showInputDialog(
             frame,
-            message,
-            "Personalizzazione Character",
+            messaggio,
+            "Personalizzazione Personaggio",
             JOptionPane.QUESTION_MESSAGE,
             null,
             opzioniArray,

@@ -5,31 +5,34 @@ package main.neri.classes;
  * Risultato di un'azione con effetti sul character
  */
 public class RisultatoAzione {
-    private String message;
-    private int deltaFame;
-    private int deltaSete;
-    private int deltaEnergia;
-    private int deltaIgiene;
+    private String messaggio;
+    private int deltaHunger;
+    private int deltaThirst;
+    private int deltaEnergy;
+    private int deltaHygiene;
+
     private static final int TEMPO_AZIONE = 5; // Tutte le azioni durano 5 secondi
     
     public RisultatoAzione(String message) {
         this(message, 0, 0, 0, 0);
     } 
     
-    public RisultatoAzione(String message, int deltaFame, int deltaSete, int deltaEnergia, int deltaIgiene) {
-        this.message = message;
-        this.deltaFame = deltaFame;
-        this.deltaSete = deltaSete;
-        this.deltaEnergia = deltaEnergia;
-        this.deltaIgiene = deltaIgiene;
+
+    public RisultatoAzione(String messaggio, int deltaHunger, int deltaThirst, int deltaEnergy, int deltaHygiene) {
+        this.messaggio = messaggio;
+        this.deltaHunger = deltaHunger;
+        this.deltaThirst = deltaThirst;
+        this.deltaEnergy = deltaEnergy;
+        this.deltaHygiene = deltaHygiene;
+
     }
     
     // Getters
-    public String getMessaggio() { return message; }
-    public int getDeltaFame() { return deltaFame; }
-    public int getDeltaSete() { return deltaSete; }
-    public int getDeltaEnergia() { return deltaEnergia; }
-    public int getDeltaIgiene() { return deltaIgiene; }
+    public String getMessaggio() { return messaggio; }
+    public int getDeltaHunger() { return deltaHunger; }
+    public int getDeltaThirst() { return deltaThirst; }
+    public int getDeltaEnergy() { return deltaEnergy; }
+    public int getDeltaHygiene() { return deltaHygiene; }
     public int getTempoDurata() { return TEMPO_AZIONE; }
 }
 

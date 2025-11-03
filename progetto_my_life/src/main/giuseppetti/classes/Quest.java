@@ -2,7 +2,7 @@ package main.giuseppetti.classes;
 
 import java.util.ArrayList;
 import java.util.List;
-import main.fabbri.classes.Character;
+import main.fabbri.classes.MainCharacter;
 import main.giuseppetti.interfaces.CompletionCondition;
 
 public class Quest {
@@ -23,7 +23,7 @@ public class Quest {
     }
     
     // Verifies quest completion
-    public boolean checkCompletion(Character character) {
+    public boolean checkCompletion(MainCharacter character) {
         if (completed) {
             return true;
         }

@@ -7,7 +7,11 @@ import main.aboufaris.interfaces.Room;
 import main.giuseppetti.classes.NPC;
 import main.neri.classes.OggettoGioco;
 
+
+
 public class IRoom implements Room{
+
+
     private String nomeStanza;
     private Optional<NPC> npcInStanza;               // Indica gli oggetti presenti nella stanza
     private final List<OggettoGioco> oggettiInStanza;  // Indica gli NPC presenti nella stanza
@@ -36,7 +40,7 @@ public class IRoom implements Room{
 
     public boolean hasOggettoRoom(OggettoGioco o){
         return oggettiInStanza.stream()
-                .anyMatch(oggetto -> oggetto.getNome().equals(o.getNome()));
+                .anyMatch(oggetto -> oggetto.getName().equals(o.getName()));
     }
     
     public void setNpc(NPC n) {

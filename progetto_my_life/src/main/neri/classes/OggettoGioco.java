@@ -1,44 +1,43 @@
 package main.neri.classes;
 
 import java.util.List;
-
-import main.fabbri.classes.Character;
+import main.fabbri.classes.MainCharacter;
 
 /**
  * Classe base per tutti gli oggetti presenti nella casa
  */
 public class OggettoGioco {
-    protected final String nome;
-    protected final String descrizione;
-    public String message;
+    protected final String name;
+    protected final String description;
+    public String messaggio;
     protected String room;
     private boolean interazioneSpeciale;
-    private int deltaFame, deltaSete, deltaEnergia, deltaIgiene;
+    private int deltaHunger, deltaThirst, deltaEnergy, deltaHygiene;
     
     public OggettoGioco(Builder builder) {
-        this.nome = builder.nome;
-        this.descrizione = builder.descrizione;
+        this.name = builder.name;
+        this.description = builder.description;
         this.room = builder.room;
-        this.deltaEnergia = builder.deltaEnergia;
-        this.deltaFame = builder.deltaFame;
-        this.deltaIgiene = builder.deltaIgiene;
-        this.deltaSete = builder.deltaSete;
-        this.message = builder.message;
+        this.deltaEnergy = builder.deltaEnergy;
+        this.deltaHunger = builder.deltaHunger;
+        this.deltaHygiene = builder.deltaHygiene;
+        this.deltaThirst = builder.deltaThirst;
+        this.messaggio = builder.messaggio;
         this.interazioneSpeciale = builder.interazioneSpeciale;
     }
       
-    public RisultatoAzione usa(Character character) {
-    	return new RisultatoAzione(message, deltaFame, deltaSete, 
-                deltaEnergia, deltaIgiene);
+    public RisultatoAzione usa(MainCharacter character) {
+    	return new RisultatoAzione(messaggio, deltaHunger, deltaThirst, 
+                deltaEnergy, deltaHygiene);
     }
     
-    public String getNome() { return nome; }
-    public String getDescrizione() { return descrizione; }
-    public String getStanza() { return room; }
+    public String getName() { return name; }
+    public String getDescription() { return description; }
+    public String getRoom() { return room; }
    
     @Override
     public String toString() {
-        return nome + " (" + room + ")";
+        return name + " (" + room + ")";
     }
     
     public boolean isInterazioneSpeciale() {
@@ -48,37 +47,38 @@ public class OggettoGioco {
     // Metodi aggiuntivi 
     public boolean richiedeScelta() { return false; }
 
-    public List<?> opzioniDisponibili(Character p) { 
+    public List<?> opzioniDisponibili(MainCharacter p) { 
         return List.of(); 
     }
 
-    public RisultatoAzione usa(Character p, Object opzione) {
+    public RisultatoAzione usa(MainCharacter p, Object opzione) {
         return usa(p);
     }
 
 	public static class Builder {
     	// Campi obbligatori
-        private final String nome;
+        private final String name;
         private final String room;
         
         // Campi opzionali con valori di default
-        private String descrizione = "";
-        private String message = "Usi l'oggetto.";
+        private String description = "";
+        private String messaggio = "Usi l'oggetto.";
         private boolean interazioneSpeciale = false;
-        private int deltaFame = 0;
-        private int deltaSete = 0;
-        private int deltaEnergia = 0;
-        private int deltaIgiene = 0;
+        private int deltaHunger = 0;
+        private int deltaThirst = 0;
+        private int deltaEnergy = 0;
+        private int deltaHygiene = 0;
+		private String message;
         
         // Costruttore con campi obbligatori
-        public Builder(String nome, String room) {
-            this.nome = nome;
+        public Builder(String name, String room) {
+            this.name = name;
             this.room = room;
         }
         
         // Metodi fluent (restituiscono this)
-        public Builder descrizione(String val) {
-            this.descrizione = val;
+        public Builder description(String val) {
+            this.description = val;
             return this;
         }
         
@@ -87,23 +87,23 @@ public class OggettoGioco {
             return this;
         }
         
-        public Builder fame(int val) {
-            this.deltaFame = val;
+        public Builder hunger(int val) {
+            this.deltaHunger = val;
             return this;
         }
         
-        public Builder sete(int val) {
-            this.deltaSete = val;
+        public Builder thirst(int val) {
+            this.deltaThirst = val;
             return this;
         }
         
-        public Builder energia(int val) {
-            this.deltaEnergia = val;
+        public Builder energy(int val) {
+            this.deltaEnergy = val;
             return this;
         }
         
-        public Builder igiene(int val) {
-            this.deltaIgiene = val;
+        public Builder hygiene(int val) {
+            this.deltaHygiene = val;
             return this;
         }
         

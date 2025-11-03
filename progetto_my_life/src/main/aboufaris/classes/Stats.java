@@ -10,7 +10,7 @@ public class Stats {
 
     private static final int COOK_MIN_ENERGY = 40;
     private static final int COOK_MIN_HYGIENE = 50;
-    private static final int COOK_MIN_SATIETY = 20; 
+    private static final int COOK_MIN_SATIETY = 40; 
 
     private static final int DRINK_MIN_HYDRATION = 70; 
     
@@ -39,7 +39,7 @@ public class Stats {
 	}
 	
 	public boolean canCook() {
-		boolean isHungryEnough = satiety > COOK_MIN_SATIETY;
+		boolean isHungryEnough = satiety < COOK_MIN_SATIETY;
 		boolean isCleanEnough = hygiene > COOK_MIN_HYGIENE;
 		boolean isEnergeticEnough = energy > COOK_MIN_ENERGY;
 		return isHungryEnough && isCleanEnough && isEnergeticEnough;

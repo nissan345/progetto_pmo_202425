@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import main.aboufaris.interfaces.Room;
-import main.fabbri.classes.Character;
+import main.fabbri.classes.MainCharacter;
 
 public abstract class NPC {
     private final String relationship;
@@ -43,7 +43,7 @@ public abstract class NPC {
     // Concrete Methods 
     
     // Handles character-NPC interaction
-    public List<InteractionOption> getAvailableOptions(Character character) {
+    public List<InteractionOption> getAvailableOptions(MainCharacter character) {
         this.options.clear();
 
         Optional<Quest> completedQuest = character.getCompletedQuestWithNPC(this);
@@ -63,7 +63,7 @@ public abstract class NPC {
         return this.options;
     }
     
-    public Quest assignQuest(Character character) {
+    public Quest assignQuest(MainCharacter character) {
     	if(character.hasActiveQuestWithNPC(this) || availableQuests.isEmpty()) {
     		return null;
     	}
@@ -72,7 +72,7 @@ public abstract class NPC {
     	return quest;
     }
 
-    public List<String> turnInQuest(Character character) {
+    public List<String> turnInQuest(MainCharacter character) {
         List<String> messages = new ArrayList<>();
         Optional<Quest> completedQuest = character.getCompletedQuestWithNPC(this);
 

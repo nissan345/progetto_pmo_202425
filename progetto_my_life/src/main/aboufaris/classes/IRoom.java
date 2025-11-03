@@ -58,7 +58,7 @@ public class IRoom implements Room{
     	if(this.npcInStanza.isEmpty()) {
     		stringa = "\nOggetti presenti: " + this.oggettiInStanza;
     	}else {
-    		stringa = this.nomeStanza + "\nNPC presenti: " + this.npcInStanza.get().getRelazione() + "\nOggetti presenti: " + this.oggettiInStanza;
+    		stringa = this.nomeStanza + "\nNPC presenti: " + this.npcInStanza.get().getRelationship() + "\nOggetti presenti: " + this.oggettiInStanza;
     	}
         return stringa;
     }

@@ -362,14 +362,14 @@ public class View1 {
             NPC npc = stanza.getNpcInStanza().get();
             
             // Primo click - Dialogo iniziale
-            JButton dialogoBtn = new JButton("Parla con " + npc.getRelazione());
+            JButton dialogoBtn = new JButton("Parla con " + npc.getRelationship());
             dialogoBtn.addActionListener(e -> {
                 Control controller = Control.getControlInstance();
                 controller.onClickNpc(npc);
             });
             
             // Secondo click - Opzioni di interazione
-            JButton opzioniBtn = new JButton("Opzioni con " + npc.getRelazione());
+            JButton opzioniBtn = new JButton("Opzioni con " + npc.getRelationship());
             opzioniBtn.addActionListener(e -> {
                 Control controller = Control.getControlInstance();
                 controller.onSecondClickNpc(npc);

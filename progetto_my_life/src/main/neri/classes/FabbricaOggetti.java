@@ -12,13 +12,13 @@ public class FabbricaOggetti {
         public static Room creaCameraDaLetto() {
         	List<OggettoGioco> oggetti = List.of(
         	        new OggettoGioco.Builder("Letto", "Camera da Letto")
-        	            .messaggio("Ti sdrai sul letto e riposi")
+        	            .message("Ti sdrai sul letto e riposi")
         	            .energy(40)
         	            .hygiene(-10)
         	            .build(), 
         	            
         	        new OggettoGioco.Builder("Computer", "Camera da Letto")
-        	            .messaggio("Giochi al computer.")
+        	            .message("Giochi al computer.")
         	            .hunger(-10)
         	            .thirst(-5)
         	            .energy(-20)
@@ -26,7 +26,7 @@ public class FabbricaOggetti {
         	            .build(),
         	            
         	        new OggettoGioco.Builder("Armadio", "Camera da Letto")
-        	            .messaggio("Provi dei nuovi outfit!")
+        	            .message("Provi dei nuovi outfit!")
         	            .energy(-10)
         	            .hygiene(20)
         	 //         .isInterazioneSpeciale(true)
@@ -40,7 +40,7 @@ public class FabbricaOggetti {
         public static Room creaCucina() {
         	List<OggettoGioco> oggetti = List.of(
         	        new OggettoGioco.Builder("Fornelli", "Cucina")
-        	        		.messaggio("Cucini un pasto caldo")
+        	        		.message("Cucini un pasto caldo")
         	        		.hunger(20)
         	        		.thirst(0)
         	        		.hygiene(-5)
@@ -51,7 +51,7 @@ public class FabbricaOggetti {
         	        new Frigorifero(),
         	        
         	        new OggettoGioco.Builder("Lavandino", "Cucina")
-        	        		.messaggio("Lava i piatti")
+        	        		.message("Lava i piatti")
         	        		.hunger(0)
         	        		.thirst(0)
         	        		.hygiene(0)
@@ -65,7 +65,7 @@ public class FabbricaOggetti {
         public static Room creaBagno() {
         	List<OggettoGioco> oggetti = List.of(
         			 new OggettoGioco.Builder("Doccia","Bagno")
-        		        		.messaggio("Fai una doccia rigenerante.")
+        		        		.message("Fai una doccia rigenerante.")
         		        		.hunger(0)
         		        		.thirst(0)
         		        		.hygiene(40)
@@ -73,7 +73,7 @@ public class FabbricaOggetti {
         		        		.build(),
         		        
         		        new OggettoGioco.Builder("WC","Bagno")
-        		        		.messaggio("Ti senti sollevata dopo essere andata al bagno.")
+        		        		.message("Ti senti sollevata dopo essere andata al bagno.")
         		        		.hunger(0)
         		        		.thirst(0)
         		        		.hygiene(5)
@@ -81,7 +81,7 @@ public class FabbricaOggetti {
         		        		.build(),
         		        
         		        new OggettoGioco.Builder("Lavatrice","Bagno")
-        		        		.messaggio("Metti i outfit in lavatrice. La casa è più ordinata!")
+        		        		.message("Metti i outfit in lavatrice. La casa è più ordinata!")
         		        		.hunger(0)
         		        		.thirst(0)
         		        		.hygiene(0)
@@ -96,7 +96,7 @@ public class FabbricaOggetti {
         public static Room creaSalotto() {
         	List<OggettoGioco> oggetti = List.of(
         			new OggettoGioco.Builder("Televisione","Salotto")
-	            		.messaggio("Guardi la TV e ti rilassi.")
+	            		.message("Guardi la TV e ti rilassi.")
 	            		.hunger(-5)
 	            		.thirst(-5)
 	            		.hygiene(-5)
@@ -104,7 +104,7 @@ public class FabbricaOggetti {
 	            		.build(),
             
             new OggettoGioco.Builder("Stereo","Salotto")
-	            		.messaggio("Ascolti Billie Eilish.")
+	            		.message("Ascolti Billie Eilish.")
 	            		.hunger(0)
 	            		.thirst(0)
 	            		.hygiene(0)
@@ -112,7 +112,7 @@ public class FabbricaOggetti {
 	            		.build(),
             
             new OggettoGioco.Builder("Divano","Salotto")
-	            		.messaggio("Ti siedi sul divano e ti riposi un po'.")
+	            		.message("Ti siedi sul divano e ti riposi un po'.")
 	            		.hunger(0)
 	            		.thirst(0)
 	            		.hygiene(0)
@@ -120,7 +120,7 @@ public class FabbricaOggetti {
 	            		.build(),
             
            new OggettoGioco.Builder("Libreria","Salotto")
-	            		.messaggio("Hai appena letto Harry Potter e la pietra filosofale!")
+	            		.message("Hai appena letto Harry Potter e la pietra filosofale!")
 	            		.hunger(-5)
 	            		.thirst(0)
 	            		.hygiene(0)
@@ -128,7 +128,7 @@ public class FabbricaOggetti {
 	            		.build(),
             
             new OggettoGioco.Builder("Album","Salotto")
-	            		.messaggio("Hai preso il vecchio album di fotografie")
+	            		.message("Hai preso il vecchio album di fotografie")
 	            		.hunger(0)
 	            		.thirst(0)
 	            		.hygiene(0)
@@ -144,7 +144,7 @@ public class FabbricaOggetti {
        public static Room creaSgabuzzino() {
     	   List<OggettoGioco> oggetti = List.of(
     			 new OggettoGioco.Builder("Aspirapolvere","Sgabuzzino")
-	           		.messaggio("Usi l'aspirapolvere e pulisci la room.")
+	           		.message("Usi l'aspirapolvere e pulisci la room.")
 	           		.hunger(0)
 	           		.thirst(0)
 	           		.hygiene(0)
@@ -159,7 +159,7 @@ public class FabbricaOggetti {
        public static Room creaGiardino() {
     	   List<OggettoGioco> oggetti = List.of(
     			   new OggettoGioco.Builder("Innaffiatoio","Giardino")
-		           		.messaggio("Innaffi le piante: ora sono più verdi")
+		           		.message("Innaffi le piante: ora sono più verdi")
 		           		.hunger(0)
 		           		.thirst(0)
 		           		.hygiene(0)
@@ -167,7 +167,7 @@ public class FabbricaOggetti {
 		           		.build(),
            
 	           		new OggettoGioco.Builder("Palla","Giardino")
-		           		.messaggio("Giochi con la palla e fai un po' di esercizio.")
+		           		.message("Giochi con la palla e fai un po' di esercizio.")
 		           		.hunger(-10)
 		           		.thirst(-5)
 		           		.hygiene(-15)
@@ -175,7 +175,7 @@ public class FabbricaOggetti {
 		           		.build(),
            
 	           		new OggettoGioco.Builder("Altalena","Giardino")
-		           		.messaggio("Ti dondoli sull'altalena, ti diverti e ti rilassi.")
+		           		.message("Ti dondoli sull'altalena, ti diverti e ti rilassi.")
 		           		.hunger(0)
 		           		.thirst(0)
 		           		.hygiene(-15)
@@ -183,7 +183,7 @@ public class FabbricaOggetti {
 		           		.build(),
            
 	           		new OggettoGioco.Builder("Macchina","Giardino")
-		           		.messaggio("Prendi la macchina e fai un giro.")
+		           		.message("Prendi la macchina e fai un giro.")
 		           		.hunger(-15)
 		           		.thirst(-15)
 		           		.hygiene(-20)

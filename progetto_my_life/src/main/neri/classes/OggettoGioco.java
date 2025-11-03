@@ -26,7 +26,7 @@ public class OggettoGioco {
         this.interazioneSpeciale = builder.interazioneSpeciale;
     }
       
-    public RisultatoAzione usa(MainCharacter personaggio) {
+    public RisultatoAzione usa(MainCharacter character) {
     	return new RisultatoAzione(messaggio, deltaHunger, deltaThirst, 
                 deltaEnergy, deltaHygiene);
     }
@@ -68,6 +68,7 @@ public class OggettoGioco {
         private int deltaThirst = 0;
         private int deltaEnergy = 0;
         private int deltaHygiene = 0;
+		private String message;
         
         // Costruttore con campi obbligatori
         public Builder(String name, String room) {

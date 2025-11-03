@@ -1,8 +1,13 @@
 package main.fabbri.classes;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+
 import main.aboufaris.interfaces.Room;
 import main.giuseppetti.classes.Quest;
 import main.giuseppetti.classes.NPC;
@@ -20,6 +25,8 @@ public class MainCharacter {
     private int energy;
     private int hygiene;
     private Room currentRoom;
+    private Map<Quest, Set<String>> itemUsedForQuests;
+
 
     // Modifiche per questi 
     private List<Quest> ongoingQuests;
@@ -35,6 +42,7 @@ public class MainCharacter {
         this.thirst = 100;
         this.energy = 100;
         this.hygiene = 100;
+        this.itemUsedForQuests = new HashMap<>();
 
         this.currentRoom = null; // Inizialmente nessuna room
         
@@ -148,40 +156,77 @@ public class MainCharacter {
     }
  */
   
-    // METODI PER LE MISSIONI -----------------------------------------------------------------------
+ // METODI PER LE MISSIONI -----------------------------------------------------------------------
 
     //Aggiunge una quest alla lista delle questi attive
     public void addQuest(Quest quest) {
         if (quest != null && !ongoingQuests.contains(quest)) {
             ongoingQuests.add(quest);
+            itemUsedForQuests.put(quest, new HashSet<>());
         }
     }
     
     // Rimuove una quest completata dalla lista delle questi attive
     public void removeQuest(Quest quest) {
         ongoingQuests.remove(quest);
+        itemUsedForQuests.remove(quest);
     }
 
     // Verifica se il personaggio ha questi attive con un NPC specifico
-    public boolean hasOngoingQuestWithNPC(NPC npc) {
+    public boolean hasActiveQuestWithNPC(NPC npc) {
         return ongoingQuests.stream()
-            .anyMatch(quest -> quest.getAssigningNPC().equals(npc));
+            .anyMatch(quest -> quest.getAssignerNPC().equals(npc));
     }
 
     // Ottiene le questi attive con un NPC specifico
-    public Optional<Quest> getOngoingQuestWithNPC(NPC npc) {
+    public Optional<Quest> getActiveQuestWithNPC(NPC npc) {
         return ongoingQuests.stream()
-            .filter(quest -> quest.getAssigningNPC().equals(npc))
+            .filter(quest -> quest.getAssignerNPC().equals(npc))
             .findFirst();
     }
     
     // Verifica automaticamente il completamento di tutte le questi attive con un NPC
     public Optional<Quest> getCompletedQuestWithNPC(NPC npc) {
 	    return ongoingQuests.stream()
-	        .filter(quest -> quest.getAssigningNPC().equals(npc))
-	        .filter(quest -> quest.verificaCompletamento(this))
-	        .findFirst();
+        .filter(q -> q.getAssignerNPC().equals(npc))
+        .filter(q -> q.checkCompletion(this))
+        .findFirst();
 	}
+
+    // METODI PER INTERAGIRE CON GLI OGGETTI -------------------------------------------------------
+    
+    // Registra l'uso di un oggetto
+    public void recordItemsUsedForQuests(String itemName) {
+    for (Quest q : ongoingQuests) {
+        itemUsedForQuests.computeIfAbsent(q, k -> new HashSet<>()).add(itemName);
+    }
+}
+    
+    // Verifica se un oggetto è state usato
+    public boolean hasUsedItemForQuest(String nameOggetto, Quest quest) {
+        return itemUsedForQuests.getOrDefault(quest, Set.of()).contains(nameOggetto);
+    }
+     
+    public String applicaRisultatoAzione(RisultatoAzione risultato, String nameOggetto) {
+        // 1. Controlla se l'azione ha senso
+        String messaggioControllo = verificaUtilitaAzione(risultato);
+        if (messaggioControllo != null) {
+            return messaggioControllo;
+        }
+        
+        // 2. Registra uso oggetto
+        recordItemsUsedForQuests(nameOggetto);
+        
+        // 3. Applica effetti
+        this.setHunger(this.getHunger() + risultato.getDeltaHunger());
+        this.setThirst(this.getThirst() + risultato.getDeltaThirst());
+        this.setEnergy(this.getEnergy() + risultato.getDeltaEnergy());
+        this.setHygiene(this.getHygiene() + risultato.getDeltaHygiene());
+        
+        // 4. Restituisce messaggio
+        return risultato.getMessaggio();
+    }
+
 
     // METODI PER INTERAGIRE CON GLI OGGETTI -------------------------------------------------------
     
@@ -193,28 +238,8 @@ public class MainCharacter {
     }
     
     // Verifica se un oggetto è state usato
-    public boolean haUsatoOggetto(String nameOggetto) {
+    public boolean hasUsedOggetto(String nameOggetto) {
         return oggettiUsati.contains(nameOggetto);
-    }
-     
-    public String applicaRisultatoAzione(RisultatoAzione risultato, String nameOggetto) {
-        // 1. Controlla se l'azione ha senso
-        String messaggioControllo = verificaUtilitaAzione(risultato);
-        if (messaggioControllo != null) {
-            return messaggioControllo;
-        }
-        
-        // 2. Registra uso oggetto
-        registraUsoOggetto(nameOggetto);
-        
-        // 3. Applica effetti
-        this.setHunger(this.getHunger() + risultato.getDeltaHunger());
-        this.setThirst(this.getThirst() + risultato.getDeltaThirst());
-        this.setEnergy(this.getEnergy() + risultato.getDeltaEnergy());
-        this.setHygiene(this.getHygiene() + risultato.getDeltaHygiene());
-        
-        // 4. Restituisce messaggio
-        return risultato.getMessaggio();
     }
     
     

@@ -1,6 +1,6 @@
 package main.giuseppetti.classes;
 
-import main.fabbri.classes.Character;
+import main.fabbri.classes.MainCharacter;
 import main.giuseppetti.interfaces.CompletionCondition;
 
 public class ObjectActionCondition implements CompletionCondition {
@@ -12,8 +12,8 @@ public class ObjectActionCondition implements CompletionCondition {
 	}
 
 	@Override
-	public boolean checkCompletion(Character character) {
-		return character.hasUsedObject(objectName);
+	public boolean checkCompletion(MainCharacter character) {
+		return character.hasUsedOggetto(objectName);
 	} 
 	   
 }

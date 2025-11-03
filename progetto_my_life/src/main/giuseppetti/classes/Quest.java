@@ -2,7 +2,6 @@ package main.giuseppetti.classes;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import main.fabbri.classes.Character;
 import main.giuseppetti.interfaces.CompletionCondition;
 
@@ -35,7 +34,7 @@ public class Quest {
         
         // If all conditions are satisfied, the quest is completed
         for (CompletionCondition condition : conditions) {
-            if (!condition.checkCompletion(character)) {
+            if (!condition.checkCompletion(character, this)) {
                 return false;
             }
         }

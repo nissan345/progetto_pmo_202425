@@ -3,7 +3,6 @@ package main.giuseppetti.classes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import main.aboufaris.interfaces.Room;
 import main.fabbri.classes.Character;
 
@@ -72,7 +71,7 @@ public abstract class NPC {
     	return quest;
     }
 
-    public List<String> turnInQuest(Character character) {
+    public List<String> turnInQuest(Character character, Quest q) {
         List<String> messages = new ArrayList<>();
         Optional<Quest> completedQuest = character.getCompletedQuestWithNPC(this);
 

@@ -1,120 +1,138 @@
 package main.fabbri.classes;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import main.aboufaris.interfaces.Room;
 import main.giuseppetti.classes.Quest;
 import main.giuseppetti.classes.NPC;
-import main.neri.classes.Frigorifero;
 import main.neri.classes.OggettoGioco;
 import main.neri.classes.RisultatoAzione;
 
 public class Character {
-	private static final int STATO_MAX = 100;
-    private static final int STATO_MIN = 0;
-    private String nome;
-    private Vestito vestiti;
-    private Capelli capelli;
-    private int fame;
-    private int sete;
-    private int energia;
-    private int igiene;
-    private Room stanzaCorrente;
+	private static final int MAX_STATE = 100;
+    private static final int MIN_STATE = 0;
+    private final int XP_TO_NEXT_LVL = 100; 
+    private String name;
+    private Outfit outfit;
+    private Hair hair;
+    private int hunger;
+    private int thirst;
+    private int energy;
+    private int hygiene;
+    private Room currentRoom;
 
-    // Modifiche per missioni 
-    private List<Quest> missioniAttive;
-    private List<String> oggettiUsati; // Traccia gli oggetti usati
+    // sistema livelli 
+    private int lvl; 
+    private int xp;            
+
+    // Modifiche per questi 
+    private List<Quest> ongoingQuests;
+
+    private Map<Quest, Set<String>> itemUsedForQuests;
  
     // COSTRUTTORE ------------------------------------------------------------------------
-    public Character(String nome, Vestito vestiti, Capelli capelli) {
-        this.nome = nome;
-        this.vestiti = vestiti;
-        this.capelli = capelli;  
+    public Character(String name, Outfit outfit, Hair hair) {
+        this.name = name;
+        this.outfit = outfit;
+        this.hair = hair;  
         // Valori iniziali
-        this.fame = 100;
-        this.sete = 100;
-        this.energia = 100;
-        this.igiene = 100;
+        this.hunger = 100;
+        this.thirst = 100;
+        this.energy = 100;
+        this.hygiene = 100;
 
-        this.stanzaCorrente = null; // Inizialmente nessuna room
+        this.lvl = 1;
+        this.xp = 0; 
+
+        this.currentRoom = null; // Inizialmente nessuna room
         
-        this.missioniAttive = new ArrayList<>();
-        this.oggettiUsati = new ArrayList<>();
-    }
-    // Rimuovi setters per stati, livello, nome, preferenze, cibo, capelli ecc... sono tutti gestiti
-    // in altri metodi 
-    // GETTER E SETTER -------------------------------------------------------------------
-    public String getNome() { 
-        return nome; 
-    }
-    
-    public Vestito getVestiti() { 
-        return vestiti; 
+        this.ongoingQuests = new ArrayList<>();
+        this.itemUsedForQuests = new HashMap<>();
     }
 
-    public Capelli getCapelli() { 
-        return capelli; 
+    // Rimuovi setters per stati, livello, name, preferenze, cibo, hair ecc... sono tutti gestiti
+    // in altri metodi 
+
+    // GETTER E SETTER -------------------------------------------------------------------
+    public String getName() { 
+        return name; 
     }
     
-    public int getFame() { 
-        return fame; 
+    public Outfit getVestiti() { 
+        return outfit; 
+    }
+
+    public Hair getCapelli() { 
+        return hair; 
     }
     
-    public int getSete() { 
-        return sete; 
+    public int getHunger() { 
+        return hunger; 
     }
     
-    public int getEnergia() { 
-        return energia; 
+    public int getThirst() { 
+        return thirst; 
     }
     
-    public int getIgiene() { 
-        return igiene; 
+    public int getEnergy() { 
+        return energy; 
     }
+    
+    public int getHygiene() { 
+        return hygiene; 
+    }
+
+    public String getCurrentRoom() {
+        if (currentRoom != null) {
+            return currentRoom.getRoomName();
+        } else {
+            return "Nessuna room";
+        }
+    }
+    
     // IN CASO CI DIMENTICHIAMO PER L'ENNESIMA VOLTA, QUESTI SETTER SONO NECESSARI!!!!!
-    private void setFame(int fame) {
-        this.fame = Math.max(STATO_MIN, Math.min(STATO_MAX, fame));
+    private void setHunger(int hunger) {
+        this.hunger = Math.max(MIN_STATE, Math.min(MAX_STATE, hunger));
     }
     
-    private void setSete(int sete) {
-        this.sete = Math.max(STATO_MIN, Math.min(STATO_MAX, sete));
+    private void setThirst(int thirst) {
+        this.thirst = Math.max(MIN_STATE, Math.min(MAX_STATE, thirst));
     }
     
-    private void setEnergia(int energia) {
-        this.energia = Math.max(STATO_MIN, Math.min(STATO_MAX, energia));
+    private void setEnergy(int energy) {
+        this.energy = Math.max(MIN_STATE, Math.min(MAX_STATE, energy));
     }
     
-    private void setIgiene(int igiene) {
-        this.igiene = Math.max(STATO_MIN, Math.min(STATO_MAX, igiene));
+    private void setHygiene(int hygiene) {
+        this.hygiene = Math.max(MIN_STATE, Math.min(MAX_STATE, hygiene));
     } 
+        
+    public String pickCurrentRoom(Room room) {
+        this.currentRoom = room;
+        return "Sei entrato in: " + room.getRoomName();
+    }
+
     
-    // GETTER E SETTER PER LA POSIZIONE
-    public Room getStanzaCorrente() {
-        return stanzaCorrente;
-    }
-    // DA VEDERE
-    public void setStanzaCorrente(Room stanzaCorrente) {
-        this.stanzaCorrente = stanzaCorrente;
-    }
     // DA RIVEDERE E FORSE TOGLIERE
     // METODI PRINCIPALI ----------------------------------------------------------------
-    public String stampaStato() {
-        StringBuilder stato = new StringBuilder();
+    public String printState() {
+        StringBuilder state = new StringBuilder();
         
-        stato.append("\n STATO DI ").append(nome.toUpperCase()).append("\n");
-        stato.append("Vestiti: ").append(vestiti.getNome()).append("\n");
-        stato.append("Capelli: ").append(capelli.getNome()).append("\n");
-        stato.append("Fame: ").append(fame).append("/100\n");
-        stato.append("Sete: ").append(sete).append("/100\n");
-        stato.append("Energia: ").append(energia).append("/100\n");
-        stato.append("Igiene: ").append(igiene).append("/100\n");
-        stato.append("Posizione: ").append(getPosizione()).append("\n"); // AGGIUNTO
+        state.append("\n STATO DI ").append(name.toUpperCase()).append("\n");
+        state.append("Vestiti: ").append(outfit.getName()).append("\n");
+        state.append("Capelli: ").append(hair.getName()).append("\n");
+        state.append("Fame: ").append(hunger).append("/100\n");
+        state.append("Sete: ").append(thirst).append("/100\n");
+        state.append("Energia: ").append(energy).append("/100\n");
+        state.append("Igiene: ").append(hygiene).append("/100\n");
+        state.append("Posizione: ").append(getCurrentRoom()).append("\n");
         
-        return stato.toString();
+        return state.toString();
     }
 
    
@@ -122,93 +140,79 @@ public class Character {
 
     /* METODO PER CAMBIARE VESTITI
     public String cambiaVestiti(Vestito nuoviVestiti) {
-        this.vestiti = nuoviVestiti;
-        return "Hai cambiato i vestiti in: " + nuoviVestiti.getNome();
+        this.outfit = nuoviVestiti;
+        return "Hai cambiato i outfit in: " + nuoviVestiti.getName();
     }
     // DA TOGLIERE
     // METODO PER CAMBIARE CAPELLI
     public String cambiaCapelli(Capelli nuoviCapelli) {
-        this.capelli = nuoviCapelli;
-        return "Hai cambiato i capelli in: " + nuoviCapelli.getNome();
+        this.hair = nuoviCapelli;
+        return "Hai cambiato i hair in: " + nuoviCapelli.getName();
     }
     // HA SENSO MA NON SAPPIAMO SE SERVE
     // METODO PER MAPPARE LO STATO COMPLETO
     public Map<String, Integer> getStatoCompleto() {
-        Map<String, Integer> stato = new HashMap<>();
-        stato.put("fame", fame);
-        stato.put("sete", sete);
-        stato.put("energia", energia);
-        stato.put("igiene", igiene);
-        return stato;
+        Map<String, Integer> state = new HashMap<>();
+        state.put("hunger", hunger);
+        state.put("thirst", thirst);
+        state.put("energy", energy);
+        state.put("hygiene", hygiene);
+        return state;
     }
  */
-    // METODI PER LA POSIZIONE ---------------------------------------------------------------
-
-    public String getPosizione() {
-        if (stanzaCorrente != null) {
-            return stanzaCorrente.getNomeStanza();
-        } else {
-            return "Nessuna room";
-        }
-    }
-
-    public String scegliStanza(Room room) {
-        this.stanzaCorrente = room;
-        return "Sei entrato in: " + room.getNomeStanza();
-    }
-
-
+  
     // METODI PER LE MISSIONI -----------------------------------------------------------------------
 
-    //Aggiunge una quest alla lista delle missioni attive
+    //Aggiunge una quest alla lista delle questi attive
     public void addQuest(Quest quest) {
-        if (quest != null && !missioniAttive.contains(quest)) {
-            missioniAttive.add(quest);
+        if (quest != null && !ongoingQuests.contains(quest)) {
+            ongoingQuests.add(quest);
+            itemUsedForQuests.put(quest, new HashSet<>());
         }
     }
     
-    // Rimuove una quest completata dalla lista
-
+    // Rimuove una quest completata dalla lista delle questi attive
     public void removeQuest(Quest quest) {
-        missioniAttive.remove(quest);
+        ongoingQuests.remove(quest);
+        itemUsedForQuests.remove(quest);
     }
-    
 
-    // Verifica se il character ha missioni attive con un NPC specifico
+    // Verifica se il personaggio ha questi attive con un NPC specifico
     public boolean hasActiveQuestWithNPC(NPC npc) {
-        return missioniAttive.stream()
+        return ongoingQuests.stream()
             .anyMatch(quest -> quest.getAssignerNPC().equals(npc));
     }
-    
 
-    // Ottiene le missioni attive con un NPC specifico
+    // Ottiene le questi attive con un NPC specifico
     public Optional<Quest> getActiveQuestWithNPC(NPC npc) {
-        return missioniAttive.stream()
+        return ongoingQuests.stream()
             .filter(quest -> quest.getAssignerNPC().equals(npc))
             .findFirst();
     }
     
-
-    // Verifica automaticamente il completamento di tutte le missioni attive con un NPC
+    // Verifica automaticamente il completamento di tutte le questi attive con un NPC
     public Optional<Quest> getCompletedQuestWithNPC(NPC npc) {
-	    return missioniAttive.stream()
-	        .filter(quest -> quest.getAssignerNPC().equals(npc))
-	        .filter(quest -> quest.checkCompletion(this))
-	        .findFirst();
+	    return ongoingQuests.stream()
+        .filter(q -> q.getAssignerNPC().equals(npc))
+        .filter(q -> q.checkCompletion(this))
+        .findFirst();
 	}
 
-    public void registraUsoOggetto(String nomeOggetto) {
-        if (!oggettiUsati.contains(nomeOggetto)) {
-            oggettiUsati.add(nomeOggetto);
-        }
-    }
+    // METODI PER INTERAGIRE CON GLI OGGETTI -------------------------------------------------------
     
-    // Verifica se un oggetto è stato usato
-    public boolean hasUsedObject(String nomeOggetto) {
-        return oggettiUsati.contains(nomeOggetto);
+    // Registra l'uso di un oggetto
+    public void recordItemsUsedForQuests(String itemName) {
+    for (Quest q : ongoingQuests) {
+        itemUsedForQuests.computeIfAbsent(q, k -> new HashSet<>()).add(itemName);
+    }
+}
+    
+    // Verifica se un oggetto è state usato
+    public boolean hasUsedItemForQuest(String nameOggetto, Quest quest) {
+        return itemUsedForQuests.getOrDefault(quest, Set.of()).contains(nameOggetto);
     }
      
-    public String applicaRisultatoAzione(RisultatoAzione risultato, String nomeOggetto) {
+    public String applicaRisultatoAzione(RisultatoAzione risultato, String nameOggetto) {
         // 1. Controlla se l'azione ha senso
         String messaggioControllo = verificaUtilitaAzione(risultato);
         if (messaggioControllo != null) {
@@ -216,45 +220,45 @@ public class Character {
         }
         
         // 2. Registra uso oggetto
-        registraUsoOggetto(nomeOggetto);
+        recordItemsUsedForQuests(nameOggetto);
         
         // 3. Applica effetti
-        this.setFame(this.getFame() + risultato.getDeltaFame());
-        this.setSete(this.getSete() + risultato.getDeltaSete());
-        this.setEnergia(this.getEnergia() + risultato.getDeltaEnergia());
-        this.setIgiene(this.getIgiene() + risultato.getDeltaIgiene());
+        this.setHunger(this.getHunger() + risultato.getDeltaHunger());
+        this.setThirst(this.getThirst() + risultato.getDeltaThirst());
+        this.setEnergy(this.getEnergy() + risultato.getDeltaEnergy());
+        this.setHygiene(this.getHygiene() + risultato.getDeltaHygiene());
         
-        // 4. Restituisce message
+        // 4. Restituisce messaggio
         return risultato.getMessaggio();
     }
     
     
     public String interagisci(OggettoGioco oggetto) {
         RisultatoAzione risultato = oggetto.usa(this);
-        return applicaRisultatoAzione(risultato, oggetto.getNome());
+        return applicaRisultatoAzione(risultato, oggetto.getName());
     }
     
     
     private String verificaUtilitaAzione(RisultatoAzione risultato) {
     	
-        if (risultato.getDeltaEnergia() > 0 && this.energia >= 100) {
-            return "Sei già pieno di energia, non ha senso riposare ora!";
-        }else if (risultato.getDeltaFame() < 0 && this.fame <= 0) {
-            return "Non hai fame, non ha senso mangiare ora!";
-        }else if (risultato.getDeltaSete() < 0 && this.sete <= 0) {
-            return "Non hai sete, non ha senso bere ora!";
-        }else if (risultato.getDeltaIgiene() > 0 && this.igiene >= 100) {
+        if (risultato.getDeltaEnergy() > 0 && this.energy >= 100) {
+            return "Sei già pieno di energy, non ha senso riposare ora!";
+        }else if (risultato.getDeltaHunger() < 0 && this.hunger <= 0) {
+            return "Non hai hunger, non ha senso mangiare ora!";
+        }else if (risultato.getDeltaThirst() < 0 && this.thirst <= 0) {
+            return "Non hai thirst, non ha senso bere ora!";
+        }else if (risultato.getDeltaHygiene() > 0 && this.hygiene >= 100) {
             return "Sei già pulitissimo, non serve lavarti!";
         }else {
         	return null;
         }
     }
 
-    public void decadimentoStato(){
-        this.fame = Math.max(0, this.fame-2);
-        this.sete = Math.max(0,this.sete-3);
-        this.energia = Math.max(0, this.energia-1);
-        this.igiene = Math.max(0, this.igiene-1);
+    public void stateDecay(){
+        this.hunger = Math.max(0, this.hunger-2);
+        this.thirst = Math.max(0,this.thirst-3);
+        this.energy = Math.max(0, this.energy-1);
+        this.hygiene = Math.max(0, this.hygiene-1);
     }
 }
 

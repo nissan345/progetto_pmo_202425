@@ -43,7 +43,7 @@ public class Mum extends NPC {
                 "Dovresti riportarmi il vecchio album di famiglia che ho perduto da qualche parte in casa e riportamelo",  
                                    this,
                                    15, 
-                                   Arrays.asList(new ObjectActionCondition("Album"))
+                                   Arrays.asList(new ItemActionCondition("Album"))
                             );
         this.addQuest(albumQuest);
     }

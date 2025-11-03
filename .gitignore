@@ -11,3 +11,10 @@ bin/
 # VSCode (se vuoi mantenere)
 .vscode/
 .yscode/
+
+*.class*.class
+bin/
+target/
+build/
+target/
+build/

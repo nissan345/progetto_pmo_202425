@@ -10,7 +10,7 @@ public class FabbricaOggetti {
    
 	 // Camera da Letto
         public static Stanza creaCameraDaLetto() {
-        	List<OggettoGioco> oggetti = new ArrayList<>(List.of(
+        	List<OggettoGioco> oggetti = List.of(
         	        new OggettoGioco.Builder("Letto", "Camera da Letto", 80)
         	            .messaggio("Ti sdrai sul letto e riposi")
         	            .energia(40)
@@ -31,13 +31,13 @@ public class FabbricaOggetti {
         	            .igiene(20)
         	 //         .isInterazioneSpeciale(true)
         	            .build()
-        	    ));
+        	    );
             return new StanzaImpl("Camera da Letto" , oggetti);
         }
         
      // Cucina
         public static Stanza creaCucina() {
-        	List<OggettoGioco> oggetti = new ArrayList<>(List.of(
+        	List<OggettoGioco> oggetti = List.of(
         	        new OggettoGioco.Builder("Fornelli", "Cucina", 80)
         	        		.messaggio("Cucini un pasto caldo")
         	        		.fame(20)
@@ -56,13 +56,13 @@ public class FabbricaOggetti {
         	        		.igiene(0)
         	        		.energia(-10)
         	        		.build()
-        			));	
+        			);	
         	return new StanzaImpl("Cucina", oggetti);
         }
        
      // Bagno
         public static Stanza creaBagno() {
-        	List<OggettoGioco> oggetti = new ArrayList<>(List.of(
+        	List<OggettoGioco> oggetti = List.of(
         			 new OggettoGioco.Builder("Doccia","Bagno", 80)
         		        		.messaggio("Fai una doccia rigenerante.")
         		        		.fame(0)
@@ -86,13 +86,13 @@ public class FabbricaOggetti {
         		        		.igiene(0)
         		        		.energia(-10)
         		        		.build()
-        			));
+        			);
         			return new StanzaImpl("Bagno", oggetti);
         }
         
      // Salotto
         public static Stanza creaSalotto() {
-        	List<OggettoGioco> oggetti = new ArrayList<>(List.of(
+        	List<OggettoGioco> oggetti = List.of(
         			new OggettoGioco.Builder("Televisione","Salotto", 40)
 	            		.messaggio("Guardi la TV e ti rilassi.")
 	            		.fame(-5)
@@ -132,7 +132,7 @@ public class FabbricaOggetti {
 	            		.igiene(0)
 	            		.energia(-5)
 	            		.build()
-	        			));
+	        			);
         	return new StanzaImpl("Salotto", oggetti);
         			
         }
@@ -140,22 +140,21 @@ public class FabbricaOggetti {
         
      // Sgabuzzino
        public static Stanza creaSgabuzzino() {
-    	   List<OggettoGioco> oggetti = new ArrayList<>(List.of(
+    	   List<OggettoGioco> oggetti = List.of(
     			 new OggettoGioco.Builder("Aspirapolvere","Sgabuzzino", 30)
 	           		.messaggio("Usi l'aspirapolvere e pulisci la stanza.")
 	           		.fame(0)
 	           		.sete(0)
 	           		.igiene(0)
 	           		.energia(-20)
-	           		.build()
-					));
+	           		.build());
     	   return new StanzaImpl("Sgabuzzino", oggetti);
        }
         
                 
        // Giardino
        public static Stanza creaGiardino() {
-    	   List<OggettoGioco> oggetti = new ArrayList<>(List.of(
+    	   List<OggettoGioco> oggetti = List.of(
     			   new OggettoGioco.Builder("Innaffiatoio","Giardino", 10)
 		           		.messaggio("Innaffi le piante: ora sono più verdi")
 		           		.fame(0)
@@ -186,8 +185,7 @@ public class FabbricaOggetti {
 		           		.sete(-15)
 		           		.igiene(-20)
 		           		.energia(-5)
-		           		.build()
-		   ));
+		           		.build());
           return new StanzaImpl("Giardino", oggetti);
        }
 }

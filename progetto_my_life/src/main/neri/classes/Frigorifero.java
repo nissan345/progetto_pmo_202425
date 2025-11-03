@@ -15,7 +15,7 @@ private final Map<FoodType, RisultatoAzione> effettiCibi;
     
     public Frigorifero() {
         super(new Builder("Frigorifero", "Cucina")
-                .messaggio("Apri il frigorifero... Scegli cosa mangiare!"));
+                .message("Apri il frigorifero... Scegli cosa mangiare!"));
         
         this.effettiCibi = new HashMap<>();
         // Inizializza tutti i cibi con i loro effetti

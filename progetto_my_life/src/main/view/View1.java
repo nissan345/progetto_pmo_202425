@@ -58,9 +58,9 @@ public class View1 {
         frame.setPreferredSize(new Dimension(1000, 800));
 
 <<<<<<< HEAD
-        // Top: stanza
+        // Top: room
         JPanel top = new JPanel(new BorderLayout());
-        stanzaLabel = new JLabel("Stanza: --");
+        stanzaLabel = new JLabel("Room: --");
         stanzaLabel.setFont(stanzaLabel.getFont().deriveFont(Font.BOLD, 18f));
         top.add(stanzaLabel, BorderLayout.NORTH);
 
@@ -100,31 +100,17 @@ public class View1 {
         oggettiPanel = new JPanel();
         oggettiPanel.setLayout(new BoxLayout(oggettiPanel, BoxLayout.Y_AXIS));
         JScrollPane oggettiScroll = new JScrollPane(oggettiPanel);
-<<<<<<< HEAD
         oggettiScroll.setBorder(BorderFactory.createTitledBorder("Oggetti in stanza"));
         center.add(oggettiScroll);
         frame.getContentPane().add(center, BorderLayout.CENTER);
-        // Right: stato personaggio e missioni
+        // Right: stato character e missioni
         JPanel right = new JPanel(new BorderLayout());
         statoArea = new JTextArea(10,20);
         statoArea.setEditable(false);
         statoArea.setLineWrap(true);
         statoArea.setWrapStyleWord(true);
         right.add(new JScrollPane(statoArea), BorderLayout.CENTER);
-        right.setBorder(BorderFactory.createTitledBorder("Stato MainCharacter / Missioni"));
-=======
-        oggettiScroll.setBorder(BorderFactory.createTitledBorder("Oggetti in room"));
-        center.add(oggettiScroll);
-        frame.getContentPane().add(center, BorderLayout.CENTER);
-        // Right: state personaggio e questi
-        JPanel right = new JPanel(new BorderLayout());
-        stateArea = new JTextArea(10,20);
-        stateArea.setEditable(false);
-        stateArea.setLineWrap(true);
-        stateArea.setWrapStyleWord(true);
-        right.add(new JScrollPane(stateArea), BorderLayout.CENTER);
-        right.setBorder(BorderFactory.createTitledBorder("Stato MainCharacter / Questi"));
->>>>>>> nicxole
+        right.setBorder(BorderFactory.createTitledBorder("Stato Personaggio / Missioni"));
 
         // Bottom: azioni
         azioniPanel = new JPanel(new GridLayout(0,3,6,6));
@@ -198,12 +184,6 @@ public class View1 {
         SwingUtilities.invokeLater(() -> {
             appendLog("Missione attiva: " + Nome + " - " + Descrizione);
             statoArea.append("Missione: " + Nome + " - " + Descrizione + "\n");
-=======
-    public void mostraQuestAttiva(String Name, String Description){
-        SwingUtilities.invokeLater(() -> {
-            appendLog("Quest attiva: " + Name + " - " + Description);
-            stateArea.append("Quest: " + Name + " - " + Description + "\n");
->>>>>>> nicxole
         });
     }
 
@@ -244,7 +224,7 @@ public class View1 {
         SwingUtilities.invokeLater(() -> appendLog(s));
     }
 
-    public void mostraOpzioni(List<OpzioniInterazione> opzioni){
+    public void mostraOpzioni(List<InteractionOption> opzioni){
     	SwingUtilities.invokeLater(() -> {
             if(opzioni == null || opzioni.isEmpty()) {
                 mostraMessaggio("Nessuna opzione disponibile");
@@ -350,11 +330,7 @@ public class View1 {
                     oggettiPanel.add(Box.createRigidArea(new Dimension(0, 5)));
                 }
             } else {
-<<<<<<< HEAD
                 JLabel nessunOggetto = new JLabel("Nessun oggetto in questa stanza");
-=======
-                JLabel nessunOggetto = new JLabel("Nessun oggetto in questa room");
->>>>>>> nicxole
                 nessunOggetto.setAlignmentX(Component.LEFT_ALIGNMENT);
                 oggettiPanel.add(nessunOggetto);
             }
@@ -368,11 +344,7 @@ public class View1 {
     
 
     
-<<<<<<< HEAD
     public void mostraNpcInterattivi(Stanza stanza) {
-=======
-    public void mostraNpcInterattivi(Room room) {
->>>>>>> nicxole
 
         // Pulisci i vecchi pulsanti NPC
         Component[] components = azioniPanel.getComponents();
@@ -385,15 +357,9 @@ public class View1 {
             }
         }
         
-<<<<<<< HEAD
         // Se c'è un NPC nella stanza, aggiungi pulsanti
         if (stanza.getNpcInStanza().isPresent()) {
             NPC npc = stanza.getNpcInStanza().get();
-=======
-        // Se c'è un NPC nella room, aggiungi pulsanti
-        if (room.getNpcInRoom().isPresent()) {
-            NPC npc = room.getNpcInRoom().get();
->>>>>>> nicxole
             
             // Primo click - Dialogo iniziale
             JButton dialogoBtn = new JButton("Parla con " + npc.getRelazione());
@@ -417,7 +383,6 @@ public class View1 {
         }
     }
 
-<<<<<<< HEAD
     public void aggiornaStanza(Stanza stanzaCorrente) {
         SwingUtilities.invokeLater(() -> {
             if(stanzaCorrente!=null){
@@ -425,22 +390,13 @@ public class View1 {
                     mostraStanza(stanzaCorrente.getNomeStanza(), stanzaCorrente);
                 }catch(Exception ex){
                     stanzaLabel.setText("Stanza: (sconosciuta)");
-=======
-    public void aggiornaRoom(Room currentRoom) {
-        SwingUtilities.invokeLater(() -> {
-            if(currentRoom!=null){
-                try{
-                    mostraRoom(currentRoom.getNameRoom(), currentRoom);
-                }catch(Exception ex){
-                    roomLabel.setText("Room: (sconosciuta)");
->>>>>>> nicxole
                 }
             }
         });
     }
 
     // Placeholder per aggiornamenti futuri del controller
-    public void mostraStatistiche(MainCharacter p){
+    public void mostraStatistiche(Personaggio p){
         SwingUtilities.invokeLater(() -> {
             if(p==null) return;
 <<<<<<< HEAD
@@ -455,11 +411,10 @@ public class View1 {
         });
     }
 
-    public void mostraMainCharacter(MainCharacter p){
+    public void mostraPersonaggio(Personaggio p){
         SwingUtilities.invokeLater(() -> {
             if(p==null) return;
-<<<<<<< HEAD
-            appendLog("MainCharacter: " + p.getNome() + " creato!");
+            appendLog("Personaggio: " + p.getNome() + " creato!");
             statoArea.setText("Nome: " + p.getNome() + "\n" + "Energia: " + p.getEnergia());
 =======
             appendLog("MainCharacter: " + p.getName() + " creato!");
@@ -488,18 +443,14 @@ public class View1 {
         int result = JOptionPane.showConfirmDialog(
                 frame, 
                 panel, 
-<<<<<<< HEAD
-                "Nome MainCharacter", 
-=======
-                "Name MainCharacter", 
->>>>>>> nicxole
+                "Nome Personaggio", 
                 JOptionPane.OK_CANCEL_OPTION, 
                 JOptionPane.QUESTION_MESSAGE
             );
            return textField.getText().trim();
     }
 
-    public int mostraOpzioniPersonalizzazione(String messaggio, List<String> opzioni) {
+    public int mostraOpzioniPersonalizzazione(String message, List<String> opzioni) {
     	if (opzioni == null || opzioni.isEmpty()) {
             return -1;
         }
@@ -510,7 +461,7 @@ public class View1 {
         Object selezione = JOptionPane.showInputDialog(
             frame,
             messaggio,
-            "Personalizzazione MainCharacter",
+            "Personalizzazione Personaggio",
             JOptionPane.QUESTION_MESSAGE,
             null,
             opzioniArray,

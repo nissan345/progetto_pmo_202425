@@ -4,11 +4,8 @@ import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.IntConsumer;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
-import main.aboufaris.interfaces.*;
 import main.control.Control;
 
 import main.fabbri.classes.MainCharacter;
@@ -92,13 +89,11 @@ public class View {
         logScroll.setBorder(BorderFactory.createTitledBorder("Log / Messaggi"));
         center.add(logScroll);
 
-
         // Oggetti in room 
         oggettiPanel = new JPanel();
         oggettiPanel.setLayout(new BoxLayout(oggettiPanel, BoxLayout.Y_AXIS));
         JScrollPane oggettiScroll = new JScrollPane(oggettiPanel);
         oggettiScroll.setBorder(BorderFactory.createTitledBorder("Oggetti in room"));
-
         center.add(oggettiScroll);
         
         return center;
@@ -189,7 +184,7 @@ public class View {
            
 	}
 	
-	public int mostraOpzioniPersonalizzazione(String messaggio, List<String> opzioni) {
+	public int mostraOpzioniPersonalizzazione(String message, List<String> opzioni) {
 		if (opzioni == null || opzioni.isEmpty()) {
             return -1;
         }
@@ -382,7 +377,7 @@ public class View {
     	SwingUtilities.invokeLater(() -> appendLog(s));
     }
     
-    public int mostraOpzioniIndice(String titolo, String messaggio, List<String> labels) {
+    public int mostraOpzioniIndice(String titolo, String message, List<String> labels) {
         if (labels == null || labels.isEmpty()) {
             mostraMessaggio("Nessuna opzione disponibile");
             return -1;
@@ -391,7 +386,7 @@ public class View {
         String[] array = labels.toArray(String[]::new);
         int scelta = JOptionPane.showOptionDialog(
                 frame,
-                messaggio,
+                message,
                 titolo,
                 JOptionPane.DEFAULT_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
@@ -409,12 +404,12 @@ public class View {
         }
     }
     
-    public <T> Optional<T> mostraDialogSceltaGenerica(String titolo, String messaggio, List<T> opzioni) {
+    public <T> Optional<T> mostraDialogSceltaGenerica(String titolo, String message, List<T> opzioni) {
         if (opzioni == null || opzioni.isEmpty()) return Optional.empty();
         String[] labels = opzioni.stream().map(Object::toString).toArray(String[]::new);
 
         int scelta = JOptionPane.showOptionDialog(
-                frame, messaggio, titolo,
+                frame, message, titolo,
                 JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
                 null, labels, labels[0]);
 

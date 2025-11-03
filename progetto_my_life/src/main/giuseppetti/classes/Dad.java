@@ -4,71 +4,60 @@ import java.util.Arrays;
 
 import main.aboufaris.interfaces.Room;
 
-public class Padre extends NPC {
+public class Dad extends NPC {
 
-    public Padre(Room s) {
-        super("Padre", s);
+    public Dad(Room s) {
+        super("Dad", s);
     }
     
     @Override
-    public String getDialogoIniziale() {
+    public String getInitialDialogue() {
         return "Ciao tesoro! Come sta andando la tua avventura?";
     }
 
     @Override
-
-    public String getQuestAssegnataDialogo(Quest quest) {
+    public String getQuestAssignedDialogue(Quest quest) {
         return "Ottimo che tu voglia aiutare! " + quest.getDescription() + 
-
                "\nSo che posso contare su di te. Torna da me quando avrai finito!";
     }
     
     @Override 
-
-    public String getDialogoQuestInCorso(Quest quest) {
+    public String getQuestInProgressDialogue(Quest quest) {
     	switch(quest.getName()) {
     		case "Annaffia le piante":
     			return "Hai già Annaffiato le piante? Ricorda che l'Innaffiatoio si trova in giardino";
     		case "Festa a sorpresa": 
     			return "Com'è andata con i preparativi per la festa a sorpresa? Ricordati di: pulire con l'aspirapolvere, cucinare ai fornelli e mettere la musica con lo stereo!";
     		default:
-
     			return "Come sta andando con la quest? Torna da me quando hai finito!";
-
     	} 
     }
     
     @Override
-
-    public String getDialogoCompletamentoQuest(Quest quest) {
-
+    public String getQuestCompletionDialogue(Quest quest) {
         return "Grazie mille! Hai fatto un ottimo lavoro." +
-               "'!\nSei sempre così affidabile, sono orgoglioso di te!";
+                "'!\nSei sempre così affidabile, sono orgoglioso di te!";
     }
 
-
-    protected void inizializzaQuesti() {
+    @Override
+    protected void initializeQuests() {
        
-        Quest questPiante = new Quest("Innaffia le piante", 
-
-                                   "Dovresti innaffiare le piante", 
+        Quest plantsQuest = new Quest("Innaffia le piante", 
+                                   "Dovresti innaffiare le piante",
                                    this, 
                                    15, 
-                                   Arrays.asList(new CondizioneAzioneOggetto("Innaffatoio"))
+                                   Arrays.asList(new ObjectActionCondition("Watering can"))
                             );
-
-        this.addQuest(questPiante);
+        this.addQuest(plantsQuest);
         
-        Quest questFestaSorpresa = new Quest("Festa a sorpresa", 
-									  "Dovresti preparare una festa a sorpresa per la mamma, fai delle pulizie in casa e metti della musica in Salotto", 
+        Quest surprisePartyQuest = new Quest("Festa a Sorpresa", 
+        											  "Dovresti preparare una festa a sorpresa per la mamma, fai delle pulizie in casa e metti della musica in Salotto", 
         											  this, 
         											  30, 
-        											  Arrays.asList(new CondizioneAzioneOggetto("Aspirapolvere"), 
-        													        new CondizioneAzioneOggetto("Fornelli"), 
-        													        new CondizioneAzioneOggetto("Stereo e vinili"))
+        											  Arrays.asList(new ObjectActionCondition("Vacuum cleaner"), 
+        													        new ObjectActionCondition("Stove"), 
+        													        new ObjectActionCondition("Stereo and records"))
         		);
-
-        this.addQuest(questFestaSorpresa);
+        this.addQuest(surprisePartyQuest);
     }
-
 }

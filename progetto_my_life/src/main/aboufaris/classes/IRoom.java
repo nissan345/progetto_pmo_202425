@@ -6,10 +6,12 @@ import main.aboufaris.interfaces.Room;
 import main.giuseppetti.classes.NPC;
 import main.neri.classes.OggettoGioco;
 
+
 public class IRoom implements Room{
+
     private String nomeStanza;
-    private Optional<NPC> npcInStanza;               // Indica gli oggetti presenti nella stanza
-    private final List<OggettoGioco> oggettiInStanza;  // Indica gli NPC presenti nella stanza
+    private Optional<NPC> npcInStanza;               // Indica gli oggetti presenti nella room
+    private final List<OggettoGioco> oggettiInStanza;  // Indica gli NPC presenti nella room
     
     public IRoom(String nome, List<OggettoGioco> oggetti){
         this.nomeStanza = nome; 

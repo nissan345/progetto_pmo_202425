@@ -1,6 +1,5 @@
 package main.aboufaris.interfaces;
 
-
 import java.util.List;
 import java.util.Optional;
 import main.giuseppetti.classes.NPC;

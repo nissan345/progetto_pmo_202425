@@ -78,14 +78,14 @@ public final class Control {
         casa.addRoom(sgabuzzino);
 
         // Creazione Npc
-        Madre madre = new Madre(salotto);
-        Padre padre = new Padre(giardino);
-        Fratello fratello = new Fratello(cucina);
+        Mum mum = new Mum(salotto);
+        Dad dad = new Dad(giardino);
+        Brother brother = new Brother(cucina);
 
         // Aggiungere nelle stanze gli NPC
-        salotto.setNpc(madre);
-        giardino.setNpc(padre);
-        cucina.setNpc(fratello);
+        salotto.setNpc(mum);
+        giardino.setNpc(dad);
+        cucina.setNpc(brother);
     }
     
     // FUNZIONA
@@ -98,11 +98,11 @@ public final class Control {
     }
     
     // FUNZIONA
-    private <T> T scegliOpzioneDaEnum(String messaggio, T[] opzioniDisponibili){
+    private <T> T scegliOpzioneDaEnum(String message, T[] opzioniDisponibili){
         List<String> opzioni = Arrays.stream(opzioniDisponibili)
             .map(Object::toString)
             .toList();
-        int scelta = view.mostraOpzioniPersonalizzazione(messaggio, opzioni);
+        int scelta = view.mostraOpzioniPersonalizzazione(message, opzioni);
         return opzioniDisponibili[scelta];
     }
     
@@ -141,7 +141,7 @@ public final class Control {
     public void onSecondClickNpc(NPC n) {
         this.npcCorrente = n;
 
-        List<OpzioniInterazione> opzioni = n.getOpzioniDisponibili(personaggio);
+        List<InteractionOption> opzioni = n.getOpzioniDisponibili(character);
         if (opzioni == null || opzioni.isEmpty()) {
             view.mostraMessaggio("Non ci sono opzioni di interazione.");
             return;
@@ -163,45 +163,45 @@ public final class Control {
         }
     }
 
-    private String labelPer(OpzioniInterazione op) {
+    private String labelPer(InteractionOption op) {
         return switch (op) {
-            case CHIEDI_MISSIONE -> "Chiedi quest";
-            case CONSEGNA_MISSIONE -> "Consegna quest";
-            case MISSIONE_IN_CORSO -> "Aiuto quest";
-            case ESCI -> "Esci";
+            case REQUEST_QUEST -> "Chiedi quest";
+            case TURN_IN_QUEST -> "Consegna quest";
+            case QUEST_IN_PROGRESS -> "Aiuto quest";
+            case EXIT -> "Esci";
         };
     }
 
-    public void onSceltaOpzioneInterazione(OpzioniInterazione scelta) {
+    public void onSceltaOpzioneInterazione(InteractionOption scelta) {
     	if (npcCorrente == null) {
             view.mostraErrore("Nessun NPC selezionato!");
             return;
         }
         switch (scelta) {
-            case CHIEDI_MISSIONE -> {
-                Quest m = npcCorrente.assegnaQuest(personaggio);
+            case REQUEST_QUEST -> {
+                Quest m = npcCorrente.assegnaMissione(character);
                 if (m != null) {
-                    personaggio.addQuest(m);
-                    view.mostraMessaggio("Nuova quest: " + m.getName() + "\n" + m.getDescription());
+                    character.aggiungiMissione(m);
+                    view.mostraMessaggio("Nuova quest: " + m.getNome() + "\n" + m.getDescrizione());
                 } else {
                     view.mostraMessaggio("Non ci sono questi disponibili al momento.");
                 }
             }
-            case MISSIONE_IN_CORSO -> {
-                Quest m = personaggio.getOngoingQuestWithNPC(npcCorrente).get();
+            case QUEST_IN_PROGRESS -> {
+                Quest m = character.getMissioneAttivaConNPC(npcCorrente).get();
                 if (m != null) {
                 	view.mostraMessaggio(npcCorrente.getDialogoQuestInCorso(m));
                 } else {
                 	view.mostraMessaggio("Non ci sono questi attive disponibili");
                 }
             }
-            case CONSEGNA_MISSIONE -> {
-                List<String> msgs = npcCorrente.consegnaQuest(personaggio);
+            case TURN_IN_QUEST -> {
+                List<String> msgs = npcCorrente.consegnaMissione(character);
                 boolean completata = msgs.stream().anyMatch(t -> t.contains("' completata!"));
                 if (completata) { contatoreQuesti++; gestisciVittoria(); }
                 msgs.forEach(view::mostraMessaggio);
             }
-            case ESCI -> view.mostraMessaggio("Arrivederci!");
+            case EXIT -> view.mostraMessaggio("Arrivederci!");
             default -> view.mostraMessaggio("Opzione non valida.");
         }
     }
@@ -261,7 +261,7 @@ public final class Control {
             return;
         }
 
-        // caso con scelta: prima messaggio poi lista opzioni
+        // caso con scelta: prima message poi lista opzioni
         var intro = oggettoGioco.usa(personaggio); 
         if (intro != null && intro.getMessaggio() != null && !intro.getMessaggio().isEmpty()) {
             view.mostraMessaggio(intro.getMessaggio());

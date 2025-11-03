@@ -81,8 +81,8 @@ public class OggettoGioco {
             return this;
         }
         
-        public Builder messaggio(String val) {
-            this.messaggio = val;
+        public Builder message(String val) {
+            this.message = val;
             return this;
         }
         

@@ -2,50 +2,49 @@ package main.giuseppetti.classes;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import main.fabbri.classes.MainCharacter;
-import main.giuseppetti.interfaces.CondizioneCompletamento;
+import main.fabbri.classes.Character;
+import main.giuseppetti.interfaces.CompletionCondition;
 
 public class Quest {
     private final String name;
     private final String description;
-    private final NPC npcAssegnatore;
-    private int puntiAffinita;
-    private List<CondizioneCompletamento> condizioni; 
-    private boolean completata;
+    private final NPC assignerNPC;
+    private int affinityPoints;
+    private List<CompletionCondition> conditions; 
+    private boolean completed;
 
-    public Quest(String name, String description, NPC npcAssegnatore, int puntiAffinita, List<CondizioneCompletamento> condizioni) {
+    public Quest(String name, String description, NPC assignerNPC, int affinityPoints, List<CompletionCondition> conditions) {
         this.name = name;
         this.description = description;
-        this.npcAssegnatore = npcAssegnatore;
-        this.puntiAffinita = puntiAffinita; 
-        this.condizioni = new ArrayList<>(condizioni);
-        this.completata = false;
+        this.assignerNPC = assignerNPC;
+        this.affinityPoints = affinityPoints; 
+        this.conditions = new ArrayList<>(conditions);
+        this.completed = false;
     }
     
-    // Verifica il completamento di una quest 
-    public boolean verificaCompletamento(MainCharacter personaggio) {
-        if (completata) {
+    // Verifies quest completion
+    public boolean checkCompletion(Character character) {
+        if (completed) {
             return true;
         }
         
-        if (personaggio == null) {
+        if (character == null) {
             return false;
         }
         
-        // Se tutte le condizioni sono soddisfatte, la quest è completata
-        for (CondizioneCompletamento condizione : condizioni) {
-            if (!condizione.verificaCompletamento(personaggio)) {
+        // If all conditions are satisfied, the quest is completed
+        for (CompletionCondition condition : conditions) {
+            if (!condition.checkCompletion(character)) {
                 return false;
             }
         }
         
-        // Marca come completata solo quando tutte le condizioni sono soddisfatte
-        this.completata = true;
+        // Mark as completed only when all conditions are satisfied
+        this.completed = true;
         return true;
     }
    
-    // GETTER
+    // GETTERS
 
     public String getName() {
         return this.name;
@@ -55,20 +54,19 @@ public class Quest {
         return this.description;
     }
 
-     public NPC getAssigningNPC() {
-        return this.npcAssegnatore;
+     public NPC getAssignerNPC() {
+        return this.assignerNPC;
     }
      
-    public int getPuntiAffinita() {
-    	return this.puntiAffinita;
+    public int getAffinityPoints() {
+    	return this.affinityPoints;
     }
     
-    public List<CondizioneCompletamento> getCondizioni() {
-        return this.condizioni;
+    public List<CompletionCondition> getConditions() {
+        return this.conditions;
     }
 
-
-    public boolean isCompletata() {
-        return this.completata;
+    public boolean isCompleted() {
+        return this.completed;
     }
 }

@@ -11,3 +11,9 @@ bin/
 # VSCode (se vuoi mantenere)
 .vscode/
 .yscode/
+
+# Ignora i file .class generati
+*.class
+bin/
+target/
+build/

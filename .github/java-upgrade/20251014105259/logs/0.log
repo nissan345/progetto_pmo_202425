@@ -1,0 +1,26 @@
+2025-10-14T10:52:59.113Z [INFO] ----------------------invoke generate_upgrade_plan_for_java_project----------------------
+2025-10-14T10:52:59.114Z [INFO] [Tool.invoke]({name: generate_upgrade_plan_for_java_project, input: {
+  "projectPath": "c:\\Users\\nasri\\OneDrive\\Documenti\\GitHub\\progetto_pmo_202425",
+  "targetJavaVersion": "21",
+  "buildToolPath": "",
+  "jdkPath": ""
+}}).
+2025-10-14T10:52:59.118Z [INFO] [Plan.tryStartTask]({tool:generate_upgrade_plan_for_java_project, nextTask:{type:undefined, tool:undefined}}
+2025-10-14T10:52:59.119Z [INFO] [Plan.tryStartTask]: no next task, create new one.
+2025-10-14T10:52:59.120Z [INFO] [Plan.createTaskAtStart]({tool: generate_upgrade_plan_for_java_project, input: {
+  "projectPath": "c:\\Users\\nasri\\OneDrive\\Documenti\\GitHub\\progetto_pmo_202425",
+  "targetJavaVersion": "21",
+  "buildToolPath": "",
+  "jdkPath": "",
+  "sessionId": "20251014105259"
+}}).
+2025-10-14T10:52:59.122Z [INFO] [Plan.tryStartTask]: starting currentTask
+2025-10-14T10:52:59.123Z [INFO] [Task.start](): Starting task generatePlan
+2025-10-14T10:52:59.126Z [INFO] [Task.start](1): Started task generatePlan
+2025-10-14T10:53:01.176Z [INFO] [Tool.invoke] validate GitHub Copilot license.
+2025-10-14T10:54:11.848Z [INFO] Copilot user info:undefined
+2025-10-14T10:54:11.849Z [WARN] "GitHub Copilot app modernization - upgrade for Java" and its tools are only available for GitHub Copilot "Pro", "Pro+", "Business" and "Enterprise" plans.
+2025-10-14T10:54:11.851Z [ERROR] [Tool.invoke] error occurs when invoking tool generate_upgrade_plan_for_java_project: UserError: "GitHub Copilot app modernization - upgrade for Java" and its tools are only available for GitHub Copilot "Pro", "Pro+", "Business" and "Enterprise" plans.. Please upgrade your GitHub Copilot plan to use this feature or upgrading this project using other tools you prefer..
+2025-10-14T10:54:11.851Z [INFO] [Task.complete](1): Completing task generatePlan
+2025-10-14T10:54:11.852Z [INFO] ----------------------invoked generate_upgrade_plan_for_java_project----------------------
+2025-10-14T10:54:11.853Z [INFO] [Task.complete](1): Completed task generatePlan

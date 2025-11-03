@@ -7,11 +7,9 @@ import java.util.function.IntConsumer;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import main.control.Control;
-
-import main.fabbri.classes.MainCharacter;
-
 import main.giuseppetti.classes.*;
 import main.neri.classes.*;
+import model.character.MainCharacter;
 
 public class View {
 	

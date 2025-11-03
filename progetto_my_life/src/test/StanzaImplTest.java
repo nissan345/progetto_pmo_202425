@@ -5,8 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import main.aboufaris.classes.StanzaImpl;
-import main.giuseppetti.classes.Brother;
-import main.neri.classes.OggettoGioco;
+import model.character.npc.Brother;
+import model.world.gameItem.OggettoGioco;
 
 import java.util.ArrayList;
 import java.util.List;

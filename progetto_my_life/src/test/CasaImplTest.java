@@ -4,9 +4,11 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import main.neri.classes.OggettoGioco;
+import model.world.House;
+import model.world.IRoom;
+import model.world.Room;
+import model.world.gameItem.OggettoGioco;
 import main.aboufaris.classes.*;
-import main.aboufaris.interfaces.Room;
 
 import java.util.ArrayList;
 import java.util.List;

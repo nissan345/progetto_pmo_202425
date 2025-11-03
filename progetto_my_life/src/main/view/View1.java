@@ -404,7 +404,7 @@ public class View1 {
             statoArea.append("\n" + stats + "\n");
             appendLog("Statistiche aggiornate per " + p.getNome());
 =======
-            String stats = String.format("Energy: %d | Hunger: %d | Hygiene: %d | Thirst: %d", p.getEnergy(), p.getHunger(), p.getHygiene(), p.getThirst());
+            String stats = String.format("Energy: %d | Hunger: %d | Hygiene: %d | Satiety: %d", p.getEnergy(), p.getHunger(), p.getHygiene(), p.getSatiety());
             stateArea.append("\n" + stats + "\n");
             appendLog("Statistiche aggiornate per " + p.getName());
 >>>>>>> nicxole

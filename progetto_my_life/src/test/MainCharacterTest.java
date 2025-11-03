@@ -4,15 +4,13 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-
-import main.aboufaris.interfaces.Room;
 import main.aboufaris.classes.*;
-
-import main.aboufaris.interfaces.Room;
 import main.aboufaris.classes.*;
 >>>>>>> nicxole
 import main.fabbri.classes.*;
-import main.neri.classes.FabbricaOggetti;
+import model.character.MainCharacter;
+import model.world.Room;
+import model.world.factory.FabbricaOggetti;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -53,7 +51,7 @@ public class MainCharacterTest {
         assertEquals("Giocatore", character.getName());
         //assertEquals(Dieta.ONNIVORO, character.getDieta());
         assertEquals(100, character.getHunger());
-        assertEquals(100, character.getThirst());
+        assertEquals(100, character.getSatiety());
         assertEquals(100, character.getEnergy());
         assertEquals(100, character.getHygiene());
 
@@ -153,11 +151,11 @@ public class MainCharacterTest {
        // String risultato = character.bevi(Bevanda.ACQUA);
         //assertTrue(risultato.contains("Hai bevuto Acqua"));
         //assertTrue(risultato.contains("Sete: +"));
-        //character.setThirst(50);
+        //character.setSatiety(50);
        // String risultato = character.bevi(Bevanda.ACQUA);
         //assertTrue(risultato.contains("Hai bevuto Acqua"));
-        //assertTrue(risultato.contains("Thirst: +"));
-        assertEquals(90, character.getThirst()); // 50 + 40 = 90
+        //assertTrue(risultato.contains("Satiety: +"));
+        assertEquals(90, character.getSatiety()); // 50 + 40 = 90
         //character.setSete(50);
        // String risultato = character.bevi(Bevanda.ACQUA);
         //assertTrue(risultato.contains("Hai bevuto Acqua"));

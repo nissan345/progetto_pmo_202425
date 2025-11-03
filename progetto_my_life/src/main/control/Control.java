@@ -12,6 +12,19 @@ import main.fabbri.classes.*;
 import main.giuseppetti.classes.*;
 import main.neri.classes.*;
 import main.view.*;
+import model.character.Hair;
+import model.character.MainCharacter;
+import model.character.NPC;
+import model.character.Outfit;
+import model.character.npc.Brother;
+import model.character.npc.Dad;
+import model.character.npc.Mum;
+import model.quest.InteractionOption;
+import model.quest.Quest;
+import model.world.House;
+import model.world.Room;
+import model.world.factory.FabbricaOggetti;
+import model.world.gameItem.OggettoGioco;
 
 public final class Control {
 	
@@ -219,7 +232,7 @@ public final class Control {
     private boolean isSconfitta(){
         // MainCharacter muore perché uno dei suoi bisogni è sotto la soglia
         return character.getEnergy() == 0 || character.getHunger() ==0 || character.getHygiene() == 0 
-        || character.getThirst() == 0;
+        || character.getSatiety() == 0;
     }
 
     // Funziona
@@ -330,7 +343,7 @@ public final class Control {
         aggiungiAvvisoBisogno(avvisi, character.getHunger(), name, " deve mangiare!", "STA PER SVENIRE DALLA FAME!");
         aggiungiAvvisoBisogno(avvisi, character.getEnergy(), name, " deve dormire!", "STA PER PERDERE I SENSI!");
         aggiungiAvvisoBisogno(avvisi, character.getHygiene(), name, " deve lavarsi!", "NON SI RIESCE A RESPIRARGLI VICINO!");
-        aggiungiAvvisoBisogno(avvisi, character.getThirst(), name, " deve bere!", "STA PER DISIDRATARSI!");
+        aggiungiAvvisoBisogno(avvisi, character.getSatiety(), name, " deve bere!", "STA PER DISIDRATARSI!");
         
         return avvisi;
     }

@@ -4,9 +4,9 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import main.aboufaris.classes.IRoom;
 import main.giuseppetti.classes.Fratello;
-import main.neri.classes.OggettoGioco;
+import model.world.IRoom;
+import model.world.gameItem.OggettoGioco;
 
 import java.util.ArrayList;
 import java.util.List;

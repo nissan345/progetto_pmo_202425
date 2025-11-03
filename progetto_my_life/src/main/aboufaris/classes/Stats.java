@@ -75,7 +75,6 @@ public class Stats {
         hygiene = clamp(hygiene + delta);
     }
     
-    
     public boolean isExhausted() { return energy < 20; }
     public boolean isStarving()  { return satiety < 20; }
     public boolean isDehydrated(){ return hydration < 20; }

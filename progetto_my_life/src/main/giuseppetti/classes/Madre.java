@@ -16,63 +16,43 @@ public class Madre extends NPC {
     }
 
     @Override
-<<<<<<< HEAD
-    public String getMissioneAssegnataDialogo(Missione missione) {
-        return "Ottimo che tu voglia aiutare! " + missione.getDescrizione() + 
-=======
+
     public String getQuestAssegnataDialogo(Quest quest) {
         return "Ottimo che tu voglia aiutare! " + quest.getDescription() + 
->>>>>>> nicxole
+
                "\nSo che posso contare su di te. Torna da me quando avrai finito!";
     }
     
     @Override 
-<<<<<<< HEAD
-    public String getDialogoMissioneInCorso(Missione missione) {
-    	switch(missione.getNome()) {
-        	case "L'album perduto":
-        		return "Hai trovato l'album? Guarda bene nel salotto, dovrebbe essere da qualche parte!";
-        	default:
-        		return "Come sta andando con la missione? Torna da me quando hai finito!";
-=======
     public String getDialogoQuestInCorso(Quest quest) {
     	switch(quest.getName()) {
         	case "L'album perduto":
         		return "Hai trovato l'album? Guarda bene nel salotto, dovrebbe essere da qualche parte!";
         	default:
         		return "Come sta andando con la quest? Torna da me quando hai finito!";
->>>>>>> nicxole
+
         } 
     }
     
     @Override
-<<<<<<< HEAD
-    public String getDialogoCompletamentoMissione(Missione missione) {
-=======
+
     public String getDialogoCompletamentoQuest(Quest quest) {
->>>>>>> nicxole
         return "Grazie mille! Hai fatto un ottimo lavoro." +
                "'!\nSei sempre così affidabile, sono orgoglioso di te!";
     }
 
     @Override
-<<<<<<< HEAD
-    protected void inizializzaMissioni() {
-        Missione missioneAlbum = new Missione("L'album perduto", 
-=======
+
     protected void inizializzaQuesti() {
         Quest questAlbum = new Quest("L'album perduto", 
->>>>>>> nicxole
                                    "Dovresti riportarmi il vecchio album di famiglia che ho perduto da qualche parte in casa e riportamelo", 
                                    this,
                                    15, 
                                    Arrays.asList(new CondizioneAzioneOggetto("Album"))
                             );
-<<<<<<< HEAD
-        this.aggiungiMissione(missioneAlbum);
-=======
+
         this.addQuest(questAlbum);
->>>>>>> nicxole
+
     }
 
 

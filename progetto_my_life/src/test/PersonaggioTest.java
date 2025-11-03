@@ -21,10 +21,10 @@ import main.neri.classes.FabbricaOggetti;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class PersonaggioTest {
+public class MainCharacterTest {
 
-    private Character personaggio;
-    private Character personaggioVegano;
+    private MainCharacter personaggio;
+    private MainCharacter personaggioVegano;
 
     // Inizializzazione dei soggetti di test ---------------------------------------------------------------------------------
     @Before
@@ -35,12 +35,12 @@ public class PersonaggioTest {
 <<<<<<< Updated upstream
         Stanza roomIniziale = new Stanza("Salotto");
 =======
-        //Room roomIniziale = new RoomImpl("Salotto", new ArrayList<>(FabbricaOggetti.creaOggettiRoom("Salotto").values()));
+        //Room roomIniziale = new IRoom("Salotto", new ArrayList<>(FabbricaOggetti.creaOggettiRoom("Salotto").values()));
 >>>>>>> Stashed changes
 >>>>>>> nicxole
     
-        //personaggio = new Personaggio("Giocatore", Vestito.INFORMALE, Dieta.ONNIVORO, Capelli.CORTI_MOSSI);
-        //personaggioVegano = new Personaggio("Vegano", Vestito.SPORTIVO, Dieta.VEGANO, Capelli.LUNGHI_LISCI);
+        //personaggio = new MainCharacter("Giocatore", Vestito.INFORMALE, Dieta.ONNIVORO, Capelli.CORTI_MOSSI);
+        //personaggioVegano = new MainCharacter("Vegano", Vestito.SPORTIVO, Dieta.VEGANO, Capelli.LUNGHI_LISCI);
         
 <<<<<<< HEAD
        // personaggio.scegliStanza(stanzaIniziale);
@@ -64,7 +64,7 @@ public class PersonaggioTest {
 
     // TEST PER CREAZIONE PERSONAGGIO -------------------------------------------------------------------------------------
     @Test
-    public void testCreazionePersonaggio() {
+    public void testCreazioneMainCharacter() {
 <<<<<<< Updated upstream
         assertEquals("Giocatore", personaggio.getNome());
         //assertEquals(Dieta.ONNIVORO, personaggio.getDieta());

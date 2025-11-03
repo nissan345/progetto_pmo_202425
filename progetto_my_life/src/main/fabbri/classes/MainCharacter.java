@@ -9,7 +9,7 @@ import main.giuseppetti.classes.NPC;
 import main.neri.classes.OggettoGioco;
 import main.neri.classes.RisultatoAzione;
 
-public class Character {
+public class MainCharacter {
 	private static final int MAX_STATE = 100;
     private static final int MIN_STATE = 0;
     private String name;
@@ -26,7 +26,7 @@ public class Character {
     private List<String> oggettiUsati; // Traccia gli oggetti usati
  
     // COSTRUTTORE ------------------------------------------------------------------------
-    public Character(String name, Outfit outfit, Hair hair) {
+    public MainCharacter(String name, Outfit outfit, Hair hair) {
         this.name = name;
         this.outfit = outfit;
         this.hair = hair;  
@@ -76,7 +76,7 @@ public class Character {
 
     public String getCurrentRoom() {
         if (currentRoom != null) {
-            return currentRoom.getNameRoom();
+            return currentRoom.getRoomName();
         } else {
             return "Nessuna room";
         }
@@ -101,7 +101,7 @@ public class Character {
         
     public String pickCurrentRoom(Room room) {
         this.currentRoom = room;
-        return "Sei entrato in: " + room.getNameRoom();
+        return "Sei entrato in: " + room.getRoomName();
     }
 
     

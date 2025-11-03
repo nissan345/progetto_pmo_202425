@@ -10,30 +10,21 @@ import javax.swing.border.EmptyBorder;
 
 import main.aboufaris.interfaces.*;
 import main.control.Control;
-<<<<<<< HEAD
-import main.fabbri.classes.Personaggio;
-=======
-import main.fabbri.classes.Character;
->>>>>>> nicxole
+
+import main.fabbri.classes.MainCharacter;
+
 import main.giuseppetti.classes.*;
 import main.neri.classes.*;
 
 public class View {
 	
 	private JFrame frame;
-<<<<<<< HEAD
-    private JLabel stanzaLabel;
-    private JTextArea descrizioneArea;
-    private JTextArea logArea;
-    private JTextArea oggettiArea;
-    private JTextArea statoArea;
-=======
+
     private JLabel roomLabel;
     private JTextArea descriptionArea;
     private JTextArea logArea;
     private JTextArea oggettiArea;
     private JTextArea stateArea;
->>>>>>> nicxole
     private JPanel azioniPanel;
     private JPanel azioniFissePanel;
     private JPanel azioniContextPanel;
@@ -72,20 +63,6 @@ public class View {
 	private JPanel buildTop() {
 	    JPanel top = new JPanel(new BorderLayout(6,6));
 	    top.setBorder(new EmptyBorder(0, 0, 6, 0));
-	    
-<<<<<<< HEAD
-        stanzaLabel = new JLabel("Stanza: --");
-        stanzaLabel.setFont(stanzaLabel.getFont().deriveFont(Font.BOLD, 18f));
-        top.add(stanzaLabel, BorderLayout.NORTH);
-
-        descrizioneArea = new JTextArea(4, 40);
-        descrizioneArea.setLineWrap(true);
-        descrizioneArea.setWrapStyleWord(true);
-        descrizioneArea.setEditable(false);
-        
-        JScrollPane descScroll = new JScrollPane(descrizioneArea);
-        descScroll.setBorder(BorderFactory.createTitledBorder("Descrizione"));
-=======
         roomLabel = new JLabel("Room: --");
         roomLabel.setFont(roomLabel.getFont().deriveFont(Font.BOLD, 18f));
         top.add(roomLabel, BorderLayout.NORTH);
@@ -97,7 +74,6 @@ public class View {
         
         JScrollPane descScroll = new JScrollPane(descriptionArea);
         descScroll.setBorder(BorderFactory.createTitledBorder("Description"));
->>>>>>> nicxole
         top.add(descScroll, BorderLayout.CENTER);
 
 	    return top;
@@ -116,19 +92,13 @@ public class View {
         logScroll.setBorder(BorderFactory.createTitledBorder("Log / Messaggi"));
         center.add(logScroll);
 
-<<<<<<< HEAD
-        // Oggetti in stanza 
-        oggettiPanel = new JPanel();
-        oggettiPanel.setLayout(new BoxLayout(oggettiPanel, BoxLayout.Y_AXIS));
-        JScrollPane oggettiScroll = new JScrollPane(oggettiPanel);
-        oggettiScroll.setBorder(BorderFactory.createTitledBorder("Oggetti in stanza"));
-=======
+
         // Oggetti in room 
         oggettiPanel = new JPanel();
         oggettiPanel.setLayout(new BoxLayout(oggettiPanel, BoxLayout.Y_AXIS));
         JScrollPane oggettiScroll = new JScrollPane(oggettiPanel);
         oggettiScroll.setBorder(BorderFactory.createTitledBorder("Oggetti in room"));
->>>>>>> nicxole
+
         center.add(oggettiScroll);
         
         return center;
@@ -155,18 +125,7 @@ public class View {
 
 	private JPanel buildRight() {
 		JPanel right = new JPanel(new BorderLayout(6, 6));
-<<<<<<< HEAD
-        right.setBorder(BorderFactory.createTitledBorder("Stato Personaggio / Missioni"));
-
-        statoArea = new JTextArea(10, 20);
-        statoArea.setEditable(false);
-        statoArea.setLineWrap(true);
-        statoArea.setWrapStyleWord(true);
-        statoArea.setBackground(Color.WHITE);
-
-        right.add(new JScrollPane(statoArea), BorderLayout.CENTER);
-=======
-        right.setBorder(BorderFactory.createTitledBorder("Stato Personaggio / Questi"));
+        right.setBorder(BorderFactory.createTitledBorder("Stato MainCharacter / Questi"));
 
         stateArea = new JTextArea(10, 20);
         stateArea.setEditable(false);
@@ -175,7 +134,6 @@ public class View {
         stateArea.setBackground(Color.WHITE);
 
         right.add(new JScrollPane(stateArea), BorderLayout.CENTER);
->>>>>>> nicxole
         return right;
 	}	
 	
@@ -209,11 +167,9 @@ public class View {
 	}
 	
 	
-<<<<<<< HEAD
-	public String chiediNomePersonaggio() {
-=======
-	public String chiediNamePersonaggio() {
->>>>>>> nicxole
+
+	public String chiediNameMainCharacter() {
+
 		JPanel panel = new JPanel();
         final JLabel label = new JLabel("Insert your Name:");
         JTextField textField = new JTextField(20);
@@ -223,11 +179,9 @@ public class View {
         int result = JOptionPane.showConfirmDialog(
                 frame, 
                 panel, 
-<<<<<<< HEAD
-                "Nome Personaggio", 
-=======
-                "Name Personaggio", 
->>>>>>> nicxole
+
+                "Name MainCharacter", 
+
                 JOptionPane.OK_CANCEL_OPTION, 
                 JOptionPane.QUESTION_MESSAGE
             );
@@ -246,7 +200,7 @@ public class View {
         Object selezione = JOptionPane.showInputDialog(
             frame,
             messaggio,
-            "Personalizzazione Personaggio",
+            "Personalizzazione MainCharacter",
             JOptionPane.QUESTION_MESSAGE,
             null,
             opzioniArray,
@@ -272,11 +226,9 @@ public class View {
         mappaDialog.setSize(600, 400);
         mappaDialog.setLayout(new BorderLayout());
         
-<<<<<<< HEAD
-        JLabel titolo = new JLabel("Seleziona una Stanza", SwingConstants.CENTER);
-=======
+
         JLabel titolo = new JLabel("Seleziona una Room", SwingConstants.CENTER);
->>>>>>> nicxole
+
         titolo.setFont(new Font("Arial", Font.BOLD, 18));
         mappaDialog.add(titolo, BorderLayout.NORTH);
         
@@ -287,21 +239,8 @@ public class View {
         // Lista delle stanze disponibili (puoi personalizzare questa lista)
         String[] stanze = {"Bagno", "Camera da Letto", "Cucina", "Salotto", "Giardino", "Sgabuzzino"};
         
-<<<<<<< HEAD
-        for (String stanza : stanze) {
-            JButton stanzaBtn = new JButton(stanza);
-            stanzaBtn.setFont(new Font("Arial", Font.PLAIN, 14));
-            stanzaBtn.setPreferredSize(new Dimension(120, 60));
-            
-            // Aggiungi l'action listener per entrare nella stanza
-            stanzaBtn.addActionListener(e -> {
-                Control controller = Control.getControlInstance();
-                controller.onClickEntra(stanza);
-                mappaDialog.dispose(); // Chiudi la mappa dopo la selezione
-            });
-            
-            mappaPanel.add(stanzaBtn);
-=======
+
+
         for (String room : stanze) {
             JButton roomBtn = new JButton(room);
             roomBtn.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -315,7 +254,7 @@ public class View {
             });
             
             mappaPanel.add(roomBtn);
->>>>>>> nicxole
+
         }
         
         mappaDialog.add(mappaPanel, BorderLayout.CENTER);
@@ -330,32 +269,23 @@ public class View {
         
 	}
 
-<<<<<<< HEAD
-	public void mostraStanza(String nome, String descrizione){
-		stanzaLabel.setText("Stanza: " + (nome == null ? "--" : nome));
-	    descrizioneArea.setText(descrizione == null ? "" : descrizione);
-	    appendLog("Entrato in stanza: " + nome);
-	}
-	public void mostraOggettiInStanza(List<String> labels, IntConsumer onClickIndex) {
-=======
+
 	public void mostraRoom(String name, String description){
 		roomLabel.setText("Room: " + (name == null ? "--" : name));
 	    descriptionArea.setText(description == null ? "" : description);
 	    appendLog("Entrato in room: " + name);
 	}
 	public void mostraOggettiInRoom(List<String> labels, IntConsumer onClickIndex) {
->>>>>>> nicxole
+
 	    SwingUtilities.invokeLater(() -> {
 	        if (oggettiPanel == null) return;
 
 	        oggettiPanel.removeAll();
 
 	        if (labels == null || labels.isEmpty()) {
-<<<<<<< HEAD
-	            JLabel none = new JLabel("Nessun oggetto in questa stanza");
-=======
+
 	            JLabel none = new JLabel("Nessun oggetto in questa room");
->>>>>>> nicxole
+
 	            none.setAlignmentX(Component.LEFT_ALIGNMENT);
 	            oggettiPanel.add(none);
 	        } else {
@@ -399,22 +329,17 @@ public class View {
 	    });
 	}
 	
-<<<<<<< HEAD
-	public void mostraNpcInterattivi(String nomeNpc,
-=======
+
 	public void mostraNpcInterattivi(String nameNpc,
->>>>>>> nicxole
+
             String relazioneNpc,
             Runnable onDialogo,
             Runnable onOpzioni) {
 		SwingUtilities.invokeLater(() -> {
 		azioniContextPanel.removeAll();
 		
-<<<<<<< HEAD
-		JButton dialogoBtn = new JButton("Parla con " + nomeNpc);
-=======
 		JButton dialogoBtn = new JButton("Parla con " + nameNpc);
->>>>>>> nicxole
+
 		dialogoBtn.addActionListener(e -> { if (onDialogo != null) onDialogo.run(); });
 		
 		JButton opzioniBtn = new JButton("Opzioni con " + relazioneNpc);
@@ -431,30 +356,14 @@ public class View {
 
 	public int mostraAzioni(List<String> a){return 1;}
 	
-<<<<<<< HEAD
-    public void mostraMissioneAttiva(String nome, String descrizione) {
-    	 SwingUtilities.invokeLater(() -> {
-             appendLog("Missione attiva: " + nome + " - " + descrizione);
-             statoArea.append("Missione: " + nome + " - " + descrizione + "\n");
-         });
-    }
-    public void aggiornaStatoPersonaggio(String stato){
-    	SwingUtilities.invokeLater(() -> {
-            statoArea.setText(stato);
-        });
-    }
-    
-    public void mostraStatistiche(String stato) {
-    	SwingUtilities.invokeLater(() -> {
-            statoArea.setText(stato);
-=======
+
     public void mostraQuestAttiva(String name, String description) {
     	 SwingUtilities.invokeLater(() -> {
              appendLog("Quest attiva: " + name + " - " + description);
              stateArea.append("Quest: " + name + " - " + description + "\n");
          });
     }
-    public void aggiornaStatoPersonaggio(String state){
+    public void aggiornaStatoMainCharacter(String state){
     	SwingUtilities.invokeLater(() -> {
             stateArea.setText(state);
         });
@@ -463,7 +372,7 @@ public class View {
     public void mostraStatistiche(String state) {
     	SwingUtilities.invokeLater(() -> {
             stateArea.setText(state);
->>>>>>> nicxole
+
         });
     }
     

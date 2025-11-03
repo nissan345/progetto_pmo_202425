@@ -35,7 +35,7 @@ public class IRoom implements Room{
 
     public boolean hasOggettoRoom(OggettoGioco o){
         return oggettiInStanza.stream()
-                .anyMatch(oggetto -> oggetto.getNome().equals(o.getNome()));
+                .anyMatch(oggetto -> oggetto.getName().equals(o.getName()));
     }
     
     public void setNpc(NPC n) {

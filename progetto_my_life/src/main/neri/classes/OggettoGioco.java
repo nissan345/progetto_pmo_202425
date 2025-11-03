@@ -1,7 +1,7 @@
 package main.neri.classes;
 
 import java.util.List;
-import main.fabbri.classes.Character;
+import main.fabbri.classes.MainCharacter;
 
 /**
  * Classe base per tutti gli oggetti presenti nella casa
@@ -26,7 +26,7 @@ public class OggettoGioco {
         this.interazioneSpeciale = builder.interazioneSpeciale;
     }
       
-    public RisultatoAzione usa(Character personaggio) {
+    public RisultatoAzione usa(MainCharacter personaggio) {
     	return new RisultatoAzione(messaggio, deltaHunger, deltaThirst, 
                 deltaEnergy, deltaHygiene);
     }
@@ -47,11 +47,11 @@ public class OggettoGioco {
     // Metodi aggiuntivi 
     public boolean richiedeScelta() { return false; }
 
-    public List<?> opzioniDisponibili(Character p) { 
+    public List<?> opzioniDisponibili(MainCharacter p) { 
         return List.of(); 
     }
 
-    public RisultatoAzione usa(Character p, Object opzione) {
+    public RisultatoAzione usa(MainCharacter p, Object opzione) {
         return usa(p);
     }
 

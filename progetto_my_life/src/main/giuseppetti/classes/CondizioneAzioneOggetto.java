@@ -1,25 +1,12 @@
 package main.giuseppetti.classes;
 
-<<<<<<< HEAD
-import main.fabbri.classes.Personaggio;
-=======
-import main.fabbri.classes.Character;
->>>>>>> nicxole
+
+import main.fabbri.classes.MainCharacter;
+
 import main.giuseppetti.interfaces.CondizioneCompletamento;
 
 public class CondizioneAzioneOggetto implements CondizioneCompletamento{
-	
-<<<<<<< HEAD
-	private String nomeOggetto;
-	    
-	public CondizioneAzioneOggetto(String nomeOggetto) {
-		this.nomeOggetto = nomeOggetto;
-	}
 
-	@Override
-	public boolean verificaCompletamento(Personaggio personaggio) {
-		return personaggio.haUsatoOggetto(nomeOggetto);
-=======
 	private String nameOggetto;
 	    
 	public CondizioneAzioneOggetto(String nameOggetto) {
@@ -27,9 +14,9 @@ public class CondizioneAzioneOggetto implements CondizioneCompletamento{
 	}
 
 	@Override
-	public boolean verificaCompletamento(Character personaggio) {
+	public boolean verificaCompletamento(MainCharacter personaggio) {
 		return personaggio.haUsatoOggetto(nameOggetto);
->>>>>>> nicxole
+
 	} 
 	   
 }

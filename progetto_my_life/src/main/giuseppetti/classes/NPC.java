@@ -6,36 +6,26 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import main.aboufaris.interfaces.Room;
-<<<<<<< HEAD
-import main.fabbri.classes.Personaggio;
-=======
-import main.fabbri.classes.Character;
->>>>>>> nicxole
+
+import main.fabbri.classes.*;
+import main.fabbri.classes.MainCharacter;
 
 public abstract class NPC {
     private final String relazione;
     private final Room posizione; 
     private int affinita;
-<<<<<<< HEAD
-    private List<Missione> missioniDisponibili;
-=======
+
     private List<Quest> questiDisponibili;
->>>>>>> nicxole
+
     private List<OpzioniInterazione> opzioni;
 
     public NPC(final String relazione, final Room s) {
         this.relazione = relazione;
         this.posizione = s; 
         this.affinita = 0;
-<<<<<<< HEAD
-        this.missioniDisponibili = new ArrayList<>();
-        this.opzioni = new ArrayList<>();
-        inizializzaMissioni();
-=======
         this.questiDisponibili = new ArrayList<>();
         this.opzioni = new ArrayList<>();
         inizializzaQuesti();
->>>>>>> nicxole
     }
 
     // Metodi Astratti
@@ -43,19 +33,6 @@ public abstract class NPC {
     // Metodo per il dialogo iniziale con un NPC
     public abstract String getDialogoIniziale();
     
-<<<<<<< HEAD
-    // Metodo per il dialogo quando un NPC assegna una missione
-    public abstract String getMissioneAssegnataDialogo(Missione missione);
-    
-    // Metodo per il dialogo quando una missione non è stata ancora completata
-    public abstract String getDialogoMissioneInCorso(Missione missione);
-    
-    // Metodo per il dialogo quando una missione è stata completata 
-    public abstract String getDialogoCompletamentoMissione(Missione missione);
-    
-    // Metodo per l'inizializzazione della missione
-    protected abstract void inizializzaMissioni();
-=======
     // Metodo per il dialogo quando un NPC assegna una quest
     public abstract String getQuestAssegnataDialogo(Quest quest);
     
@@ -67,27 +44,13 @@ public abstract class NPC {
     
     // Metodo per l'inizializzazione della quest
     protected abstract void inizializzaQuesti();
->>>>>>> nicxole
+
     
     // Metodi concreti 
     
     // Gestisce l'interazione tra personaggio e NPC
-<<<<<<< HEAD
-    public List<OpzioniInterazione> getOpzioniDisponibili(Personaggio personaggio) {
-        this.opzioni.clear();
 
-        Optional<Missione> missioneCompletata = personaggio.getMissioneCompletataConNPC(this);
-        Optional<Missione> missioneAttiva = personaggio.getMissioneAttivaConNPC(this);
-
-        if (missioneCompletata.isPresent()) {
-            this.opzioni.add(OpzioniInterazione.CONSEGNA_MISSIONE);
-
-        } else if (missioneAttiva.isPresent()) {
-            this.opzioni.add(OpzioniInterazione.MISSIONE_IN_CORSO);
-
-        } else if (!missioniDisponibili.isEmpty()) {
-=======
-    public List<OpzioniInterazione> getOpzioniDisponibili(Character personaggio) {
+    public List<OpzioniInterazione> getOpzioniDisponibili(MainCharacter personaggio) {
         this.opzioni.clear();
 
         Optional<Quest> questCompletata = personaggio.getCompletedQuestWithNPC(this);
@@ -100,7 +63,8 @@ public abstract class NPC {
             this.opzioni.add(OpzioniInterazione.MISSIONE_IN_CORSO);
 
         } else if (!questiDisponibili.isEmpty()) {
->>>>>>> nicxole
+        	
+        }else {
             this.opzioni.add(OpzioniInterazione.CHIEDI_MISSIONE);
         }
 
@@ -108,32 +72,8 @@ public abstract class NPC {
         return this.opzioni;
     }
     
-<<<<<<< HEAD
-    public Missione assegnaMissione(Personaggio personaggio) {
-    	if(personaggio.haMissioneAttivaConNPC(this) || missioniDisponibili.isEmpty()) {
-    		return null;
-    	}
-    	Missione missione = missioniDisponibili.remove(0);
-    	personaggio.aggiungiMissione(missione);
-    	return missione;
-    }
 
-    public List<String> consegnaMissione(Personaggio personaggio) {
-        List<String> messaggi = new ArrayList<>();
-        Optional<Missione> missioneCompletata = personaggio.getMissioneCompletataConNPC(this);
-
-        if (missioneCompletata.isEmpty()) {
-            messaggi.add("Non ci sono missioni completate con " + this.relazione);
-            return messaggi;
-        }
-        
-        Missione missione = missioneCompletata.get();
-        incrementaAffinita(missione.getPuntiAffinita());
-        personaggio.rimuoviMissione(missione);
-        
-        messaggi.add("Missione '" + missione.getNome() + "' completata!");
-=======
-    public Quest assegnaQuest(Character personaggio) {
+    public Quest assegnaQuest(MainCharacter personaggio) {
     	if(personaggio.hasOngoingQuestWithNPC(this) || questiDisponibili.isEmpty()) {
     		return null;
     	}
@@ -142,7 +82,7 @@ public abstract class NPC {
     	return quest;
     }
 
-    public List<String> consegnaQuest(Character personaggio) {
+    public List<String> consegnaQuest(MainCharacter personaggio) {
         List<String> messaggi = new ArrayList<>();
         Optional<Quest> questCompletata = personaggio.getCompletedQuestWithNPC(this);
 
@@ -156,20 +96,16 @@ public abstract class NPC {
         personaggio.removeQuest(quest);
         
         messaggi.add("Quest '" + quest.getName() + "' completata!");
->>>>>>> nicxole
+
         messaggi.add("Affinità con " + this.relazione + ": " + this.affinita + "/100");
         return messaggi;
     }
     
-<<<<<<< HEAD
-    // Si aggiunge una missione a quelle disponibili 
-    protected void aggiungiMissione(Missione missione) {
-        missioniDisponibili.add(missione);
-=======
+
     // Si aggiunge una quest a quelle disponibili 
     protected void addQuest(Quest quest) {
         questiDisponibili.add(quest);
->>>>>>> nicxole
+
     }
     
     // Incrementa l'affinita tra un personaggio e un NPC, l'affinita va da 0 a 100
@@ -186,20 +122,13 @@ public abstract class NPC {
     	return this.affinita; 
     }
     
-<<<<<<< HEAD
-    public Room getPosizione() { 
-    	return this.posizione; 
-    }
-    
-    public List<Missione> getMissioniDisponibili() { 
-        return new ArrayList<>(this.missioniDisponibili); 
-=======
+
     public Room getCurrentRoom() { 
     	return this.posizione; 
     }
     
     public List<Quest> getQuestiDisponibili() { 
         return new ArrayList<>(this.questiDisponibili); 
->>>>>>> nicxole
+
     }
 }

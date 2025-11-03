@@ -4,16 +4,16 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import main.aboufaris.classes.RoomImpl;
+import main.aboufaris.classes.IRoom;
 import main.giuseppetti.classes.Fratello;
 import main.neri.classes.OggettoGioco;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RoomImplTest {
+public class IRoomTest {
 /*
-    private RoomImpl room;
+    private IRoom room;
     private OggettoGenerico divano;
     private OggettoGenerico libreria;
     private Fratello fratello;
@@ -26,7 +26,7 @@ public class RoomImplTest {
         libreria = new OggettoGenerico(TipoOggetto.LIBRERIA);
         
         oggetti.add(divano);
-        room = new RoomImpl("Salotto", oggetti);
+        room = new IRoom("Salotto", oggetti);
         fratello = new Fratello(room);
     }
 
@@ -91,7 +91,7 @@ public class RoomImplTest {
     @Test
     public void testRoomVuota() {
         List<OggettoGioco> listaVuota = new ArrayList<>();
-        RoomImpl roomVuota = new RoomImpl("Room Vuota", listaVuota);
+        IRoom roomVuota = new IRoom("Room Vuota", listaVuota);
         
         assertTrue(roomVuota.getOggettiInRoom().isEmpty());
         assertFalse(roomVuota.getNpcInRoom().isPresent());

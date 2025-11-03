@@ -111,7 +111,7 @@ public class View1 {
         statoArea.setLineWrap(true);
         statoArea.setWrapStyleWord(true);
         right.add(new JScrollPane(statoArea), BorderLayout.CENTER);
-        right.setBorder(BorderFactory.createTitledBorder("Stato Personaggio / Missioni"));
+        right.setBorder(BorderFactory.createTitledBorder("Stato MainCharacter / Missioni"));
 =======
         oggettiScroll.setBorder(BorderFactory.createTitledBorder("Oggetti in room"));
         center.add(oggettiScroll);
@@ -123,7 +123,7 @@ public class View1 {
         stateArea.setLineWrap(true);
         stateArea.setWrapStyleWord(true);
         right.add(new JScrollPane(stateArea), BorderLayout.CENTER);
-        right.setBorder(BorderFactory.createTitledBorder("Stato Personaggio / Questi"));
+        right.setBorder(BorderFactory.createTitledBorder("Stato MainCharacter / Questi"));
 >>>>>>> nicxole
 
         // Bottom: azioni
@@ -229,11 +229,11 @@ public class View1 {
     }
 
 <<<<<<< HEAD
-    public void aggiornaStatoPersonaggio(String stato){
+    public void aggiornaStatoMainCharacter(String stato){
         SwingUtilities.invokeLater(() -> {
             statoArea.setText(stato);
 =======
-    public void aggiornaStatoPersonaggio(String state){
+    public void aggiornaStatoMainCharacter(String state){
         SwingUtilities.invokeLater(() -> {
             stateArea.setText(state);
 >>>>>>> nicxole
@@ -440,7 +440,7 @@ public class View1 {
     }
 
     // Placeholder per aggiornamenti futuri del controller
-    public void mostraStatistiche(Personaggio p){
+    public void mostraStatistiche(MainCharacter p){
         SwingUtilities.invokeLater(() -> {
             if(p==null) return;
 <<<<<<< HEAD
@@ -455,14 +455,14 @@ public class View1 {
         });
     }
 
-    public void mostraPersonaggio(Personaggio p){
+    public void mostraMainCharacter(MainCharacter p){
         SwingUtilities.invokeLater(() -> {
             if(p==null) return;
 <<<<<<< HEAD
-            appendLog("Personaggio: " + p.getNome() + " creato!");
+            appendLog("MainCharacter: " + p.getNome() + " creato!");
             statoArea.setText("Nome: " + p.getNome() + "\n" + "Energia: " + p.getEnergia());
 =======
-            appendLog("Personaggio: " + p.getName() + " creato!");
+            appendLog("MainCharacter: " + p.getName() + " creato!");
             stateArea.setText("Name: " + p.getName() + "\n" + "Energy: " + p.getEnergy());
 >>>>>>> nicxole
         });
@@ -475,9 +475,9 @@ public class View1 {
     }
 
 <<<<<<< HEAD
-    public String chiediNomePersonaggio() {
+    public String chiediNomeMainCharacter() {
 =======
-    public String chiediNamePersonaggio() {
+    public String chiediNameMainCharacter() {
 >>>>>>> nicxole
         JPanel panel = new JPanel();
         final JLabel label = new JLabel("Insert your Name:");
@@ -489,9 +489,9 @@ public class View1 {
                 frame, 
                 panel, 
 <<<<<<< HEAD
-                "Nome Personaggio", 
+                "Nome MainCharacter", 
 =======
-                "Name Personaggio", 
+                "Name MainCharacter", 
 >>>>>>> nicxole
                 JOptionPane.OK_CANCEL_OPTION, 
                 JOptionPane.QUESTION_MESSAGE
@@ -510,7 +510,7 @@ public class View1 {
         Object selezione = JOptionPane.showInputDialog(
             frame,
             messaggio,
-            "Personalizzazione Personaggio",
+            "Personalizzazione MainCharacter",
             JOptionPane.QUESTION_MESSAGE,
             null,
             opzioniArray,

@@ -23,16 +23,16 @@ public final class Control {
     // Singleton
     private static Control singletonController;
 
-    private final Casa casa;
+    private final House casa;
     private final View view;
     private Timer gameTimer;
-    private Character personaggio;
+    private MainCharacter personaggio;
     private int contatoreQuesti;
     private NPC npcCorrente;
     
     // Costruttore privato
     private Control(){
-       this.casa = new CasaImpl();
+       this.casa = new House();
        this.contatoreQuesti = 0;
        this.view = new View();
        this.view.setController(this);
@@ -50,7 +50,7 @@ public final class Control {
     // Inizio del gioco
     public void startGame(){
         view.mostraMenu();
-        creaPersonaggioPersonalizzato();
+        creaMainCharacterPersonalizzato();
         creaMondo();
         avviaTimerBisogni();
         view.mostraStatistiche(personaggio.printState());
@@ -70,12 +70,12 @@ public final class Control {
         Room sgabuzzino = FabbricaOggetti.creaSgabuzzino();
         
         // Aggiunge le stanze alla casa
-        casa.aggiungiRoom(bagno);
-        casa.aggiungiRoom(camera);
-        casa.aggiungiRoom(cucina);
-        casa.aggiungiRoom(salotto);
-        casa.aggiungiRoom(giardino);
-        casa.aggiungiRoom(sgabuzzino);
+        casa.addRoom(bagno);
+        casa.addRoom(camera);
+        casa.addRoom(cucina);
+        casa.addRoom(salotto);
+        casa.addRoom(giardino);
+        casa.addRoom(sgabuzzino);
 
         // Creazione Npc
         Madre madre = new Madre(salotto);
@@ -90,11 +90,11 @@ public final class Control {
     
     // FUNZIONA
     // Creazione del personaggio personalizzato
-    private void creaPersonaggioPersonalizzato() {
-        String name = view.chiediNamePersonaggio();
+    private void creaMainCharacterPersonalizzato() {
+        String name = view.chiediNameMainCharacter();
         Outfit outfit = scegliOpzioneDaEnum("Scegli i outfit", Outfit.values());
-        Capelli hair = scegliOpzioneDaEnum("Scegli i hair", Capelli.values());
-        this.personaggio = new Character(name, outfit, hair);
+        Hair hair = scegliOpzioneDaEnum("Scegli i hair", Hair.values());
+        this.personaggio = new MainCharacter(name, outfit, hair);
     }
     
     // FUNZIONA
@@ -130,12 +130,7 @@ public final class Control {
         String relazione = npc.getRelazione();
 
         // passi SOLO stringhe + le azioni da eseguire
-        view.mostraNpcInterattivi(
-            name,
-            relazione,
-            () -> onClickNpc(npc),        // primo click: dialogo
-            () -> onSecondClickNpc(npc)   // secondo click: opzioni
-        );
+        
     }
     
     // Mezzo funziona, devo sistemare che se si esce dalla room si toglie il bottone per parlare con NPC
@@ -216,20 +211,20 @@ public final class Control {
         }
     }
 
-    public Character getPersonaggio(){
+    public MainCharacter getMainCharacter(){
       return personaggio;
     }
 
     // DA VEDERE
     private boolean isSconfitta(){
-        // Personaggio muore perché uno dei suoi bisogni è sotto la soglia
+        // MainCharacter muore perché uno dei suoi bisogni è sotto la soglia
         return personaggio.getEnergy() == 0 || personaggio.getHunger() ==0 || personaggio.getHygiene() == 0 
         || personaggio.getThirst() == 0;
     }
 
     // Funziona
      public void onClickEntra(String nameRoom){
-        Optional<Room> ris = casa.entraInRoom(nameRoom);
+        Optional<Room> ris = casa.enterRoom(nameRoom);
         if(ris.isEmpty()){
             view.mostraErrore("Room non trovata!");
             return;
@@ -245,7 +240,7 @@ public final class Control {
 
      //(Kind of))
     public void onClickEsci(String nameRoom){
-        casa.esciDaRoom();
+        casa.exitRoom();
         view.mostraCasa(); // tornare nel menu principale
     }
 
@@ -285,7 +280,7 @@ public final class Control {
 
 	// Per la visualizzazione della mappa 
     public void getMappaCompleta(){
-        Map<String,Room> stanze = casa.getStanze();
+        Map<String,Room> stanze = casa.getRooms();
         for(Map.Entry<String, Room> s: stanze.entrySet()){
             String name = s.getKey();
             String description = s.getValue().toString();
@@ -371,7 +366,7 @@ public final class Control {
     }
 
     public void gestisciSconfitta(){
-        // Personaggio muore perché uno dei suoi bisogni è sotto la soglia
+        // MainCharacter muore perché uno dei suoi bisogni è sotto la soglia
         if(isSconfitta()){
             view.mostraSconfitta();
             gameTimer.stop();

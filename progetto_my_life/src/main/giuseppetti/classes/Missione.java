@@ -3,7 +3,7 @@ package main.giuseppetti.classes;
 import java.util.ArrayList;
 import java.util.List;
 
-import main.fabbri.classes.Personaggio;
+import main.fabbri.classes.MainCharacter;
 import main.giuseppetti.interfaces.CondizioneCompletamento;
 
 public class Missione {
@@ -24,7 +24,7 @@ public class Missione {
     }
     
     // Verifica il completamento di una missione 
-    public boolean verificaCompletamento(Personaggio personaggio) {
+    public boolean verificaCompletamento(MainCharacter personaggio) {
         if (completata) {
             return true;
         }

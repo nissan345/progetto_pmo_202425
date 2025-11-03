@@ -22,9 +22,9 @@ public class CasaImplTest {
     private IRoom camera;
 =======
     private CasaImpl casa;
-    private RoomImpl salotto;
-    private RoomImpl cucina;
-    private RoomImpl camera;
+    private IRoom salotto;
+    private IRoom cucina;
+    private IRoom camera;
 >>>>>>> nicxole
 
     // Inizializzazione dei soggetti di test ---------------------------------------------------------------------------------
@@ -42,7 +42,7 @@ public class CasaImplTest {
 <<<<<<< HEAD
         salotto = new IRoom("Salotto", oggettiSalotto);
 =======
-        salotto = new RoomImpl("Salotto", oggettiSalotto);
+        salotto = new IRoom("Salotto", oggettiSalotto);
 >>>>>>> nicxole
         
         List<OggettoGioco> oggettiCucina = new ArrayList<>();
@@ -51,7 +51,7 @@ public class CasaImplTest {
 <<<<<<< HEAD
         cucina = new IRoom("Cucina", oggettiCucina);
 =======
-        cucina = new RoomImpl("Cucina", oggettiCucina);
+        cucina = new IRoom("Cucina", oggettiCucina);
 >>>>>>> nicxole
         
         List<OggettoGioco> oggettiCamera = new ArrayList<>();
@@ -60,7 +60,7 @@ public class CasaImplTest {
 <<<<<<< HEAD
         camera = new IRoom("Camera da letto", oggettiCamera);
 =======
-        camera = new RoomImpl("Camera da letto", oggettiCamera);
+        camera = new IRoom("Camera da letto", oggettiCamera);
 >>>>>>> nicxole
     }
 

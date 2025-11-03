@@ -1,8 +1,8 @@
 package main.giuseppetti.interfaces;
 
-import main.fabbri.classes.Personaggio;
+import main.fabbri.classes.MainCharacter;
 
 public interface CondizioneCompletamento {
 	
-	public boolean verificaCompletamento(Personaggio personaggio);
+	public boolean verificaCompletamento(MainCharacter personaggio);
 }

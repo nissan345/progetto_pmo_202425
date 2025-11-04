@@ -11,8 +11,7 @@ package main.giuseppetti.classes;
  */
 public class LevelRequirement {
 
-    private final int minLvl; 
-
+    private int minLvl; 
     public LevelRequirement(int minLvl) {
         if (minLvl < 1) throw  new IllegalArgumentException("minLvl >= 1"); 
         this.minLvl = minLvl; 
@@ -21,4 +20,13 @@ public class LevelRequirement {
     public boolean isSatisfiedBy(Character c) {
         return c.getLvl() >= this.minLvl; 
     }
+
+    public String getDescription() {
+        return "Richiede livello" + minLvl + "+"; 
+    }
+
+    public int getMinLvl() {
+        return this.minLvl; 
+    }
 }
+

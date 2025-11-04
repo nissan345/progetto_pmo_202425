@@ -4,15 +4,13 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-
-import main.aboufaris.interfaces.Room;
 import main.aboufaris.classes.*;
-
-import main.aboufaris.interfaces.Room;
 import main.aboufaris.classes.*;
 >>>>>>> nicxole
 import main.fabbri.classes.*;
-import main.neri.classes.FabbricaOggetti;
+import model.character.MainCharacter;
+import model.world.Room;
+import model.world.factory.FabbricaOggetti;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -52,8 +50,8 @@ public class MainCharacterTest {
 
         assertEquals("Giocatore", character.getName());
         //assertEquals(Dieta.ONNIVORO, character.getDieta());
-        assertEquals(100, character.getHunger());
-        assertEquals(100, character.getThirst());
+        assertEquals(100, character.getSatiety());
+        assertEquals(100, character.getSatiety());
         assertEquals(100, character.getEnergy());
         assertEquals(100, character.getHygiene());
 
@@ -72,11 +70,11 @@ public class MainCharacterTest {
     public void testMangiare() {
 
 
-        int hungerIniziale = character.getHunger();
+        int satietyIniziale = character.getSatiety();
         //String risultato = character.mangia(TipoCibo.BISTECCA);
         //assertTrue(risultato.contains("Hai mangiato Bistecca"));
-        //assertTrue(risultato.contains("Hunger: +"));
-        assertTrue(character.getHunger() > hungerIniziale);
+        //assertTrue(risultato.contains("Satiety: +"));
+        assertTrue(character.getSatiety() > satietyIniziale);
 
         //character.setFame(50);
         int fameIniziale = character.getFame();
@@ -92,7 +90,7 @@ public class MainCharacterTest {
 
        // String risultato = characterVegano.mangia(TipoCibo.BISTECCA);
        // assertTrue(risultato.contains("Non puoi mangiare Bistecca con la tua dieta"));
-        assertEquals(100, characterVegano.getHunger());
+        assertEquals(100, characterVegano.getSatiety());
     }
 
     @Test
@@ -100,13 +98,13 @@ public class MainCharacterTest {
 
         //character.setFame(50);
         //character.setPreferenza(Gusto.SALATO, Reazione.PIACE);
-        //character.setHunger(50);
+        //character.setSatiety(50);
         //character.setPreferenza(Gusto.SALATO, Reazione.PIACE);
-        int hungerIniziale = character.getHunger();
+        int satietyIniziale = character.getSatiety();
        // String risultato = character.mangia(TipoCibo.BISTECCA);
        // assertTrue(risultato.contains("Ti è piaciuto!"));
-        // Verifica che la hunger sia aumentata più del valore base grazie al bonus
-        assertTrue(character.getHunger() > hungerIniziale + 40);
+        // Verifica che la satiety sia aumentata più del valore base grazie al bonus
+        assertTrue(character.getSatiety() > satietyIniziale + 40);
 
         //character.setFame(50);
         //character.setPreferenza(Gusto.SALATO, Reazione.PIACE);
@@ -128,13 +126,13 @@ public class MainCharacterTest {
         //assertTrue(risultato.contains("Non ti è piaciuto"));
         // Verifica che la fame sia aumentata meno del valore base a causa del malus
         assertTrue(character.getFame() < fameIniziale + 40);
-        //character.setHunger(50);
+        //character.setSatiety(50);
         //character.setPreferenza(Gusto.SALATO, Reazione.NON_PIACE);
-        int hungerIniziale = character.getHunger();
+        int satietyIniziale = character.getSatiety();
         //String risultato = character.mangia(TipoCibo.BISTECCA);
         //assertTrue(risultato.contains("Non ti è piaciuto"));
-        // Verifica che la hunger sia aumentata meno del valore base a causa del malus
-        assertTrue(character.getHunger() < hungerIniziale + 40);
+        // Verifica che la satiety sia aumentata meno del valore base a causa del malus
+        assertTrue(character.getSatiety() < satietyIniziale + 40);
         //character.setFame(50);
         //character.setPreferenza(Gusto.SALATO, Reazione.NON_PIACE);
         int fameIniziale = character.getFame();
@@ -153,11 +151,11 @@ public class MainCharacterTest {
        // String risultato = character.bevi(Bevanda.ACQUA);
         //assertTrue(risultato.contains("Hai bevuto Acqua"));
         //assertTrue(risultato.contains("Sete: +"));
-        //character.setThirst(50);
+        //character.setSatiety(50);
        // String risultato = character.bevi(Bevanda.ACQUA);
         //assertTrue(risultato.contains("Hai bevuto Acqua"));
-        //assertTrue(risultato.contains("Thirst: +"));
-        assertEquals(90, character.getThirst()); // 50 + 40 = 90
+        //assertTrue(risultato.contains("Satiety: +"));
+        assertEquals(90, character.getSatiety()); // 50 + 40 = 90
         //character.setSete(50);
        // String risultato = character.bevi(Bevanda.ACQUA);
         //assertTrue(risultato.contains("Hai bevuto Acqua"));
@@ -279,8 +277,8 @@ public class MainCharacterTest {
 
         Map<String, Integer> state = character.getStatoCompleto();
         assertEquals(4, state.size());
-        assertEquals(Integer.valueOf(100), state.get("hunger"));
-        assertEquals(Integer.valueOf(100), state.get("thirst"));
+        assertEquals(Integer.valueOf(100), state.get("satiety"));
+        assertEquals(Integer.valueOf(100), state.get("hydration"));
         assertEquals(Integer.valueOf(100), state.get("energy"));
         assertEquals(Integer.valueOf(100), state.get("hygiene"));
 }

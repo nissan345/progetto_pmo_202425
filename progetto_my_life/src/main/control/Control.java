@@ -12,6 +12,19 @@ import main.fabbri.classes.*;
 import main.giuseppetti.classes.*;
 import main.neri.classes.*;
 import main.view.*;
+import model.character.Hair;
+import model.character.MainCharacter;
+import model.character.NPC;
+import model.character.Outfit;
+import model.character.npc.Brother;
+import model.character.npc.Dad;
+import model.character.npc.Mum;
+import model.quest.InteractionOption;
+import model.quest.Quest;
+import model.world.House;
+import model.world.Room;
+import model.world.factory.FabbricaOggetti;
+import model.world.gameItem.GameObject;
 
 public final class Control {
 	
@@ -218,8 +231,8 @@ public final class Control {
     // DA VEDERE
     private boolean isSconfitta(){
         // MainCharacter muore perché uno dei suoi bisogni è sotto la soglia
-        return character.getEnergy() == 0 || character.getHunger() ==0 || character.getHygiene() == 0 
-        || character.getThirst() == 0;
+        return character.getEnergy() == 0 || character.getSatiety() ==0 || character.getHygiene() == 0 
+        || character.getSatiety() == 0;
     }
 
     // Funziona
@@ -245,7 +258,7 @@ public final class Control {
     }
 
     // Metodo che serve per gli effetti dell'uso dell'oggetto
-    public void onClickOggetto(OggettoGioco oggettoGioco){
+    public void onClickOggetto(GameObject oggettoGioco){
     	Room corrente = getCurrentRoom();
         if (!corrente.hasOggettoRoom(oggettoGioco)) {
             view.mostraErrore("L'oggetto non si trova in room!");
@@ -271,7 +284,7 @@ public final class Control {
         Object scelta = view.mostraDialogSceltaGenerica("Scegli un'opzione","Azioni disponibili:", opzioni);
         if (scelta != null) {
             var ra = oggettoGioco.usa(character, scelta);
-            character.applicaRisultatoAzione(ra, oggettoGioco.getName());
+            character.applicaActionResult(ra, oggettoGioco.getName());
             view.mostraStatistiche(character.printState());
         }
     }
@@ -296,7 +309,7 @@ public final class Control {
 
     public void mostraOggettiCurrentRoom() {
         Room room = getCurrentRoom();
-        List<OggettoGioco> oggettiCorrenti = room.getOggettiInRoom();
+        List<GameObject> oggettiCorrenti = room.getOggettiInRoom();
 
         List<String> labels = oggettiCorrenti.stream()
             .map(o -> o.getName() + " - " + o.getDescription())
@@ -327,10 +340,10 @@ public final class Control {
         List<String> avvisi = new ArrayList<>();
         String name = character.getName();
 
-        aggiungiAvvisoBisogno(avvisi, character.getHunger(), name, " deve mangiare!", "STA PER SVENIRE DALLA FAME!");
+        aggiungiAvvisoBisogno(avvisi, character.getSatiety(), name, " deve mangiare!", "STA PER SVENIRE DALLA FAME!");
         aggiungiAvvisoBisogno(avvisi, character.getEnergy(), name, " deve dormire!", "STA PER PERDERE I SENSI!");
         aggiungiAvvisoBisogno(avvisi, character.getHygiene(), name, " deve lavarsi!", "NON SI RIESCE A RESPIRARGLI VICINO!");
-        aggiungiAvvisoBisogno(avvisi, character.getThirst(), name, " deve bere!", "STA PER DISIDRATARSI!");
+        aggiungiAvvisoBisogno(avvisi, character.getSatiety(), name, " deve bere!", "STA PER DISIDRATARSI!");
         
         return avvisi;
     }

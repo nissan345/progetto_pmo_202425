@@ -5,8 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import main.aboufaris.classes.StanzaImpl;
-import main.giuseppetti.classes.Brother;
-import main.neri.classes.OggettoGioco;
+import model.character.npc.Brother;
+import model.world.gameItem.GameObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ public class StanzaImplTest {
     // Inizializzazione dei soggetti di test ---------------------------------------------------------------------------------
     @Before
     public void setUp() {
-        List<OggettoGioco> oggetti = new ArrayList<>();
+        List<GameObject> oggetti = new ArrayList<>();
         divano = new OggettoGenerico(TipoOggetto.DIVANO);
         libreria = new OggettoGenerico(TipoOggetto.LIBRERIA);
         
@@ -80,7 +80,7 @@ public class StanzaImplTest {
         room.addOggettoStanza(televisione);
         room.addOggettoStanza(stereo);
         
-        List<OggettoGioco> oggetti = room.getOggettiInStanza();
+        List<GameObject> oggetti = room.getOggettiInStanza();
         assertEquals(4, oggetti.size());
         assertTrue(oggetti.contains(divano));
         assertTrue(oggetti.contains(libreria));
@@ -90,7 +90,7 @@ public class StanzaImplTest {
 
     @Test
     public void testStanzaVuota() {
-        List<OggettoGioco> listaVuota = new ArrayList<>();
+        List<GameObject> listaVuota = new ArrayList<>();
         StanzaImpl stanzaVuota = new StanzaImpl("Room Vuota", listaVuota);
         
         assertTrue(stanzaVuota.getOggettiInStanza().isEmpty());
@@ -103,7 +103,7 @@ public class StanzaImplTest {
         room.addOggettoStanza(libreria);
         
         // Test interazione con oggetto reale
-        main.neri.classes.RisultatoAzione risultato = divano.usa(null);
+        main.neri.classes.ActionResult risultato = divano.usa(null);
         assertNotNull(risultato);
         assertTrue(risultato.getMessaggio().contains("Ti siedi sul divano"));
         

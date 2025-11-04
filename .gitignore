@@ -12,8 +12,9 @@ bin/
 .vscode/
 .yscode/
 
-# Ignora i file .class generati
-*.class
+*.class*.class
 bin/
+target/
+build/
 target/
 build/

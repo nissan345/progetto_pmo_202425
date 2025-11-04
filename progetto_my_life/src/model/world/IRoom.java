@@ -8,7 +8,9 @@ import model.world.gameItem.GameObject;
 import model.world.gameItem.GameObject;
 
 
+
 public class IRoom implements Room{
+
 
     private String nomeStanza;
     private Optional<NPC> npcInStanza;               // Indica gli oggetti presenti nella room

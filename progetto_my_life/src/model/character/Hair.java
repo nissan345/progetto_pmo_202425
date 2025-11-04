@@ -24,4 +24,6 @@ public enum Hair {
     public String toString() {
         return name;
     }
+
 }
+

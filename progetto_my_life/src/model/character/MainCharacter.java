@@ -7,19 +7,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-
 import model.action.ActionResult;
 import model.quest.Quest;
 import model.world.Room;
 import model.world.gameItem.GameObject;
 
 public class MainCharacter {
+
     private String name;
     private Outfit outfit;
     private Hair hair;
     private Stats stats;
+    private int lvl; 
+    private int xp; 
+    private int xpToNext; 
 	private Room currentRoom;
-    private Map<Quest, Set<String>> itemUsedForQuests;
+    private Map<Quest, Set<String>> objectUsedForQuests;
     private List<Quest> ongoingQuests;
     private List<String> usedObjects; // Traccia gli oggetti usati
  
@@ -28,18 +31,24 @@ public class MainCharacter {
         this.name = name;
         this.outfit = outfit;
         this.hair = hair;  
-        this.itemUsedForQuests = new HashMap<>();
+        this.objectUsedForQuests = new HashMap<>();
         this.stats = new Stats();
+        this.lvl = 1; 
+        this.xp = 0;
+        this.xpToNext = computeXpToNext(1);
         this.currentRoom = null; // There's no room in the beginning
         this.ongoingQuests = new ArrayList<>();
         this.usedObjects = new ArrayList<>();
     }
     
-    // GETTERS AND SETTERA -------------------------------------------------------------------
+    // GETTERS AND SETTER -------------------------------------------------------------------
     public String getName() {return name;}    
-    public Outfit getVestiti() { return outfit; }
-    public Hair getCapelli() { return hair;}
+    public Outfit getOutfit() { return outfit; }
+    public Hair getHair() { return hair;}
     public Stats getStats() { return stats; }
+    public int getLvl() { return lvl; }
+    public int getXp() { return xp; }
+    public int getXpToNext() { return xpToNext; }
     public String getCurrentRoom() {
         if (currentRoom != null) {
             return currentRoom.getRoomName();
@@ -60,6 +69,8 @@ public class MainCharacter {
         state.append("Sete: ").append(stats.getHydration()).append("/100\n");
         state.append("Energia: ").append(stats.getEnergy()).append("/100\n");
         state.append("Igiene: ").append(stats.getHygiene()).append("/100\n");
+         state.append("Livello: ").append(this.lvl).append("/").append("\n"); 
+        state.append("XP: ").append(this.xp).append("/").append(this.xpToNext).append("\n"); 
         state.append("Posizione: ").append(getCurrentRoom()).append("\n");
         
         return state.toString();
@@ -94,6 +105,34 @@ public class MainCharacter {
         return state;
     }
  */
+
+// LEVEL SYSTEM ----------------------------------------------------------------------------------
+    
+    /**
+     * Creates a progressive growth of xp needed to level up
+     * @param level  
+     */
+    private int computeXpToNext(int level) {
+        double inc = Math.pow(Math.max(0, level - 1), 1.2);
+        return 100 + (int)Math.round(50 * inc);
+    }
+
+    /**
+     * @param amount
+     */
+    public void addXp(int amount) {
+        if (amount <= 0) return;
+        this.xp += amount;
+        while (xp >= xpToNext) {
+            xp -= xpToNext;
+            levelUp();
+        }
+    }
+
+    public void levelUp() {
+        this.lvl++; 
+        this.xpToNext = computeXpToNext(lvl); 
+    }
   
  // METODI PER LE MISSIONI -----------------------------------------------------------------------
 
@@ -105,7 +144,7 @@ public class MainCharacter {
     public void addQuest(Quest quest) {
         if (quest != null && !ongoingQuests.contains(quest)) {
             ongoingQuests.add(quest);
-            itemUsedForQuests.put(quest, new HashSet<>());
+            objectUsedForQuests.put(quest, new HashSet<>());
         }
     }
     
@@ -115,7 +154,7 @@ public class MainCharacter {
      */
     public void removeQuest(Quest quest) {
         ongoingQuests.remove(quest);
-        itemUsedForQuests.remove(quest);
+        objectUsedForQuests.remove(quest);
     }
 
     /**
@@ -156,11 +195,11 @@ public class MainCharacter {
     
     /**
      * registers the use of an object
-     * @param itemName
+     * @param objectName
      */
-    public void recordItemsUsedForQuests(String itemName) {
+    public void recordObjectsUsedForQuests(String objectName) {
     for (Quest q : ongoingQuests) {
-        itemUsedForQuests.computeIfAbsent(q, k -> new HashSet<>()).add(itemName);
+        objectUsedForQuests.computeIfAbsent(q, k -> new HashSet<>()).add(objectName);
     }
 }
     
@@ -171,8 +210,8 @@ public class MainCharacter {
      * @param quest
      * @return
      */
-    public boolean hasUsedItemForQuest(String nameObject, Quest quest) {
-        return itemUsedForQuests.getOrDefault(quest, Set.of()).contains(nameObject);
+    public boolean hasUsedObjectForQuest(String nameObject, Quest quest) {
+        return objectUsedForQuests.getOrDefault(quest, Set.of()).contains(nameObject);
     }
     
     /**
@@ -188,7 +227,7 @@ public class MainCharacter {
         if (controlMessage != null) {
             return controlMessage;
         }
-        recordItemsUsedForQuests(nameObject);
+        recordObjectsUsedForQuests(nameObject);
         stats.changeEnergy(result.getDeltaEnergy());
         stats.changeHydration(result.getDeltaHydration());
         stats.changeHygiene(result.getDeltaHygiene());

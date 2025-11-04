@@ -2,7 +2,6 @@ package model.quest;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import model.character.MainCharacter;
 import model.character.NPC;
 

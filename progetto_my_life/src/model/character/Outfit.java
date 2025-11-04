@@ -27,4 +27,5 @@ public enum Outfit {
     public String toString() {
         return name + ": " + description;
     }
+
 }

@@ -1,7 +1,6 @@
 package model.character.npc;
 
 import java.util.Arrays;
-
 import model.character.NPC;
 import model.quest.Quest;
 import model.world.Room;
@@ -49,7 +48,7 @@ public class Dad extends NPC {
                                    "Dovresti innaffiare le piante",
                                    this, 
                                    15, 
-                                   Arrays.asList(new ItemActionCondition("Watering can"))
+                                   Arrays.asList(new ObjectActionCondition("Watering can"))
                             );
         this.addQuest(plantsQuest);
         
@@ -57,9 +56,9 @@ public class Dad extends NPC {
         											  "Dovresti preparare una festa a sorpresa per la mamma, fai delle pulizie in casa e metti della musica in Salotto", 
         											  this, 
         											  30, 
-        											  Arrays.asList(new ItemActionCondition("Vacuum cleaner"), 
-        													        new ItemActionCondition("Stove"), 
-        													        new ItemActionCondition("Stereo and records"))
+        											  Arrays.asList(new ObjectActionCondition("Vacuum cleaner"), 
+        													        new ObjectActionCondition("Stove"), 
+        													        new ObjectActionCondition("Stereo and records"))
         		);
         this.addQuest(surprisePartyQuest);
     }

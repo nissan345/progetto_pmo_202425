@@ -1,7 +1,6 @@
 package model.character.npc;
 
 import java.util.Arrays;
-
 import model.character.NPC;
 import model.quest.Quest;
 import model.world.Room;
@@ -46,7 +45,7 @@ public class Mum extends NPC {
                 "Dovresti riportarmi il vecchio album di famiglia che ho perduto da qualche parte in casa e riportamelo",  
                                    this,
                                    15, 
-                                   Arrays.asList(new ItemActionCondition("Album"))
+                                   Arrays.asList(new ObjectActionCondition("Album"))
                             );
         this.addQuest(albumQuest);
     }

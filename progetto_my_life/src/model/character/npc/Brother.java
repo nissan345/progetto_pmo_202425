@@ -1,7 +1,6 @@
 package model.character.npc;
 
 import java.util.Arrays;
-
 import model.character.NPC;
 import model.quest.Quest;
 import model.world.Room;
@@ -44,7 +43,7 @@ public class Brother extends NPC {
                 				   "Dei nostri amici vengono a casa, potresti prepare qualcosa per tutti mentre io pulisco la mia camera", 
                                    this, 
                                    20, 
-                                   Arrays.asList(new ItemActionCondition("Stove"))
+                                   Arrays.asList(new ObjectActionCondition("Stove"))
                             );
         this.addQuest(kitchenQuest);
     }

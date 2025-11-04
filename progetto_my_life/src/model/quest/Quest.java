@@ -2,7 +2,6 @@ package model.quest;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import model.character.MainCharacter;
 import model.character.NPC;
 
@@ -35,7 +34,7 @@ public class Quest {
         
         // If all conditions are satisfied, the quest is completed
         for (CompletionCondition condition : conditions) {
-            if (!condition.checkCompletion(character, this)) {
+            if (!condition.checkCompletion(character)) {
                 return false;
             }
         }

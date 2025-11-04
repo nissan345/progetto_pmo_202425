@@ -273,11 +273,11 @@ public class View1 {
     }
 
 <<<<<<< HEAD
-    public void mostraOggettiInStanza(List<OggettoGioco> oggettiPresenti){
+    public void mostraOggettiInStanza(List<GameObject> oggettiPresenti){
     	SwingUtilities.invokeLater(() -> {
             System.out.println("DEBUG: mostraOggettiInStanza chiamato con " + 
 =======
-    public void mostraOggettiInRoom(List<OggettoGioco> oggettiPresenti){
+    public void mostraOggettiInRoom(List<GameObject> oggettiPresenti){
     	SwingUtilities.invokeLater(() -> {
             System.out.println("DEBUG: mostraOggettiInRoom chiamato con " + 
 >>>>>>> nicxole
@@ -293,7 +293,7 @@ public class View1 {
             
             if(oggettiPresenti != null && !oggettiPresenti.isEmpty()){
                 System.out.println("DEBUG: Creazione pulsanti per oggetti:");
-                for(OggettoGioco oggetto : oggettiPresenti){
+                for(GameObject oggetto : oggettiPresenti){
 <<<<<<< HEAD
                     System.out.println("  - " + oggetto.getNome());
                     
@@ -404,7 +404,7 @@ public class View1 {
             statoArea.append("\n" + stats + "\n");
             appendLog("Statistiche aggiornate per " + p.getNome());
 =======
-            String stats = String.format("Energy: %d | Hunger: %d | Hygiene: %d | Satiety: %d", p.getEnergy(), p.getHunger(), p.getHygiene(), p.getSatiety());
+            String stats = String.format("Energy: %d | Satiety: %d | Hygiene: %d | Satiety: %d", p.getEnergy(), p.getSatiety(), p.getHygiene(), p.getSatiety());
             stateArea.append("\n" + stats + "\n");
             appendLog("Statistiche aggiornate per " + p.getName());
 >>>>>>> nicxole

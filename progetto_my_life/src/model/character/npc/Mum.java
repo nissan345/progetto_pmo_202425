@@ -2,10 +2,10 @@ package model.character.npc;
 
 import java.util.Arrays;
 
-import model.ObjectActionCondition;
 import model.character.NPC;
 import model.quest.Quest;
 import model.world.Room;
+import model.world.gameItem.ObjectActionCondition;
 
 public class Mum extends NPC {
 

@@ -1,4 +1,4 @@
-package main.neri.classes;
+package model.world.gameItem;
 
 import java.util.ArrayList;
 import java.util.List;

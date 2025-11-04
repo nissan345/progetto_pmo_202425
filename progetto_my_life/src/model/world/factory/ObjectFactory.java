@@ -1,8 +1,12 @@
-package main.neri.classes;
+package model.world.factory;
 
 import java.util.*;
-import main.aboufaris.classes.*;
-import main.aboufaris.interfaces.Room;
+
+import model.world.IRoom;
+import model.world.Room;
+import model.world.gameItem.GameObject;
+import model.world.gameItem.Refrigerator;
+
      
 
 public class ObjectFactory { 
@@ -10,37 +14,37 @@ public class ObjectFactory {
     // Bedroom
     public static Room createBedroom() {
         List<GameObject> objects = new ArrayList<>(List.of(
-                new GameObject.Builder("Bed", "Bedroom", 80)
-                    .message("You lie down on the bed and rest.")
+                new GameObject.Builder("Letto", "Camera da Letto", 80)
+                    .message("Ti sdrai e ti riposi")
                     .energy(40)
                     .hygiene(-10)
                     .build(), 
                     
-                new GameObject.Builder("Computer", "Bedroom", 20)
-                    .message("You play on the computer.")
-                    .hunger(-10)
-                    .thirst(-5)
+                new GameObject.Builder("Computer", "Camera da Letto", 20)
+                    .message("Giochi al pc.")
+                    .satiety(-10)
+                    .hydration(-5)
                     .energy(-20)
                     .hygiene(-5)
                     .build(),
                     
-                new GameObject.Builder("Wardrobe", "Bedroom", 90)
-                    .message("You try on some new outfits!")
+                new GameObject.Builder("Armadio", "Camera da Letto", 90)
+                    .message("Provi dei nuovi outfit!")
                     .energy(-10)
                     .hygiene(20)
-             //       .isSpecialInteraction(true)
+             //     .isSpecialInteraction(true)
                     .build()
         ));
-        return new RoomImpl("Bedroom", objects);
+        return new IRoom("Camera Da Letto", objects);
     }
     
     // Kitchen
     public static Room createKitchen() {
         List<GameObject> objects = new ArrayList<>(List.of(
-                new GameObject.Builder("Stove", "Kitchen", 80)
-                        .message("You cook a hot meal.")
-                        .hunger(20)
-                        .thirst(0)
+                new GameObject.Builder("Fornelli", "Cucina", 80)
+                        .message("Cuoci un buon pasto.")
+                        .satiety(20)
+                        .hydration(0)
                         .hygiene(-5)
                         .energy(-10)
              //           .isSpecialInteraction(true)
@@ -48,143 +52,143 @@ public class ObjectFactory {
                         
                 new Refrigerator(),
                 
-                new GameObject.Builder("Sink", "Kitchen", 80)
-                        .message("You wash the dishes.")
-                        .hunger(0)
-                        .thirst(0)
+                new GameObject.Builder("Lavandino", "Cucina", 80)
+                        .message("Lavi i piatti")
+                        .satiety(0)
+                        .hydration(0)
                         .hygiene(0)
                         .energy(-10)
                         .build()
         ));	
-        return new RoomImpl("Kitchen", objects);
+        return new IRoom("Cucina", objects);
     }
    
-    // Bathroom
-    public static Room createBathroom() {
+    // Bagno
+    public static Room createBagno() {
         List<GameObject> objects = new ArrayList<>(List.of(
-                new GameObject.Builder("Shower", "Bathroom", 80)
+                new GameObject.Builder("Doccia", "Bagno", 80)
                         .message("You take a refreshing shower.")
-                        .hunger(0)
-                        .thirst(0)
+                        .satiety(0)
+                        .hydration(0)
                         .hygiene(40)
                         .energy(10)
                         .build(),
                 
-                new GameObject.Builder("Toilet", "Bathroom", 60)
-                        .message("You feel relieved after using the bathroom.")
-                        .hunger(0)
-                        .thirst(0)
+                new GameObject.Builder("Toilet", "Bagno", 60)
+                        .message("You feel relieved after using the Bagno.")
+                        .satiety(0)
+                        .hydration(0)
                         .hygiene(5)
                         .energy(5)
                         .build(),
                 
-                new GameObject.Builder("Washing Machine", "Bathroom", 80)
+                new GameObject.Builder("Washing Machine", "Bagno", 80)
                         .message("You put your clothes in the washing machine. The house is tidier!")
-                        .hunger(0)
-                        .thirst(0)
+                        .satiety(0)
+                        .hydration(0)
                         .hygiene(0)
                         .energy(-10)
                         .build()
         ));
-        return new RoomImpl("Bathroom", objects);
+        return new IRoom("Bagno", objects);
     }
     
-    // Living Room
+    // Salotto
     public static Room createLivingRoom() {
         List<GameObject> objects = new ArrayList<>(List.of(
-                new GameObject.Builder("Television", "Living Room", 40)
+                new GameObject.Builder("Televisione", "Salotto", 40)
                         .message("You watch TV and relax.")
-                        .hunger(-5)
-                        .thirst(-5)
+                        .satiety(-5)
+                        .hydration(-5)
                         .hygiene(-5)
                         .energy(10)
                         .build(),
         
-                new GameObject.Builder("Stereo", "Living Room", 30)
+                new GameObject.Builder("Stereo", "Salotto", 30)
                         .message("You listen to Billie Eilish.")
-                        .hunger(0)
-                        .thirst(0)
+                        .satiety(0)
+                        .hydration(0)
                         .hygiene(0)
                         .energy(10)
                         .build(),
         
-                new GameObject.Builder("Sofa", "Living Room", 80)
+                new GameObject.Builder("Sofa", "Salotto", 80)
                         .message("You sit on the sofa and rest a bit.")
-                        .hunger(0)
-                        .thirst(0)
+                        .satiety(0)
+                        .hydration(0)
                         .hygiene(0)
                         .energy(-15)
                         .build(),
         
-                new GameObject.Builder("Bookshelf", "Living Room", 80)
+                new GameObject.Builder("Bookshelf", "Salotto", 80)
                         .message("You just finished reading Harry Potter and the Philosopher’s Stone!")
-                        .hunger(-5)
-                        .thirst(0)
+                        .satiety(-5)
+                        .hydration(0)
                         .hygiene(0)
                         .energy(-10)
                         .build(),
         
-                new GameObject.Builder("Photo Album", "Living Room", 20)
+                new GameObject.Builder("Photo Album", "Salotto", 20)
                         .message("You picked up the old photo album.")
-                        .hunger(0)
-                        .thirst(0)
+                        .satiety(0)
+                        .hydration(0)
                         .hygiene(0)
                         .energy(-5)
                         .build()
         ));
-        return new RoomImpl("Living Room", objects);
+        return new IRoom("Salotto", objects);
     }
     
     
-    // Storage Room
+    // Sgabuzzino
     public static Room createStorageRoom() {
         List<GameObject> objects = new ArrayList<>(List.of(
-                new GameObject.Builder("Vacuum Cleaner", "Storage Room", 30)
+                new GameObject.Builder("Vacuum Cleaner", "Sgabuzzino", 30)
                     .message("You use the vacuum cleaner and clean the room.")
-                    .hunger(0)
-                    .thirst(0)
+                    .satiety(0)
+                    .hydration(0)
                     .hygiene(0)
                     .energy(-20)
                     .build()
         ));
-        return new RoomImpl("Storage Room", objects);
+        return new IRoom("Sgabuzzino", objects);
     }
             
-    // Garden
-    public static Room createGarden() {
+    // Giardino
+    public static Room createGiardino() {
         List<GameObject> objects = new ArrayList<>(List.of(
-                new GameObject.Builder("Watering Can", "Garden", 10)
+                new GameObject.Builder("Watering Can", "Giardino", 10)
                     .message("You water the plants: they look greener now.")
-                    .hunger(0)
-                    .thirst(0)
+                    .satiety(0)
+                    .hydration(0)
                     .hygiene(0)
                     .energy(-10)
                     .build(),
        
-                new GameObject.Builder("Ball", "Garden", 10)
+                new GameObject.Builder("Ball", "Giardino", 10)
                     .message("You play with the ball and get some exercise.")
-                    .hunger(-10)
-                    .thirst(-5)
+                    .satiety(-10)
+                    .hydration(-5)
                     .hygiene(-15)
                     .energy(-5)
                     .build(),
        
-                new GameObject.Builder("Swing", "Garden", 80)
+                new GameObject.Builder("Swing", "Giardino", 80)
                     .message("You swing back and forth, having fun and relaxing.")
-                    .hunger(0)
-                    .thirst(0)
+                    .satiety(0)
+                    .hydration(0)
                     .hygiene(-15)
                     .energy(0)
                     .build(),
        
-                new GameObject.Builder("Car", "Garden", 90)
+                new GameObject.Builder("Car", "Giardino", 90)
                     .message("You take the car and go for a drive.")
-                    .hunger(-15)
-                    .thirst(-15)
+                    .satiety(-15)
+                    .hydration(-15)
                     .hygiene(-20)
                     .energy(-5)
                     .build()
         ));
-        return new RoomImpl("Garden", objects);
+        return new IRoom("Giardino", objects);
     }
 }

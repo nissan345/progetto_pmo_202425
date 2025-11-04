@@ -32,7 +32,7 @@ public class House {
             this.currentRoom = Optional.of(s);
             return Optional.of(s);
         }
-        return Optional.empty(); // Stanza non trovata
+        return Optional.empty(); // Can't find a room
     }
 
     public Map<String, Room> exitRoom(){

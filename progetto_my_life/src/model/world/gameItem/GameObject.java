@@ -1,7 +1,10 @@
-package main.neri.classes;
+package model.world.gameItem;
 
 import java.util.List;
-import main.fabbri.classes.Character;
+
+import model.action.ActionResult;
+import model.character.MainCharacter;
+
 
 /**
  * Base class for all objects present in the house.
@@ -13,7 +16,7 @@ public class GameObject{
     public String message;
     protected String room;
     private boolean specialInteraction;
-    private int deltaHunger, deltaThirst, deltaEnergy, deltaHygiene;
+    private int deltaSatiety, deltaHydration, deltaEnergy, deltaHygiene;
     
     public GameObject(Builder builder) {
         this.name = builder.name;
@@ -21,16 +24,20 @@ public class GameObject{
         this.size = builder.size;
         this.room = builder.room;
         this.deltaEnergy = builder.deltaEnergy;
-        this.deltaHunger = builder.deltaHunger;
+        this.deltaSatiety = builder.deltaSatiety;
         this.deltaHygiene = builder.deltaHygiene;
-        this.deltaThirst = builder.deltaThirst;
+        this.deltaHydration = builder.deltaHydration;
         this.message = builder.message;
         this.specialInteraction = builder.specialInteraction;
     }
       
-    /** Executes the default action associated with this object. */
-    public ActionResult use(Character character) {
-        return new ActionResult(message, deltaHunger, deltaThirst, 
+    /**
+     * Executes the default action associated with this object. 
+     * @param character
+     * @return
+     */
+    public ActionResult use(MainCharacter character) {
+        return new ActionResult(message, deltaSatiety, deltaHydration, 
                 deltaEnergy, deltaHygiene);
     }
     
@@ -56,7 +63,7 @@ public class GameObject{
         return List.of(); 
     }
 
-    public ActionResult use(Character c, Object option) {
+    public ActionResult use(MainCharacter c, Object option) {
         return use(c);
     }
 
@@ -73,8 +80,8 @@ public class GameObject{
         private String description = "";
         private String message = "You use the object.";
         private boolean specialInteraction = false;
-        private int deltaHunger = 0;
-        private int deltaThirst = 0;
+        private int deltaSatiety = 0;
+        private int deltaHydration = 0;
         private int deltaEnergy = 0;
         private int deltaHygiene = 0;
         
@@ -96,13 +103,13 @@ public class GameObject{
             return this;
         }
         
-        public Builder hunger(int val) {
-            this.deltaHunger = val;
+        public Builder satiety(int val) {
+            this.deltaSatiety = val;
             return this;
         }
         
-        public Builder thirst(int val) {
-            this.deltaThirst = val;
+        public Builder hydration(int val) {
+            this.deltaHydration = val;
             return this;
         }
         

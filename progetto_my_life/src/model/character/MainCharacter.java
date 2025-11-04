@@ -8,60 +8,38 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import model.action.RisultatoAzione;
+import model.action.ActionResult;
 import model.quest.Quest;
 import model.world.Room;
-import model.world.gameItem.OggettoGioco;
+import model.world.gameItem.GameObject;
 
 public class MainCharacter {
-	private static final int MAX_STATE = 100;
-    private static final int MIN_STATE = 0;
     private String name;
     private Outfit outfit;
     private Hair hair;
     private Stats stats;
-    
-    public Stats getStats() {
-		return stats;
-	}
 	private Room currentRoom;
     private Map<Quest, Set<String>> itemUsedForQuests;
-
-
-    // Modifiche per questi 
     private List<Quest> ongoingQuests;
-    private List<String> oggettiUsati; // Traccia gli oggetti usati
+    private List<String> usedObjects; // Traccia gli oggetti usati
  
-    // COSTRUTTORE ------------------------------------------------------------------------
+    // CONSTRUCTOR ------------------------------------------------------------------------
     public MainCharacter(String name, Outfit outfit, Hair hair) {
         this.name = name;
         this.outfit = outfit;
         this.hair = hair;  
-        // Valori iniziali
         this.itemUsedForQuests = new HashMap<>();
         this.stats = new Stats();
-        this.currentRoom = null; // Inizialmente nessuna room
-        
+        this.currentRoom = null; // There's no room in the beginning
         this.ongoingQuests = new ArrayList<>();
-        this.oggettiUsati = new ArrayList<>();
-    }
-
-    // Rimuovi setters per stati, livello, name, preferenze, cibo, hair ecc... sono tutti gestiti
-    // in altri metodi 
-
-    // GETTER E SETTER -------------------------------------------------------------------
-    public String getName() { 
-        return name; 
+        this.usedObjects = new ArrayList<>();
     }
     
-    public Outfit getVestiti() { 
-        return outfit; 
-    }
-
-    public Hair getCapelli() { 
-        return hair; 
-    }
-
+    // GETTERS AND SETTERA -------------------------------------------------------------------
+    public String getName() {return name;}    
+    public Outfit getVestiti() { return outfit; }
+    public Hair getCapelli() { return hair;}
+    public Stats getStats() { return stats; }
     public String getCurrentRoom() {
         if (currentRoom != null) {
             return currentRoom.getRoomName();
@@ -69,18 +47,12 @@ public class MainCharacter {
             return "Nessuna room";
         }
     }
-        
-    public String pickCurrentRoom(Room room) {
-        this.currentRoom = room;
-        return "Sei entrato in: " + room.getRoomName();
-    }
-
     
-    // DA RIVEDERE E FORSE TOGLIERE
-    // METODI PRINCIPALI ----------------------------------------------------------------
+    
+        
+    // MAIN METHODS ----------------------------------------------------------------
     public String printState() {
         StringBuilder state = new StringBuilder();
-        
         state.append("\n STATO DI ").append(name.toUpperCase()).append("\n");
         state.append("Vestiti: ").append(outfit.getName()).append("\n");
         state.append("Capelli: ").append(hair.getName()).append("\n");
@@ -93,6 +65,10 @@ public class MainCharacter {
         return state.toString();
     }
 
+    public String pickCurrentRoom(Room room) {
+        this.currentRoom = room;
+        return "Sei entrato in: " + room.getRoomName();
+    }
    
     // METODI PER LA PERSONALIZZAZIONE -------------------------------------------------------
 
@@ -111,8 +87,8 @@ public class MainCharacter {
     // METODO PER MAPPARE LO STATO COMPLETO
     public Map<String, Integer> getStatoCompleto() {
         Map<String, Integer> state = new HashMap<>();
-        state.put("hunger", hunger);
-        state.put("thirst", thirst);
+        state.put("satiety", satiety);
+        state.put("hydration", hydration);
         state.put("energy", energy);
         state.put("hygiene", hygiene);
         return state;
@@ -121,7 +97,11 @@ public class MainCharacter {
   
  // METODI PER LE MISSIONI -----------------------------------------------------------------------
 
-    //Aggiunge una quest alla lista delle questi attive
+
+    /**
+     * Adds a quest to a list of active quests
+     * @param quest
+     */
     public void addQuest(Quest quest) {
         if (quest != null && !ongoingQuests.contains(quest)) {
             ongoingQuests.add(quest);
@@ -129,26 +109,42 @@ public class MainCharacter {
         }
     }
     
-    // Rimuove una quest completata dalla lista delle questi attive
+    /**
+     * If a quest is completed, it removes it from the list of active quests
+     * @param quest
+     */
     public void removeQuest(Quest quest) {
         ongoingQuests.remove(quest);
         itemUsedForQuests.remove(quest);
     }
 
-    // Verifica se il personaggio ha questi attive con un NPC specifico
+    /**
+     * Verifies if the MainCharacter has active quests with a specific NPC
+     * @param npc
+     * @return 
+     */
     public boolean hasActiveQuestWithNPC(NPC npc) {
         return ongoingQuests.stream()
             .anyMatch(quest -> quest.getAssignerNPC().equals(npc));
     }
 
-    // Ottiene le questi attive con un NPC specifico
+    /**
+     * Shows the ongoing quests with an NPC
+     * @param npc
+     * @return
+     */
     public Optional<Quest> getActiveQuestWithNPC(NPC npc) {
         return ongoingQuests.stream()
             .filter(quest -> quest.getAssignerNPC().equals(npc))
             .findFirst();
     }
     
-    // Verifica automaticamente il completamento di tutte le questi attive con un NPC
+
+    /**
+     * Automatically verifies the completion of every active quest with a specific NPC
+     * @param npc
+     * @return
+     */
     public Optional<Quest> getCompletedQuestWithNPC(NPC npc) {
 	    return ongoingQuests.stream()
         .filter(q -> q.getAssignerNPC().equals(npc))
@@ -156,79 +152,87 @@ public class MainCharacter {
         .findFirst();
 	}
 
-    // METODI PER INTERAGIRE CON GLI OGGETTI -------------------------------------------------------
+    // METHODS TO INTERACT WITH AN OBJECT -------------------------------------------------------
     
-    // Registra l'uso di un oggetto
+    /**
+     * registers the use of an object
+     * @param itemName
+     */
     public void recordItemsUsedForQuests(String itemName) {
     for (Quest q : ongoingQuests) {
         itemUsedForQuests.computeIfAbsent(q, k -> new HashSet<>()).add(itemName);
     }
 }
     
-    // Verifica se un oggetto è state usato
-    public boolean hasUsedItemForQuest(String nameOggetto, Quest quest) {
-        return itemUsedForQuests.getOrDefault(quest, Set.of()).contains(nameOggetto);
+
+    /**
+     * Verifies whether an object has been used or not
+     * @param nameObject
+     * @param quest
+     * @return
+     */
+    public boolean hasUsedItemForQuest(String nameObject, Quest quest) {
+        return itemUsedForQuests.getOrDefault(quest, Set.of()).contains(nameObject);
     }
+    
+    /**
+     * Performs an action
+     * @param result
+     * @param nameObject
+     * @return
+     */
      
-    public String applicaRisultatoAzione(RisultatoAzione risultato, String nameOggetto) {
-        // 1. Controlla se l'azione ha senso
-        String messaggioControllo = verificaUtilitaAzione(risultato);
-        if (messaggioControllo != null) {
-            return messaggioControllo;
+    public String applyActionResult(ActionResult result, String nameObject) {
+
+        String controlMessage = checkActionUsefulness(result);
+        if (controlMessage != null) {
+            return controlMessage;
         }
+        recordItemsUsedForQuests(nameObject);
+        stats.changeEnergy(result.getDeltaEnergy());
+        stats.changeHydration(result.getDeltaHydration());
+        stats.changeHygiene(result.getDeltaHygiene());
+        stats.changeSatiety(result.getDeltaSatiety());
         
-        // 2. Registra uso oggetto
-        recordItemsUsedForQuests(nameOggetto);
-        
-        // 3. Applica effetti
-        stats.changeEnergy(risultato.getDeltaEnergy());
-        stats.changeHydration(risultato.getDeltaHydration());
-        stats.changeHygiene(risultato.getDeltaHygiene());
-        stats.changeSatiety(risultato.getDeltaSatiety());
-        
-        // 4. Restituisce messaggio
-        return risultato.getMessaggio();
+        return result.getMessage();
     }
 
-
-    // METODI PER INTERAGIRE CON GLI OGGETTI -------------------------------------------------------
-    
     // Registra l'uso di un oggetto
-    public void registraUsoOggetto(String nameOggetto) {
-        if (!oggettiUsati.contains(nameOggetto)) {
-            oggettiUsati.add(nameOggetto);
+    public void registerObjectUse(String nameObject) {
+        if (!usedObjects.contains(nameObject)) {
+            usedObjects.add(nameObject);
         }
     }
     
     // Verifica se un oggetto è state usato
-    public boolean hasUsedOggetto(String nameOggetto) {
-        return oggettiUsati.contains(nameOggetto);
+    public boolean hasUsedObject(String nameObject) {
+        return usedObjects.contains(nameObject);
     }
     
     
-    public String interagisci(OggettoGioco oggetto) {
-        RisultatoAzione risultato = oggetto.usa(this);
-        return applicaRisultatoAzione(risultato, oggetto.getName());
+    public String interact(GameObject oggetto) {
+        ActionResult result = oggetto.use(this);
+        return applyActionResult(result, oggetto.getName());
     }
     
     // dovrebbe farlo requirements
-    private String verificaUtilitaAzione(RisultatoAzione risultato) {
+    private String checkActionUsefulness(ActionResult result) {
     	
-        if (risultato.getDeltaEnergy() > 0 && stats.getEnergy() >= 100) {
+        if (result.getDeltaEnergy() > 0 && stats.getEnergy() >= 100) {
             return "Sei già pieno di energy, non ha senso riposare ora!";
-        }else if (risultato.getDeltaSatiety() < 0 && stats.getSatiety() <= 0) {
-            return "Non hai hunger, non ha senso mangiare ora!";
-        }else if (risultato.getDeltaHydration() < 0 && stats.getHydration() <= 0) {
-            return "Non hai thirst, non ha senso bere ora!";
-        }else if (risultato.getDeltaHygiene() > 0 && stats.getHygiene() >= 100) {
+        }else if (result.getDeltaSatiety() < 0 && stats.getSatiety() <= 0) {
+            return "Non hai satiety, non ha senso mangiare ora!";
+        }else if (result.getDeltaHydration() < 0 && stats.getHydration() <= 0) {
+            return "Non hai hydration, non ha senso bere ora!";
+        }else if (result.getDeltaHygiene() > 0 && stats.getHygiene() >= 100) {
             return "Sei già pulitissimo, non serve lavarti!";
         }else {
         	return null;
         }
     }
     
-    @Deprecated public int getHunger() { return stats.getSatiety(); }
-    @Deprecated public int getThirst() { return stats.getHydration(); }
+    @Deprecated public int getSatiety() { return stats.getSatiety(); }
+    @Deprecated public int getHydration() { return stats.getHydration(); }
     @Deprecated public int getEnergy() { return stats.getEnergy(); }
     @Deprecated public int getHygiene() { return stats.getHygiene(); }
     public void stateDecay(){

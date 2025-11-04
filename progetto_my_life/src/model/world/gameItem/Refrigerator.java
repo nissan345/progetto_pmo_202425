@@ -1,9 +1,10 @@
-package main.neri.classes;
+package model.world.gameItem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import main.fabbri.classes.*;
+import model.action.ActionResult;
+import model.character.MainCharacter;
 
 public class Refrigerator extends GameObject {
     
@@ -18,8 +19,8 @@ public class Refrigerator extends GameObject {
         for (FoodType food : FoodType.values()) {
             foodEffects.put(food, new ActionResult(
                 food.getDescription(), 
-                food.getHunger(), 
-                food.getThirst(), 
+                food.getSatiety(), 
+                food.getHydration(), 
                 food.getEnergy(),
                 0
             ));
@@ -35,19 +36,19 @@ public class Refrigerator extends GameObject {
     }
 
     @Override
-    public ActionResult use(Character p) { 
+    public ActionResult use(MainCharacter p) { 
         return new ActionResult("You open the refrigerator... Choose what to eat!"); 
     }
 
     @Override
-    public ActionResult use(Character p, Object option) {
+    public ActionResult use(MainCharacter p, Object option) {
         FoodType food = (FoodType) option;
         return foodEffects.getOrDefault(
             food, 
             new ActionResult(
                 food.getDescription(), 
-                food.getHunger(), 
-                food.getThirst(), 
+                food.getSatiety(), 
+                food.getHydration(), 
                 food.getEnergy(), 
                 0
             )

@@ -1,4 +1,4 @@
-package model;
+package model.world.gameItem;
 
 import model.character.MainCharacter;
 import model.quest.CompletionCondition;
@@ -13,7 +13,7 @@ public class ObjectActionCondition implements CompletionCondition {
 
 	@Override
 	public boolean checkCompletion(MainCharacter character) {
-		return character.hasUsedOggetto(objectName);
+		return character.hasUsedObject(objectName);
 	} 
 	   
 }

@@ -4,18 +4,19 @@ import java.util.List;
 import java.util.Optional;
 
 import model.character.NPC;
-import model.world.gameItem.OggettoGioco;
+import model.world.gameItem.GameObject;
+import model.world.gameItem.GameObject;
 
 
 public class IRoom implements Room{
 
     private String nomeStanza;
     private Optional<NPC> npcInStanza;               // Indica gli oggetti presenti nella room
-    private final List<OggettoGioco> oggettiInStanza;  // Indica gli NPC presenti nella room
+    private final List<GameObject> oggettiInStanza;  // Indica gli NPC presenti nella room
     
-    public IRoom(String nome, List<OggettoGioco> oggetti){
+    public IRoom(String nome, List<GameObject> objects){
         this.nomeStanza = nome; 
-        this.oggettiInStanza = oggetti;
+        this.oggettiInStanza = objects;
         this.npcInStanza = Optional.empty();
     }
 
@@ -23,7 +24,7 @@ public class IRoom implements Room{
         return nomeStanza;
     }
 
-    public List<OggettoGioco> getOggettiInRoom() {
+    public List<GameObject> getOggettiInRoom() {
         return oggettiInStanza;
     }
 
@@ -35,7 +36,7 @@ public class IRoom implements Room{
         return this.npcInStanza.isPresent();
     }
 
-    public boolean hasOggettoRoom(OggettoGioco o){
+    public boolean hasOggettoRoom(GameObject o){
         return oggettiInStanza.stream()
                 .anyMatch(oggetto -> oggetto.getName().equals(o.getName()));
     }
@@ -44,11 +45,11 @@ public class IRoom implements Room{
         npcInStanza = Optional.of(n);
     };
 
-    public void addOggettoRoom(OggettoGioco o){
+    public void addOggettoRoom(GameObject o){
         this.oggettiInStanza.add(o);
     };
     
-    public void removeOggettoRoom(OggettoGioco o){
+    public void removeOggettoRoom(GameObject o){
         this.oggettiInStanza.remove(o);
     };
 

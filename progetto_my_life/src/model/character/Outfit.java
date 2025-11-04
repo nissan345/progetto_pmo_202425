@@ -1,7 +1,7 @@
 package model.character;
 
 public enum Outfit {
-    // ALTERNATIVE DI VESTITI
+    // ALTERNATIVES FOR CLOTHES
     CASUAL("Informale", "Abbigliamento casual per tutti i giorni"),
     FORMAL("Formale", "Abbigliamento elegante per occasioni speciali"),
     SPORTY("Sportivo", "Abbigliamento comodo per attività fisica"),
@@ -9,11 +9,11 @@ public enum Outfit {
     SUMMERLY("Estivo", "Abbigliamento leggero per il caldo"),
     WINTERLY("Invernale", "Abbigliamento caldo per il freddo"); 
 
-    // ATTRIBUTI
+    // ATTRIBUTES
     private final String name;
     private final String description;
 
-    // COSTRUTTORE
+    // CONSTRUCTOR
     Outfit(String name, String description) {
         this.name = name;
         this.description = description;

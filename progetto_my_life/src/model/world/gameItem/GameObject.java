@@ -1,9 +1,11 @@
 package model.world.gameItem;
 
 import java.util.List;
+import java.util.function.BiFunction;
 
 import model.action.ActionResult;
 import model.character.MainCharacter;
+import model.requirement.Requirement;
 
 
 /**
@@ -17,6 +19,8 @@ public class GameObject{
     protected String room;
     private boolean specialInteraction;
     private int deltaSatiety, deltaHydration, deltaEnergy, deltaHygiene;
+    private final Requirement requirement;
+    private BiFunction<MainCharacter, GameObject, ActionResult> dynamicUse; 
     
     public GameObject(Builder builder) {
         this.name = builder.name;
@@ -29,6 +33,8 @@ public class GameObject{
         this.deltaHydration = builder.deltaHydration;
         this.message = builder.message;
         this.specialInteraction = builder.specialInteraction;
+        this.dynamicUse = builder.dynamicUse;
+        this.requirement = builder.requirement;
     }
       
     /**
@@ -37,8 +43,13 @@ public class GameObject{
      * @return
      */
     public ActionResult use(MainCharacter character) {
-        return new ActionResult(message, deltaSatiety, deltaHydration, 
-                deltaEnergy, deltaHygiene);
+        if (dynamicUse != null) {
+            return dynamicUse.apply(character, this);
+        }
+        if (!requirement.isSatisfiedBy(character)) {
+            return new ActionResult(requirement.getFailureReasons(character));  // Restituisce il motivo del fallimento
+        }
+        return new ActionResult(message, deltaSatiety, deltaHydration, deltaEnergy, deltaHygiene);
     }
     
     // Getters
@@ -71,7 +82,8 @@ public class GameObject{
      * Builder class used to create GameObject instances.
      */
     public static class Builder {
-        // Required fields
+        public Requirement requirement;
+		// Required fields
         private final String name;
         private final String room;
         private final int size;
@@ -84,6 +96,7 @@ public class GameObject{
         private int deltaHydration = 0;
         private int deltaEnergy = 0;
         private int deltaHygiene = 0;
+		private BiFunction<MainCharacter, GameObject, ActionResult> dynamicUse;
         
         // Constructor with required fields
         public Builder(String name, String room, int size) {
@@ -92,6 +105,16 @@ public class GameObject{
             this.size = size;
         }
         
+        
+        public Builder requirement(Requirement r) {
+        	this.requirement = r;
+        	return this;
+        }
+
+        public Builder dynamic(BiFunction<MainCharacter, GameObject, ActionResult> fn) {
+            this.dynamicUse = fn;
+            return this;
+        }
         // Fluent builder methods
         public Builder description(String val) {
             this.description = val;

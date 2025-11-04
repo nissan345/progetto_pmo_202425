@@ -1,7 +1,7 @@
 package model.world.factory;
 
 import java.util.*;
-
+import model.requirement.LevelRequirement;
 import model.world.IRoom;
 import model.world.Room;
 import model.world.gameItem.GameObject;
@@ -35,7 +35,7 @@ public class ObjectFactory {
              //     .isSpecialInteraction(true)
                     .build()
         ));
-        return new IRoom("Camera Da Letto", objects);
+        return new IRoom("Camera Da Letto", objects, new LevelRequirement(1));
     }
     
     // Kitchen
@@ -60,7 +60,7 @@ public class ObjectFactory {
                         .energy(-10)
                         .build()
         ));	
-        return new IRoom("Cucina", objects);
+        return new IRoom("Cucina", objects, new LevelRequirement(1));
     }
    
     // Bagno
@@ -90,7 +90,7 @@ public class ObjectFactory {
                         .energy(-10)
                         .build()
         ));
-        return new IRoom("Bagno", objects);
+        return new IRoom("Bagno", objects, new LevelRequirement(3));
     }
     
     // Salotto
@@ -136,7 +136,7 @@ public class ObjectFactory {
                         .energy(-5)
                         .build()
         ));
-        return new IRoom("Salotto", objects);
+        return new IRoom("Salotto", objects, new LevelRequirement(2));
     }
     
     
@@ -151,7 +151,7 @@ public class ObjectFactory {
                     .energy(-20)
                     .build()
         ));
-        return new IRoom("Sgabuzzino", objects);
+        return new IRoom("Sgabuzzino", objects, new LevelRequirement(4));
     }
             
     // Giardino
@@ -189,6 +189,6 @@ public class ObjectFactory {
                     .energy(-5)
                     .build()
         ));
-        return new IRoom("Giardino", objects);
+        return new IRoom("Giardino", objects, new LevelRequirement(5));
     }
 }

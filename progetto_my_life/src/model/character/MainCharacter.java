@@ -77,6 +77,14 @@ public class MainCharacter {
     }
 
     public String pickCurrentRoom(Room room) {
+        if (!room.canEnter(this)) {
+        List<String> reasons = room.getEntryFailureReasons(this);
+        StringBuilder message = new StringBuilder("Non puoi entrare in: " + room.getRoomName() + "\n");
+        for (String reason : reasons) {
+            message.append("- ").append(reason).append("\n");
+        }
+        return message.toString();
+        }
         this.currentRoom = room;
         return "Sei entrato in: " + room.getRoomName();
     }

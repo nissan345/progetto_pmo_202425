@@ -1,7 +1,6 @@
 package model.character.npc;
 
 import java.util.Arrays;
-
 import model.character.NPC;
 import model.quest.Quest;
 import model.world.Room;

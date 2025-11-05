@@ -3,8 +3,8 @@ package model.character;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiPredicate;
 
-import model.quest.InteractionOption;
 import model.quest.Quest;
 import model.world.Room;
 
@@ -13,37 +13,58 @@ public abstract class NPC {
     private final Room position; 
     private int affinity;
     private List<Quest> availableQuests;
-    private List<InteractionOption> options;
+
+    //private List<InteractionOption> options;
+    private BiPredicate<MainCharacter, Room> triggerCondition;
+
 
     public NPC(final String relationship, final Room s) {
         this.relationship = relationship;
         this.position = s; 
         this.affinity = 0;
         this.availableQuests = new ArrayList<>();
-        this.options = new ArrayList<>();
+
+       // this.options = new ArrayList<>();
+       this.triggerCondition = (character, room) -> false; // Default: no trigger
         initializeQuests();
     }
 
-    // Abstract Methods
+    // ABSTRACT METHODS --------------------------------------------------------------
     
-    // Initial dialogue with an NPC
+    /**
+     * Adds a quest to the NPC's available quests
+     */  
     public abstract String getInitialDialogue();
     
-    // Dialogue when NPC assigns a quest
+    /**
+     * Dialogue when NPC assigns a quest
+     * @param quest 
+     */  
     public abstract String getQuestAssignedDialogue(Quest quest);
     
-    // Dialogue when quest is still in progress
+    /**
+     * Dialogue when quest is still in progress
+     * @param quest 
+     */  
     public abstract String getQuestInProgressDialogue(Quest quest);
     
-    // Dialogue when quest is completed
+    /**
+     * Dialogue when quest is completed
+     * @param quest 
+     */  
     public abstract String getQuestCompletionDialogue(Quest quest);
     
-    // Quest initialization method
+    /**
+     * Quest initialization method
+     */ 
     protected abstract void initializeQuests();
     
-    // Concrete Methods 
+    // CONCRETE METHODS ------------------------------------------------------------ 
     
+    // DA ELIMINARE SE AUTOMATIZZIAMO LE QUEST
     // Handles character-NPC interaction
+    /*
+     * 
     public List<InteractionOption> getAvailableOptions(MainCharacter character) {
         this.options.clear();
 
@@ -90,18 +111,45 @@ public abstract class NPC {
         messages.add("affinità con " + this.relationship + ": " + this.affinity + "/100");
         return messages;
     }
-    
-    // Adds a quest to available quests
+     */
+
+    /**
+     * Adds a quest to the NPC's available quests
+     * @param quest 
+     */    
     protected void addQuest(Quest quest) {
         availableQuests.add(quest);
     }
-    
-    // Increases affinity between character and NPC (0-100 range)
+
+    /**
+     * Sets the trigger condition for offering quests
+     * @param condition 
+     */
+    public BiPredicate<MainCharacter, Room> getTriggerCondition() {
+        return this.triggerCondition;
+    }
+
+    //  QUEST COMPLETION REWARD METHOD --------------------------------------------------------
+
+    /**
+     * Rewards the character for completing a quest
+     * @param quest 
+     * @param character
+     */
+    public void rewardFor(Quest quest, MainCharacter character) {
+        increaseAffinity(quest.getAffinityPoints());
+        
+    }
+
+    /**
+     * Increases affinity between character and NPC (0-100 range)
+     * @param affinityPoints
+     */
     protected void increaseAffinity(int affinityPoints) {
         this.affinity = Math.min(100, this.affinity + affinityPoints);
     }
 
-    // Getters
+    // GETTERS ---------------------------------------------------------------------
     public String getRelationship() { 
     	return this.relationship; 
     }
@@ -113,8 +161,9 @@ public abstract class NPC {
     public Room getPosition() { 
     	return this.position; 
     }
-    
+
     public List<Quest> getAvailableQuests() { 
         return new ArrayList<>(this.availableQuests); 
     }
+    
 }

@@ -1,7 +1,7 @@
 package model.character;
 
 public enum Hair {
-    // ALTERNATIVE DI CAPELLI
+    // Hair types
     STRAIGHT_SHORT("Corti e lisci"),
     STRAIGHT_LONG("Lunghi e lisci"),
     WAVY_SHORT("Corti e mossi"),
@@ -9,10 +9,8 @@ public enum Hair {
     CURLY_SHORT("Corti e ricci"),
     CURLY_LONG("Lunghi e ricci");
 
-    // ATTRIBUTI
     private final String name;
 
-    // COSTRUTTORE
     Hair(String name) {
         this.name = name;
     }
@@ -24,4 +22,6 @@ public enum Hair {
     public String toString() {
         return name;
     }
+
 }
+

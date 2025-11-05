@@ -1,6 +1,10 @@
 package model.action;
 
 import java.util.List;
+import java.util.Optional;
+import model.character.MainCharacter;
+import model.world.Room;
+import model.world.gameItem.GameObject;
 
 /**
  * Result of an action with effects on the character
@@ -35,6 +39,41 @@ public class ActionResult {
     public ActionResult(List<String> messages) {
     	this.messages = messages;
     }
+
+    public class PickItemAction {
+
+    public ActionResult execute(MainCharacter character, GameObject item) {
+        Room room = character.getCurrentRoom();
+
+        if (!room.hasOggettoRoom(item)) {
+            return new ActionResult("L'oggetto non è presente nella stanza!");
+        }
+
+        boolean added = character.getInventory().addItem(item);
+        if (!added) {
+            return new ActionResult("Inventario pieno! Non puoi raccogliere " + item.getName());
+        }
+
+        room.removeOggettoRoom(item);
+        return new ActionResult("Hai raccolto " + item.getName() + "!");
+    }
+}
+
+public class DropItemAction {
+
+    public ActionResult execute(MainCharacter character, GameObject item) {
+        Room room = character.getCurrentRoom();
+
+        Optional<GameObject> removedItem = character.getInventory().removeItem(item.getName());
+
+        if (removedItem.isEmpty()) {
+            return new ActionResult("Non hai " + item.getName() + " nell'inventario!");
+        }
+
+        room.addOggettoRoom(removedItem.get());
+        return new ActionResult("Hai lasciato " + item.getName() + " nella stanza.");
+            }
+        }
     
     // Getters
     public String getMessage() { return message; }

@@ -8,15 +8,19 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import model.action.ActionResult;
+import model.action.ActionResult.DropItemAction;
+import model.action.ActionResult.PickItemAction;
 import model.quest.Quest;
 import model.world.Room;
 import model.world.gameItem.GameObject;
+import model.world.gameItem.Inventory;
 
 public class MainCharacter {
 
     private String name;
     private Outfit outfit;
     private Hair hair;
+    private Inventory inventory;
     private Stats stats;
     private int lvl; 
     private int xp; 
@@ -31,6 +35,7 @@ public class MainCharacter {
         this.name = name;
         this.outfit = outfit;
         this.hair = hair;  
+        this.inventory = new Inventory(35);
         this.objectUsedForQuests = new HashMap<>();
         this.stats = new Stats();
         this.lvl = 1; 
@@ -49,13 +54,17 @@ public class MainCharacter {
     public int getLvl() { return lvl; }
     public int getXp() { return xp; }
     public int getXpToNext() { return xpToNext; }
-    public String getCurrentRoom() {
+    public String getCurrentRoomName(){
         if (currentRoom != null) {
             return currentRoom.getRoomName();
         } else {
             return "Nessuna room";
         }
     }
+    public Room getCurrentRoom() {
+        return currentRoom;
+    }
+    public Inventory getInventory() { return inventory; }
     
     
         
@@ -277,6 +286,15 @@ public class MainCharacter {
     public void stateDecay(){
         stats.decay();
     }
+
+    public ActionResult pickUp(GameObject item) {
+    return new PickItemAction().execute(this, item);
+}
+
+public ActionResult drop(GameObject item) {
+    return new DropItemAction().execute(this, item);
+}
+
 }
 
     

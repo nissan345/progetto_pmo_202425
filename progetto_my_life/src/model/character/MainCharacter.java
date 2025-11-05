@@ -184,10 +184,6 @@ public class MainCharacter {
      
     public String applyActionResult(ActionResult result, String nameObject) {
 
-        String controlMessage = checkActionUsefulness(result);
-        if (controlMessage != null) {
-            return controlMessage;
-        }
         recordItemsUsedForQuests(nameObject);
         stats.changeEnergy(result.getDeltaEnergy());
         stats.changeHydration(result.getDeltaHydration());
@@ -215,7 +211,7 @@ public class MainCharacter {
         return applyActionResult(result, oggetto.getName());
     }
     
-    // dovrebbe farlo requirements
+    @Deprecated
     private String checkActionUsefulness(ActionResult result) {
     	
         if (result.getDeltaEnergy() > 0 && stats.getEnergy() >= 100) {

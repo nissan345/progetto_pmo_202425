@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import main.aboufaris.classes.StanzaImpl;
 import model.character.npc.Brother;
-import model.world.gameItem.GameObject;
+import model.world.gameItem.GameItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ public class StanzaImplTest {
     // Inizializzazione dei soggetti di test ---------------------------------------------------------------------------------
     @Before
     public void setUp() {
-        List<GameObject> oggetti = new ArrayList<>();
+        List<GameItem> oggetti = new ArrayList<>();
         divano = new OggettoGenerico(TipoOggetto.DIVANO);
         libreria = new OggettoGenerico(TipoOggetto.LIBRERIA);
         
@@ -80,7 +80,7 @@ public class StanzaImplTest {
         room.addOggettoStanza(televisione);
         room.addOggettoStanza(stereo);
         
-        List<GameObject> oggetti = room.getOggettiInStanza();
+        List<GameItem> oggetti = room.getOggettiInStanza();
         assertEquals(4, oggetti.size());
         assertTrue(oggetti.contains(divano));
         assertTrue(oggetti.contains(libreria));
@@ -90,7 +90,7 @@ public class StanzaImplTest {
 
     @Test
     public void testStanzaVuota() {
-        List<GameObject> listaVuota = new ArrayList<>();
+        List<GameItem> listaVuota = new ArrayList<>();
         StanzaImpl stanzaVuota = new StanzaImpl("Room Vuota", listaVuota);
         
         assertTrue(stanzaVuota.getOggettiInStanza().isEmpty());

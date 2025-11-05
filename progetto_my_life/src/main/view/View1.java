@@ -273,11 +273,11 @@ public class View1 {
     }
 
 <<<<<<< HEAD
-    public void mostraOggettiInStanza(List<GameObject> oggettiPresenti){
+    public void mostraOggettiInStanza(List<GameItem> oggettiPresenti){
     	SwingUtilities.invokeLater(() -> {
             System.out.println("DEBUG: mostraOggettiInStanza chiamato con " + 
 =======
-    public void mostraOggettiInRoom(List<GameObject> oggettiPresenti){
+    public void mostraOggettiInRoom(List<GameItem> oggettiPresenti){
     	SwingUtilities.invokeLater(() -> {
             System.out.println("DEBUG: mostraOggettiInRoom chiamato con " + 
 >>>>>>> nicxole
@@ -293,7 +293,7 @@ public class View1 {
             
             if(oggettiPresenti != null && !oggettiPresenti.isEmpty()){
                 System.out.println("DEBUG: Creazione pulsanti per oggetti:");
-                for(GameObject oggetto : oggettiPresenti){
+                for(GameItem oggetto : oggettiPresenti){
 <<<<<<< HEAD
                     System.out.println("  - " + oggetto.getNome());
                     
@@ -458,7 +458,7 @@ public class View1 {
         String[] opzioniArray = opzioni.toArray(new String[0]);
         
         // Mostra il dialog di selezione
-        Object selezione = JOptionPane.showInputDialog(
+        Item selezione = JOptionPane.showInputDialog(
             frame,
             messaggio,
             "Personalizzazione Personaggio",
@@ -483,13 +483,13 @@ public class View1 {
     }
 
 
-	public Object mostraDialogSceltaGenerica(String titolo, List<?> opzioni) {
+	public Item mostraDialogSceltaGenerica(String titolo, List<?> opzioni) {
 		if (opzioni == null || opzioni.isEmpty()) {
 	        JOptionPane.showMessageDialog(null, "Nessuna opzione disponibile.");
 	        return null;
 	    }
 
-	    Object scelta = JOptionPane.showInputDialog(
+	    Item scelta = JOptionPane.showInputDialog(
 	        null,
 	        titolo,
 	        "Scelta",

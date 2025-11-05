@@ -4,13 +4,10 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import main.aboufaris.classes.*;
-import main.aboufaris.classes.*;
->>>>>>> nicxole
-import main.fabbri.classes.*;
-import model.character.MainCharacter;
-import model.world.Room;
-import model.world.factory.FabbricaOggetti;
+
+import main.model.character.MainCharacter;
+import main.model.world.Room;
+import main.model.world.*;
 
 import java.util.ArrayList;
 import java.util.Map;

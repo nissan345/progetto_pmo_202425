@@ -7,9 +7,7 @@ import java.util.function.IntConsumer;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import main.control.Control;
-import main.giuseppetti.classes.*;
-import main.neri.classes.*;
-import model.character.MainCharacter;
+
 
 public class View {
 	
@@ -190,7 +188,7 @@ public class View {
         String[] opzioniArray = opzioni.toArray(new String[0]);
         
         // Mostra il dialog di selezione
-        Object selezione = JOptionPane.showInputDialog(
+        Item selezione = JOptionPane.showInputDialog(
             frame,
             messaggio,
             "Personalizzazione MainCharacter",
@@ -404,7 +402,7 @@ public class View {
     
     public <T> Optional<T> mostraDialogSceltaGenerica(String titolo, String message, List<T> opzioni) {
         if (opzioni == null || opzioni.isEmpty()) return Optional.empty();
-        String[] labels = opzioni.stream().map(Object::toString).toArray(String[]::new);
+        String[] labels = opzioni.stream().map(Item::toString).toArray(String[]::new);
 
         int scelta = JOptionPane.showOptionDialog(
                 frame, message, titolo,

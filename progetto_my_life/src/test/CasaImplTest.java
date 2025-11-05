@@ -7,7 +7,7 @@ import org.junit.Test;
 import model.world.House;
 import model.world.IRoom;
 import model.world.Room;
-import model.world.gameItem.GameObject;
+import model.world.gameItem.GameItem;
 import main.aboufaris.classes.*;
 
 import java.util.ArrayList;
@@ -27,17 +27,17 @@ public class CasaImplTest {
     public void setUp() {
         casa = new House();
         
-        List<GameObject> oggettiSalotto = new ArrayList<>();
+        List<GameItem> oggettiSalotto = new ArrayList<>();
         //oggettiSalotto.add(new OggettoGenerico(TipoOggetto.DIVANO));
         //oggettiSalotto.add(new OggettoGenerico(TipoOggetto.TELEVISIONE));
         salotto = new IRoom("Salotto", oggettiSalotto);
         
-        List<GameObject> oggettiCucina = new ArrayList<>();
+        List<GameItem> oggettiCucina = new ArrayList<>();
         //oggettiCucina.add(new OggettoGenerico(TipoOggetto.FRIGORIFERO));
         //oggettiCucina.add(new OggettoGenerico(TipoOggetto.FORNELLI));
         cucina = new IRoom("Cucina", oggettiCucina);
         
-        List<GameObject> oggettiCamera = new ArrayList<>();
+        List<GameItem> oggettiCamera = new ArrayList<>();
         //oggettiCamera.add(new OggettoGenerico(TipoOggetto.LETTO));
         //oggettiCamera.add(new OggettoGenerico(TipoOggetto.ARMADIO));
         camera = new IRoom("Camera da letto", oggettiCamera);

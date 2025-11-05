@@ -12,8 +12,13 @@ import model.quest.Quest;
 import model.world.Room;
 import model.world.gameItem.GameObject;
 
+/**
+ * The MainCharacter class represents the playable character in the game,
+ */
+
 public class MainCharacter {
 
+    // ATTRIBUTES ------------------------------------------------------------------------
     private String name;
     private Outfit outfit;
     private Hair hair;
@@ -57,10 +62,11 @@ public class MainCharacter {
         }
     }
     
-    
-        
     // MAIN METHODS ----------------------------------------------------------------
     
+    /**
+     * Prints the current state of the MainCharacter stats.
+     */
     public String printState() {
         StringBuilder state = new StringBuilder();
         state.append("\n STATO DI ").append(name.toUpperCase()).append("\n");
@@ -77,6 +83,11 @@ public class MainCharacter {
         return state.toString();
     }
 
+    /**
+     * Sets the current room of the MainCharacter
+     * @param room
+     * @return
+     */
     public String pickCurrentRoom(Room room) {
         this.currentRoom = room;
         return "Sei entrato in: " + room.getRoomName();
@@ -119,6 +130,7 @@ public class MainCharacter {
     }
 
     /**
+     * Adds xp to the MainCharacter
      * @param amount
      */
     public void addXp(int amount) {
@@ -130,6 +142,9 @@ public class MainCharacter {
         }
     }
 
+    /**
+     * Levels up the MainCharacter.
+     */
     public void levelUp() {
         this.lvl++; 
         this.xpToNext = computeXpToNext(lvl); 
@@ -194,6 +209,7 @@ public class MainCharacter {
      * Automatically verifies the completion of every active quest with a specific NPC
      * @param 
      */
+    // TODO
 
     // METHODS TO INTERACT WITH AN OBJECT -------------------------------------------------------
     
@@ -223,7 +239,6 @@ public class MainCharacter {
      * @param nameObject
      * @return
      */
-     
     public String applyActionResult(ActionResult result, String nameObject) {
 
         String controlMessage = checkActionUsefulness(result);

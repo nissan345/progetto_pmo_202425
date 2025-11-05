@@ -24,7 +24,7 @@ public class MainCharacter {
 	private Room currentRoom;
     private Map<Quest, Set<String>> objectUsedForQuests;
     private List<Quest> ongoingQuests;
-    private List<String> usedObjects; // Traccia gli oggetti usati
+    private List<String> usedObjects; // Keeps track of used objects
  
     // CONSTRUCTOR ------------------------------------------------------------------------
     public MainCharacter(String name, Outfit outfit, Hair hair) {
@@ -60,6 +60,7 @@ public class MainCharacter {
     
         
     // MAIN METHODS ----------------------------------------------------------------
+    
     public String printState() {
         StringBuilder state = new StringBuilder();
         state.append("\n STATO DI ").append(name.toUpperCase()).append("\n");
@@ -106,7 +107,7 @@ public class MainCharacter {
     }
  */
 
-// LEVEL SYSTEM ----------------------------------------------------------------------------------
+    // LEVEL SYSTEM ----------------------------------------------------------------------------------
     
     /**
      * Creates a progressive growth of xp needed to level up
@@ -134,8 +135,7 @@ public class MainCharacter {
         this.xpToNext = computeXpToNext(lvl); 
     }
   
- // METODI PER LE MISSIONI -----------------------------------------------------------------------
-
+    // QUESTS SYSTEM -----------------------------------------------------------------------
 
     /**
      * Adds a quest to a list of active quests
@@ -177,7 +177,6 @@ public class MainCharacter {
             .filter(quest -> quest.getAssignerNPC().equals(npc))
             .findFirst();
     }
-    
 
     /**
      * Automatically verifies the completion of every active quest with a specific NPC
@@ -191,6 +190,11 @@ public class MainCharacter {
         .findFirst();
 	}
 
+    /**
+     * Automatically verifies the completion of every active quest with a specific NPC
+     * @param 
+     */
+
     // METHODS TO INTERACT WITH AN OBJECT -------------------------------------------------------
     
     /**
@@ -198,12 +202,11 @@ public class MainCharacter {
      * @param objectName
      */
     public void recordObjectsUsedForQuests(String objectName) {
-    for (Quest q : ongoingQuests) {
-        objectUsedForQuests.computeIfAbsent(q, k -> new HashSet<>()).add(objectName);
+        for (Quest q : ongoingQuests) {
+            objectUsedForQuests.computeIfAbsent(q, k -> new HashSet<>()).add(objectName);
+        }
     }
-}
     
-
     /**
      * Verifies whether an object has been used or not
      * @param nameObject

@@ -24,7 +24,7 @@ import model.quest.Quest;
 import model.world.House;
 import model.world.Room;
 import model.world.factory.FabbricaOggetti;
-import model.world.gameItem.GameObject;
+import model.world.gameItem.GameItem;
 
 public final class Control {
 	
@@ -113,7 +113,7 @@ public final class Control {
     // FUNZIONA
     private <T> T scegliOpzioneDaEnum(String message, T[] opzioniDisponibili){
         List<String> opzioni = Arrays.stream(opzioniDisponibili)
-            .map(Object::toString)
+            .map(Item::toString)
             .toList();
         int scelta = view.mostraOpzioniPersonalizzazione(message, opzioni);
         return opzioniDisponibili[scelta];
@@ -258,7 +258,7 @@ public final class Control {
     }
 
     // Metodo che serve per gli effetti dell'uso dell'oggetto
-    public void onClickOggetto(GameObject oggettoGioco){
+    public void onClickOggetto(GameItem oggettoGioco){
     	Room corrente = getCurrentRoom();
         if (!corrente.hasOggettoRoom(oggettoGioco)) {
             view.mostraErrore("L'oggetto non si trova in room!");
@@ -281,7 +281,7 @@ public final class Control {
         }
 
         var opzioni = oggettoGioco.opzioniDisponibili(character);
-        Object scelta = view.mostraDialogSceltaGenerica("Scegli un'opzione","Azioni disponibili:", opzioni);
+        Item scelta = view.mostraDialogSceltaGenerica("Scegli un'opzione","Azioni disponibili:", opzioni);
         if (scelta != null) {
             var ra = oggettoGioco.usa(character, scelta);
             character.applicaActionResult(ra, oggettoGioco.getName());
@@ -309,7 +309,7 @@ public final class Control {
 
     public void mostraOggettiCurrentRoom() {
         Room room = getCurrentRoom();
-        List<GameObject> oggettiCorrenti = room.getOggettiInRoom();
+        List<GameItem> oggettiCorrenti = room.getOggettiInRoom();
 
         List<String> labels = oggettiCorrenti.stream()
             .map(o -> o.getName() + " - " + o.getDescription())

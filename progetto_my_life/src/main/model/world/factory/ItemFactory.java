@@ -4,7 +4,7 @@ import java.util.*;
 
 import main.model.action.ActionResult;
 import main.model.requirement.*;
-import main.model.world.IRoom;
+import main.model.world.Room;
 import main.model.world.Room;
 import main.model.world.gameItem.GameItem;
 import main.model.world.gameItem.Refrigerator;
@@ -48,7 +48,7 @@ public class ItemFactory {
                     .hygiene(20)
                     .build()
         ));
-        return new IRoom("Camera Da Letto", items);
+        return new Room("Camera Da Letto", items);
     }
     
     // Kitchen
@@ -80,11 +80,11 @@ public class ItemFactory {
                         })
                         .build()
         ));	
-        return new IRoom("Cucina", items);
+        return new Room("Cucina", items);
     }
    
     // Bagno
-    public static Room createBagno() {
+    public static Room createBathroom() {
         List<GameItem> items = new ArrayList<>(List.of(
                 new GameItem.Builder("Doccia", "Bagno", 80)
                         .message("You take a refreshing shower.")
@@ -114,7 +114,7 @@ public class ItemFactory {
                         .energy(-10)
                         .build()
         ));
-        return new IRoom("Bagno", items);
+        return new Room("Bagno", items);
     }
     
     // Salotto
@@ -162,7 +162,7 @@ public class ItemFactory {
                         .energy(-5)
                         .build()
         ));
-        return new IRoom("Salotto", items);
+        return new Room("Salotto", items);
     }
     
     
@@ -177,11 +177,11 @@ public class ItemFactory {
                     .energy(-20)
                     .build()
         ));
-        return new IRoom("Sgabuzzino", items);
+        return new Room("Sgabuzzino", items);
     }
             
     // Giardino
-    public static Room createGiardino() {
+    public static Room createGarden() {
         List<GameItem> items = new ArrayList<>(List.of(
                 new GameItem.Builder("Watering Can", "Giardino", 10)
                     .message("You water the plants: they look greener now.")
@@ -218,6 +218,6 @@ public class ItemFactory {
                     .requirement(new CanPlayRequirement())
                     .build()
         ));
-        return new IRoom("Giardino", items);
+        return new Room("Giardino", items);
     }
 }

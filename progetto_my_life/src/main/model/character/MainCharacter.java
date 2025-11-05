@@ -8,9 +8,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import main.model.action.ActionResult;
+import main.model.action.DropItemAction;
+import main.model.action.PickItemAction;
 import main.model.quest.Quest;
 import main.model.world.Room;
 import main.model.world.gameItem.GameItem;
+import main.model.world.gameItem.Inventory;
 
 /**
  * The MainCharacter class represents the playable character in the game,
@@ -27,6 +30,7 @@ public class MainCharacter {
     private int xp; 
     private int xpToNext; 
 	private Room currentRoom;
+	private Inventory inventory;
     private Map<Quest, Set<String>> ItemUsedForQuests;
     private List<Quest> ongoingQuests;
     private List<String> usedItems; // Keeps track of used Items
@@ -54,13 +58,8 @@ public class MainCharacter {
     public int getLvl() { return lvl; }
     public int getXp() { return xp; }
     public int getXpToNext() { return xpToNext; }
-    public String getCurrentRoom() {
-        if (currentRoom != null) {
-            return currentRoom.getRoomName();
-        } else {
-            return "Nessuna room";
-        }
-    }
+    public Room getCurrentRoom() {return currentRoom;}
+    public Inventory getInventory() { return inventory; }
     
     // MAIN METHODS ----------------------------------------------------------------
     
@@ -272,7 +271,17 @@ public class MainCharacter {
         return applyActionResult(result, item.getName());
     }
     
-    // dovrebbe farlo requirements
+    public ActionResult pickUp(GameItem item) {
+        return new PickItemAction().execute(this, item);
+    }
+
+    public ActionResult drop(GameItem item) {
+        return new DropItemAction().execute(this, item);
+    }
+
+    
+    
+    @Deprecated
     private String checkActionUsefulness(ActionResult result) {
     	
         if (result.getDeltaEnergy() > 0 && stats.getEnergy() >= 100) {

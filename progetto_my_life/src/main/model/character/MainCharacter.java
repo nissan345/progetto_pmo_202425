@@ -12,8 +12,13 @@ import main.model.quest.Quest;
 import main.model.world.Room;
 import main.model.world.gameItem.GameItem;
 
+/**
+ * The MainCharacter class represents the playable character in the game,
+ */
+
 public class MainCharacter {
 
+    // ATTRIBUTES ------------------------------------------------------------------------
     private String name;
     private Outfit outfit;
     private Hair hair;
@@ -22,16 +27,16 @@ public class MainCharacter {
     private int xp; 
     private int xpToNext; 
 	private Room currentRoom;
-    private Map<Quest, Set<String>> itemUsedForQuests;
+    private Map<Quest, Set<String>> ItemUsedForQuests;
     private List<Quest> ongoingQuests;
-    private List<String> usedItems; // Keeps track of used items
+    private List<String> usedItems; // Keeps track of used Items
  
     // CONSTRUCTOR ------------------------------------------------------------------------
     public MainCharacter(String name, Outfit outfit, Hair hair) {
         this.name = name;
         this.outfit = outfit;
         this.hair = hair;  
-        this.itemUsedForQuests = new HashMap<>();
+        this.ItemUsedForQuests = new HashMap<>();
         this.stats = new Stats();
         this.lvl = 1; 
         this.xp = 0;
@@ -57,10 +62,11 @@ public class MainCharacter {
         }
     }
     
-    
-        
     // MAIN METHODS ----------------------------------------------------------------
     
+    /**
+     * Prints the current state of the MainCharacter stats.
+     */
     public String printState() {
         StringBuilder state = new StringBuilder();
         state.append("\n STATO DI ").append(name.toUpperCase()).append("\n");
@@ -77,6 +83,11 @@ public class MainCharacter {
         return state.toString();
     }
 
+    /**
+     * Sets the current room of the MainCharacter
+     * @param room
+     * @return
+     */
     public String pickCurrentRoom(Room room) {
         this.currentRoom = room;
         return "Sei entrato in: " + room.getRoomName();
@@ -119,6 +130,7 @@ public class MainCharacter {
     }
 
     /**
+     * Adds xp to the MainCharacter
      * @param amount
      */
     public void addXp(int amount) {
@@ -130,6 +142,9 @@ public class MainCharacter {
         }
     }
 
+    /**
+     * Levels up the MainCharacter.
+     */
     public void levelUp() {
         this.lvl++; 
         this.xpToNext = computeXpToNext(lvl); 
@@ -144,7 +159,7 @@ public class MainCharacter {
     public void addQuest(Quest quest) {
         if (quest != null && !ongoingQuests.contains(quest)) {
             ongoingQuests.add(quest);
-            itemUsedForQuests.put(quest, new HashSet<>());
+            ItemUsedForQuests.put(quest, new HashSet<>());
         }
     }
     
@@ -154,7 +169,7 @@ public class MainCharacter {
      */
     public void removeQuest(Quest quest) {
         ongoingQuests.remove(quest);
-        itemUsedForQuests.remove(quest);
+        ItemUsedForQuests.remove(quest);
     }
 
     /**
@@ -194,27 +209,28 @@ public class MainCharacter {
      * Automatically verifies the completion of every active quest with a specific NPC
      * @param 
      */
+    // TODO
 
-    // METHODS TO INTERACT WITH AN OBJECT -------------------------------------------------------
+    // METHODS TO INTERACT WITH AN Item -------------------------------------------------------
     
     /**
-     * registers the use of an item
-     * @param itemName
+     * registers the use of an Item
+     * @param ItemName
      */
-    public void recordItemsUsedForQuests(String itemName) {
+    public void recordItemsUsedForQuests(String ItemName) {
         for (Quest q : ongoingQuests) {
-            itemUsedForQuests.computeIfAbsent(q, k -> new HashSet<>()).add(itemName);
+            ItemUsedForQuests.computeIfAbsent(q, k -> new HashSet<>()).add(ItemName);
         }
     }
     
     /**
-     * Verifies whether an item has been used or not
+     * Verifies whether an Item has been used or not
      * @param nameItem
      * @param quest
      * @return
      */
     public boolean hasUsedItemForQuest(String nameItem, Quest quest) {
-        return itemUsedForQuests.getOrDefault(quest, Set.of()).contains(nameItem);
+        return ItemUsedForQuests.getOrDefault(quest, Set.of()).contains(nameItem);
     }
     
     /**
@@ -223,7 +239,6 @@ public class MainCharacter {
      * @param nameItem
      * @return
      */
-     
     public String applyActionResult(ActionResult result, String nameItem) {
 
         String controlMessage = checkActionUsefulness(result);
@@ -239,22 +254,22 @@ public class MainCharacter {
         return result.getMessage();
     }
 
-    // Registra l'uso di un oggetto
+    // Registra l'uso di un item
     public void registerItemUse(String nameItem) {
         if (!usedItems.contains(nameItem)) {
             usedItems.add(nameItem);
         }
     }
     
-    // Verifica se un oggetto è state usato
+    // Verifica se un item è state usato
     public boolean hasUsedItem(String nameItem) {
         return usedItems.contains(nameItem);
     }
     
     
-    public String interact(GameItem oggetto) {
-        ActionResult result = oggetto.use(this);
-        return applyActionResult(result, oggetto.getName());
+    public String interact(GameItem item) {
+        ActionResult result = item.use(this);
+        return applyActionResult(result, item.getName());
     }
     
     // dovrebbe farlo requirements
@@ -281,5 +296,3 @@ public class MainCharacter {
         stats.decay();
     }
 }
-
-    

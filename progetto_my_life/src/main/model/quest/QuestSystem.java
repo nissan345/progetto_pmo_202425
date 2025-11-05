@@ -7,19 +7,18 @@ import main.model.character.MainCharacter;
 import main.model.character.NPC;
 import main.model.world.Room;
 
+
 /**
- * SPIEGAZIONE CLASSE -------------------------------------------------------------
- * Orchestratore centrale delle quest:
- * Quando vengono triggerati, gli NPC forniscono il catalogo delle quest
- * La quest viene assegnata al player e alla fine l'NPC applica la ricompensa
+ * The QuestSystem class manages the registration, triggering, and completion of quests in the game.
  */
 
 public class QuestSystem {
-    // trigger di attivazione: diventa true quando deve offrire una quest
+    // ATTRIBUTES ---------------------------------------------------------------------------
+    // Mapping of quests to their trigger conditions
     private final Map<Quest, BiPredicate<MainCharacter, Room>> triggers = new HashMap<>();
-    private final List<Quest> catalog = new ArrayList<>(); // catalogo globale di tutte le quest
-    private final Set<Quest> offered = new HashSet<>(); // quest già offerte almeno una volta al player (per non ripeterle)
-    private final Set<Quest> turnedIn = new HashSet<>(); // quest completate dal player
+    private final List<Quest> catalog = new ArrayList<>(); // All registered quests
+    private final Set<Quest> offered = new HashSet<>(); // Quests already offered to the player
+    private final Set<Quest> turnedIn = new HashSet<>(); // Quests already turned in by the player
 
     // MAIN METHODS ----------------------------------------------------------------
     

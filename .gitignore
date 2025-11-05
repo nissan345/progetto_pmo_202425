@@ -12,7 +12,7 @@ bin/
 .vscode/
 .yscode/
 
-*.class*.class
+*.class
 bin/
 target/
 build/

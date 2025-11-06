@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import main.giuseppetti.classes.Fratello;
 import model.world.IRoom;
-import model.world.gameItem.GameObject;
+import model.world.gameItem.GameItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ public class IRoomTest {
     // Inizializzazione dei soggetti di test ---------------------------------------------------------------------------------
     @Before
     public void setUp() {
-        List<GameObject> oggetti = new ArrayList<>();
+        List<GameItem> oggetti = new ArrayList<>();
         divano = new OggettoGenerico(TipoOggetto.DIVANO);
         libreria = new OggettoGenerico(TipoOggetto.LIBRERIA);
         
@@ -80,7 +80,7 @@ public class IRoomTest {
         room.addOggettoRoom(televisione);
         room.addOggettoRoom(stereo);
         
-        List<GameObject> oggetti = room.getOggettiInRoom();
+        List<GameItem> oggetti = room.getOggettiInRoom();
         assertEquals(4, oggetti.size());
         assertTrue(oggetti.contains(divano));
         assertTrue(oggetti.contains(libreria));
@@ -90,7 +90,7 @@ public class IRoomTest {
 
     @Test
     public void testRoomVuota() {
-        List<GameObject> listaVuota = new ArrayList<>();
+        List<GameItem> listaVuota = new ArrayList<>();
         IRoom roomVuota = new IRoom("Room Vuota", listaVuota);
         
         assertTrue(roomVuota.getOggettiInRoom().isEmpty());

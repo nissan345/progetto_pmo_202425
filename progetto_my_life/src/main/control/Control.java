@@ -6,25 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.swing.Timer;
-import main.aboufaris.classes.*;
-import main.aboufaris.interfaces.*;
-import main.fabbri.classes.*;
-import main.giuseppetti.classes.*;
-import main.neri.classes.*;
-import main.view.*;
-import model.character.Hair;
-import model.character.MainCharacter;
-import model.character.NPC;
-import model.character.Outfit;
-import model.character.npc.Brother;
-import model.character.npc.Dad;
-import model.character.npc.Mum;
-import model.quest.InteractionOption;
-import model.quest.Quest;
-import model.world.House;
-import model.world.Room;
-import model.world.factory.FabbricaOggetti;
-import model.world.gameItem.GameObject;
+import main.model.character.*;
+import main.model.character.npc.*;
+import main.model.quest.*;
+import main.model.world.*;
+import main.model.world.factory.*;
+import main.model.world.gameItem.GameItem;
+import main.view.View;
 
 public final class Control {
 	
@@ -75,12 +63,12 @@ public final class Control {
     // Creazione del mondo di gioco, stanze, NPC e oggetti
     private void creaMondo(){
          // Creazione delle stanze
-        Room bagno = FabbricaOggetti.creaBagno();
-        Room camera = FabbricaOggetti.creaCameraDaLetto();
-        Room cucina = FabbricaOggetti.creaCucina();
-        Room salotto = FabbricaOggetti.creaSalotto();
-        Room giardino = FabbricaOggetti.creaGiardino();
-        Room sgabuzzino = FabbricaOggetti.creaSgabuzzino();
+        Room bagno = ItemFactory.createBathroom();
+        Room camera = ItemFactory.createBedroom();
+        Room cucina = ItemFactory.createKitchen();
+        Room salotto = ItemFactory.createLivingRoom();
+        Room giardino = ItemFactory.createGarden();
+        Room sgabuzzino = ItemFactory.createStorageRoom();
         
         // Aggiunge le stanze alla casa
         casa.addRoom(bagno);
@@ -105,19 +93,11 @@ public final class Control {
     // Creazione del character personalizzato
     private void creaMainCharacterPersonalizzato() {
         String name = view.chiediNameMainCharacter();
-        Outfit outfit = scegliOpzioneDaEnum("Scegli i outfit", Outfit.values());
-        Hair hair = scegliOpzioneDaEnum("Scegli i hair", Hair.values());
-        this.character = new MainCharacter(name, outfit, hair);
+        
+
     }
     
-    // FUNZIONA
-    private <T> T scegliOpzioneDaEnum(String message, T[] opzioniDisponibili){
-        List<String> opzioni = Arrays.stream(opzioniDisponibili)
-            .map(Object::toString)
-            .toList();
-        int scelta = view.mostraOpzioniPersonalizzazione(message, opzioni);
-        return opzioniDisponibili[scelta];
-    }
+ 
     
     // FUNZIONA
     // Metodo che gestisce il timer, serve per il decadimento dei bisogni
@@ -151,73 +131,7 @@ public final class Control {
     	this.npcCorrente = n;
         view.mostraMessaggio(n.getInitialDialogue());
     }
-    public void onSecondClickNpc(NPC n) {
-        this.npcCorrente = n;
-
-        List<InteractionOption> opzioni = n.getAvailableOptions(character);
-        if (opzioni == null || opzioni.isEmpty()) {
-            view.mostraMessaggio("Non ci sono opzioni di interazione.");
-            return;
-        }
-
-        // Etichette leggibili (se non ti interessa la bella label, usa op::toString)
-        List<String> labels = opzioni.stream()
-                .map(this::labelPer)   // vedi metodo sotto
-                .toList();
-
-        int idx = view.mostraOpzioniIndice(
-                "Interazione con " + n.getRelationship(),
-                "Scegli un'opzione di interazione:",
-                labels
-        );
-
-        if (idx >= 0) {
-            onSceltaOpzioneInterazione(opzioni.get(idx));
-        }
-    }
-
-    private String labelPer(InteractionOption op) {
-        return switch (op) {
-            case REQUEST_QUEST -> "Chiedi quest";
-            case TURN_IN_QUEST -> "Consegna quest";
-            case QUEST_IN_PROGRESS -> "Aiuto quest";
-            case EXIT -> "Esci";
-        };
-    }
-
-    public void onSceltaOpzioneInterazione(InteractionOption scelta) {
-    	if (npcCorrente == null) {
-            view.mostraErrore("Nessun NPC selezionato!");
-            return;
-        }
-        switch (scelta) {
-            case REQUEST_QUEST -> {
-                Quest m = npcCorrente.assegnaMissione(character);
-                if (m != null) {
-                    character.aggiungiMissione(m);
-                    view.mostraMessaggio("Nuova quest: " + m.getName() + "\n" + m.getDescription());
-                } else {
-                    view.mostraMessaggio("Non ci sono questi disponibili al momento.");
-                }
-            }
-            case QUEST_IN_PROGRESS -> {
-                Quest m = character.getMissioneAttivaConNPC(npcCorrente).get();
-                if (m != null) {
-                	view.mostraMessaggio(npcCorrente.getQuestInProgressDialogue(m));
-                } else {
-                	view.mostraMessaggio("Non ci sono questi attive disponibili");
-                }
-            }
-            case TURN_IN_QUEST -> {
-                List<String> msgs = npcCorrente.consegnaMissione(character);
-                boolean completata = msgs.stream().anyMatch(t -> t.contains("' completata!"));
-                if (completata) { contatoreQuesti++; gestisciVittoria(); }
-                msgs.forEach(view::mostraMessaggio);
-            }
-            case EXIT -> view.mostraMessaggio("Arrivederci!");
-            default -> view.mostraMessaggio("Opzione non valida.");
-        }
-    }
+   
     public void stopGame(){
         if(gameTimer != null){
             gameTimer.stop();
@@ -247,7 +161,6 @@ public final class Control {
         String description = ris.get().toString();
         view.mostraRoom(nameRoom, description);
         view.clearAzioniNpc();
-        mostraOggettiCurrentRoom();
         mostraNpcInCurrentRoom();
     }
 
@@ -257,39 +170,7 @@ public final class Control {
         view.mostraCasa(); // tornare nel menu principale
     }
 
-    // Metodo che serve per gli effetti dell'uso dell'oggetto
-    public void onClickOggetto(GameObject oggettoGioco){
-    	Room corrente = getCurrentRoom();
-        if (!corrente.hasOggettoRoom(oggettoGioco)) {
-            view.mostraErrore("L'oggetto non si trova in room!");
-            return;
-        }
-
-        if (!oggettoGioco.richiedeScelta()) {
-            // caso semplice
-            var ra = oggettoGioco.usa(character);
-            String msg = character.interagisci(oggettoGioco);
-            view.mostraMessaggio(msg);
-            view.mostraStatistiche(character.printState());
-            return;
-        }
-
-        // caso con scelta: prima message poi lista opzioni
-        var intro = oggettoGioco.usa(character); 
-        if (intro != null && intro.getMessaggio() != null && !intro.getMessaggio().isEmpty()) {
-            view.mostraMessaggio(intro.getMessaggio());
-        }
-
-        var opzioni = oggettoGioco.opzioniDisponibili(character);
-        Object scelta = view.mostraDialogSceltaGenerica("Scegli un'opzione","Azioni disponibili:", opzioni);
-        if (scelta != null) {
-            var ra = oggettoGioco.usa(character, scelta);
-            character.applicaActionResult(ra, oggettoGioco.getName());
-            view.mostraStatistiche(character.printState());
-        }
-    }
-
-
+   
 
 	// Per la visualizzazione della mappa 
     public void getMappaCompleta(){
@@ -307,20 +188,7 @@ public final class Control {
             .orElseThrow(() -> new IllegalStateException("Nessuna room corrente"));
     }
 
-    public void mostraOggettiCurrentRoom() {
-        Room room = getCurrentRoom();
-        List<GameObject> oggettiCorrenti = room.getOggettiInRoom();
 
-        List<String> labels = oggettiCorrenti.stream()
-            .map(o -> o.getName() + " - " + o.getDescription())
-            .toList();
-
-        view.mostraOggettiInRoom(labels, idx -> {
-            if (idx >= 0 && idx < oggettiCorrenti.size()) {
-                onClickOggetto(oggettiCorrenti.get(idx));
-            }
-        });
-    }
 
     public void mostraNpcInCurrentRoom(){
         Room currentRoom = getCurrentRoom();
@@ -357,17 +225,7 @@ public final class Control {
     }
 
     
-   // METODI PER IL GIOCO
-    // Metodo che mostra su schermata tutte le questi attive del character
-    public void getQuestiAttive(){
-        Optional<Quest> quest = character.getOngoingQuestWithNPC(this.npcCorrente);
-        if(!quest.isEmpty()) {
-        	Quest questAttiva = quest.get();
-        	view.mostraQuestAttiva(questAttiva.getName(), questAttiva.getDescription());
-        }
-            
-       
-    }
+  
 
     public void gestisciVittoria(){
         // Si vince nel caso in cui un character riesce a finire tutte le questi

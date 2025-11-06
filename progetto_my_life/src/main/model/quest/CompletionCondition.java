@@ -2,7 +2,14 @@ package main.model.quest;
 
 import main.model.character.MainCharacter;
 
-public interface CompletionCondition {
+public class CompletionCondition {
 	
-	public boolean checkCompletion(MainCharacter character);
+	private String nameItem;
+	    
+	public CompletionCondition(String nameItem) {
+		this.nameItem = nameItem;
+	}
+	public boolean checkCompletion(MainCharacter character) {
+		return character.hasUsedItem(nameItem);
+	} 
 }

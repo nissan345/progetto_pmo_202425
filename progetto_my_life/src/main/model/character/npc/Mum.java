@@ -3,9 +3,9 @@ package main.model.character.npc;
 
 import java.util.Arrays;
 import main.model.character.NPC;
+import main.model.quest.CompletionCondition;
 import main.model.quest.Quest;
 import main.model.world.Room;
-import main.model.world.gameItem.ItemActionCondition;
 
 public class Mum extends NPC {
 
@@ -47,7 +47,7 @@ public class Mum extends NPC {
                                    this,
                                    15,
                                    20, 
-                                   Arrays.asList(new ItemActionCondition("Album"))
+                                   Arrays.asList(new CompletionCondition("Album"))
                             );
         this.addQuest(albumQuest);
     }

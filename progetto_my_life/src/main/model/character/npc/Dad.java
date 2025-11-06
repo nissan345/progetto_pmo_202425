@@ -2,9 +2,9 @@ package main.model.character.npc;
 
 import java.util.Arrays;
 import main.model.character.NPC;
+import main.model.quest.CompletionCondition;
 import main.model.quest.Quest;
 import main.model.world.Room;
-import main.model.world.gameItem.ItemActionCondition;
 
 public class Dad extends NPC {
 
@@ -49,7 +49,7 @@ public class Dad extends NPC {
                                    this, 
                                    15, 
                                    20,
-                                   Arrays.asList(new ItemActionCondition("Watering can"))
+                                   Arrays.asList(new CompletionCondition("Watering can"))
                             );
         this.addQuest(plantsQuest);
         
@@ -58,9 +58,9 @@ public class Dad extends NPC {
         											  this, 
         											  30,
                                                       55, 
-        											  Arrays.asList(new ItemActionCondition("Vacuum cleaner"), 
-        													        new ItemActionCondition("Stove"), 
-        													        new ItemActionCondition("Stereo and records"))
+        											  Arrays.asList(new CompletionCondition("Vacuum cleaner"), 
+        													        new CompletionCondition("Stove"), 
+        													        new CompletionCondition("Stereo and records"))
         		);
         this.addQuest(surprisePartyQuest);
     }

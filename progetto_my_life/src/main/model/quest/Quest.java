@@ -56,8 +56,8 @@ public class Quest {
      *
      * @param player
      */
-    public void applyReward(MainCharacter player) {
-        if (player != null && completed) {
+    public void applyReward(MainCharacter character) {
+        if (character != null && completed) {
             assignerNPC.increaseAffinity(assignerNPC, affinityPoints); // TO DO: Il metodo è protected quindi non lo legge
             // Additional rewards can be added here
         }

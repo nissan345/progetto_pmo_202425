@@ -1,21 +1,19 @@
-package model.world;
+package main.model.world;
 
 import java.util.List;
 import java.util.Optional;
-import model.character.MainCharacter;
-import model.character.NPC;
-import model.requirement.Requirement;
-import model.world.gameItem.GameObject;
-
-
+import main.model.character.MainCharacter;
+import main.model.character.NPC;
+import main.model.requirement.Requirement;
+import main.model.world.gameItem.GameItem;
 
 public class Room {
 
     private String roomName;
     private Optional<NPC> npcInRoom;               // Indica gli oggetti presenti nella room
-    private final List<GameObject> objectsInRoom;  // Indica gli NPC presenti nella room 
+    private final List<GameItem> objectsInRoom;  // Indica gli NPC presenti nella room 
     private Requirement entryRequirement; 
-    public Room(String name, List<GameObject> objects, Requirement requirement){
+    public Room(String name, List<GameItem> objects, Requirement requirement){
         this.roomName = name; 
         this.objectsInRoom = objects;
         this.npcInRoom = Optional.empty();
@@ -27,7 +25,7 @@ public class Room {
         return roomName;
     }
 
-    public List<GameObject> getObjectsInRoom() {
+    public List<GameItem> getObjectsInRoom() {
         return objectsInRoom;
     }
 
@@ -53,7 +51,7 @@ public class Room {
      * @param o
      * @return
      */
-    public boolean hasObjectRoom(GameObject o){
+    public boolean hasObjectRoom(GameItem o){
         return objectsInRoom.stream()
                 .anyMatch(object -> object.getName().equals(o.getName()));
     }
@@ -66,7 +64,7 @@ public class Room {
      * Adds an item in the room
      * @param o
      */
-    public void addObjectRoom(GameObject o){
+    public void addObjectRoom(GameItem o){
         this.objectsInRoom.add(o);
     };
     
@@ -74,7 +72,7 @@ public class Room {
      * Removes an item in the room 
      * @param o
      */
-    public void removeObjectRoom(GameObject o){
+    public void removeObjectRoom(GameItem o){
         this.objectsInRoom.remove(o);
     };
 

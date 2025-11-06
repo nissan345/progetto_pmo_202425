@@ -54,7 +54,7 @@ public class Quest {
     /**
      * Applies the reward of the quest to the given character
      *
-     * @param player
+     * @param character
      */
     public void applyReward(MainCharacter character) {
         if (character != null && completed) {

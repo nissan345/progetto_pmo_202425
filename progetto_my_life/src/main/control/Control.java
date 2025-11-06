@@ -230,7 +230,7 @@ public final class Control {
     public void gestisciVittoria(){
         // Si vince nel caso in cui un character riesce a finire tutte le questi
         if(contatoreQuesti == MISSIONI_TOTALI){
-            view.mostraVittoria();
+       
             gameTimer.stop();
         }
        
@@ -239,7 +239,7 @@ public final class Control {
     public void gestisciSconfitta(){
         // MainCharacter muore perché uno dei suoi bisogni è sotto la soglia
         if(isSconfitta()){
-            view.mostraSconfitta();
+         
             gameTimer.stop();
         }
     }

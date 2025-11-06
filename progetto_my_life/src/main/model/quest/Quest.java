@@ -10,15 +10,17 @@ public class Quest {
     private final String name;
     private final String description;
     private final NPC assignerNPC;
-    private int affinityPoints;
-    private List<CompletionCondition> conditions;
+    private final int affinityPoints;
+    private final int xpReward;
+    private final List<CompletionCondition> conditions;
     private boolean completed;
 
-    public Quest(String name, String description, NPC assignerNPC, int affinityPoints, List<CompletionCondition> conditions) {
+    public Quest(final String name, final String description, final NPC assignerNPC, final int affinityPoints, final int xpReward,final List<CompletionCondition> conditions) {
         this.name = name;
         this.description = description;
         this.assignerNPC = assignerNPC;
         this.affinityPoints = affinityPoints;
+        this.xpReward = xpReward; 
         this.conditions = new ArrayList<>(conditions);
         this.completed = false;
     }
@@ -57,10 +59,8 @@ public class Quest {
      * @param character
      */
     public void applyReward(MainCharacter character) {
-        if (character != null && completed) {
-            assignerNPC.increaseAffinity(assignerNPC, affinityPoints); // TO DO: Il metodo è protected quindi non lo legge
-            // Additional rewards can be added here
-        }
+        assignerNPC.increaseAffinity(affinityPoints); 
+        character.addXp(xpReward);
     }
 
     // GETTERS ---------------------------------------------------------------------

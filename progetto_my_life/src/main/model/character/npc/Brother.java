@@ -42,7 +42,8 @@ public class Brother extends NPC {
         Quest kitchenQuest = new Quest("Cibo per tutti", 
                 				   "Dei nostri amici vengono a casa, potresti prepare qualcosa per tutti mentre io pulisco la mia camera", 
                                    this, 
-                                   20, 
+                                   20,
+                                   25, 
                                    Arrays.asList(new ItemActionCondition("Stove"))
                             );
         this.addQuest(kitchenQuest);

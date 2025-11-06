@@ -2,9 +2,7 @@ package main.model.character;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.BiPredicate;
-
 import main.model.quest.Quest;
 import main.model.world.Room;
 
@@ -130,21 +128,10 @@ public abstract class NPC {
     //  QUEST COMPLETION REWARD METHOD --------------------------------------------------------
 
     /**
-     * Rewards the character for completing a quest
-     * @param quest 
-     * @param character
-     */
-    public void rewardFor(Quest quest, MainCharacter character) {
-        increaseAffinity(this, quest.getAffinityPoints());
-        
-    }
-
-    /**
      * Increases affinity between character and NPC (0-100 range)
-     * @param assignerNPC 
      * @param affinityPoints
      */
-    public void increaseAffinity(NPC assignerNPC, int affinityPoints) {
+    public void increaseAffinity(int affinityPoints) {
         this.affinity = Math.min(100, this.affinity + affinityPoints);
     }
 

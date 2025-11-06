@@ -48,6 +48,7 @@ public class Dad extends NPC {
                                    "Dovresti innaffiare le piante",
                                    this, 
                                    15, 
+                                   20,
                                    Arrays.asList(new ItemActionCondition("Watering can"))
                             );
         this.addQuest(plantsQuest);
@@ -55,7 +56,8 @@ public class Dad extends NPC {
         Quest surprisePartyQuest = new Quest("Festa a Sorpresa", 
         											  "Dovresti preparare una festa a sorpresa per la mamma, fai delle pulizie in casa e metti della musica in Salotto", 
         											  this, 
-        											  30, 
+        											  30,
+                                                      55, 
         											  Arrays.asList(new ItemActionCondition("Vacuum cleaner"), 
         													        new ItemActionCondition("Stove"), 
         													        new ItemActionCondition("Stereo and records"))

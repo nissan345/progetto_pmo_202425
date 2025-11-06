@@ -1,15 +1,12 @@
 package main.model.world.factory;
 
 import java.util.*;
-
 import main.model.action.ActionResult;
 import main.model.requirement.*;
-import main.model.world.Room;
 import main.model.world.Room;
 import main.model.world.gameItem.GameItem;
 import main.model.world.gameItem.Refrigerator;
 
-     
 
 public class ItemFactory { 
    
@@ -48,7 +45,7 @@ public class ItemFactory {
                     .hygiene(20)
                     .build()
         ));
-        return new Room("Camera Da Letto", items);
+        return new Room("Camera Da Letto", items, new LevelRequirement(1));
     }
     
     // Kitchen
@@ -80,7 +77,7 @@ public class ItemFactory {
                         })
                         .build()
         ));	
-        return new Room("Cucina", items);
+        return new Room("Cucina", items, new LevelRequirement(1));
     }
    
     // Bagno
@@ -114,7 +111,7 @@ public class ItemFactory {
                         .energy(-10)
                         .build()
         ));
-        return new Room("Bagno", items);
+        return new Room("Bagno", items, new LevelRequirement(2));
     }
     
     // Salotto
@@ -162,7 +159,7 @@ public class ItemFactory {
                         .energy(-5)
                         .build()
         ));
-        return new Room("Salotto", items);
+        return new Room("Salotto", items, new LevelRequirement(2));
     }
     
     
@@ -177,7 +174,7 @@ public class ItemFactory {
                     .energy(-20)
                     .build()
         ));
-        return new Room("Sgabuzzino", items);
+        return new Room("Sgabuzzino", items, new LevelRequirement(3));
     }
             
     // Giardino
@@ -218,6 +215,6 @@ public class ItemFactory {
                     .requirement(new CanPlayRequirement())
                     .build()
         ));
-        return new Room("Giardino", items);
+        return new Room("Giardino", items, new LevelRequirement(4));
     }
 }

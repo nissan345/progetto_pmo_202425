@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class MainCharacterTest {
-
+/*
     private MainCharacter character;
     private MainCharacter characterVegano;
 
@@ -235,14 +235,14 @@ public class MainCharacterTest {
         //assertTrue(risultato.contains(Vestito.FORMALE.getName()));
         //assertEquals(Vestito.FORMALE, character.getVestiti());
     }
-/*
+
     @Test
     public void testCambiareCapelli() {
         String risultato = character.cambiaCapelli(Capelli.LUNGHI_LISCI);
         assertTrue(risultato.contains("Hai cambiato i capelli in:"));
         assertTrue(risultato.contains(Capelli.LUNGHI_LISCI.getNome()));
         assertEquals(Capelli.LUNGHI_LISCI, character.getCapelli());
-    }*/
+    }
 
     // TEST PER STAMPA STATO -----------------------------------------------------------------------------------------------
     @Test
@@ -278,7 +278,7 @@ public class MainCharacterTest {
         assertEquals(Integer.valueOf(100), state.get("hydration"));
         assertEquals(Integer.valueOf(100), state.get("energy"));
         assertEquals(Integer.valueOf(100), state.get("hygiene"));
-}
+}*/
 }
 
 

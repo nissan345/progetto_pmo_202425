@@ -45,7 +45,8 @@ public class Mum extends NPC {
         Quest albumQuest = new Quest("L'album perduto", 
                 "Dovresti riportarmi il vecchio album di famiglia che ho perduto da qualche parte in casa e riportamelo",  
                                    this,
-                                   15, 
+                                   15,
+                                   20, 
                                    Arrays.asList(new ItemActionCondition("Album"))
                             );
         this.addQuest(albumQuest);

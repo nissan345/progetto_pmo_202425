@@ -17,7 +17,7 @@ public class DropItemAction {
             return new ActionResult("Non hai " + item.getName() + " nell'inventario!");
         }
 
-        room.addOggettoRoom(item);
+        room.addItemRoom(item);
         return new ActionResult("Hai lasciato " + item.getName() + " nella stanza.");
     }
 }

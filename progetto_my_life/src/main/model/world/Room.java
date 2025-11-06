@@ -2,66 +2,105 @@ package main.model.world;
 
 import java.util.List;
 import java.util.Optional;
-
+import main.model.character.MainCharacter;
 import main.model.character.NPC;
+import main.model.requirement.Requirement;
 import main.model.world.gameItem.GameItem;
 
+public class Room {
 
-
-public class Room{
-
-
-    private String nomeStanza;
-    private Optional<NPC> npcInStanza;               // Indica gli oggetti presenti nella room
-    private final List<GameItem> oggettiInStanza;  // Indica gli NPC presenti nella room
+    private String roomName;
+    private Optional<NPC> npcInRoom;               // Indica gli oggetti presenti nella room
+    private final List<GameItem> itemsInRoom;  // Indica gli NPC presenti nella room 
+    private Requirement entryRequirement; 
+    public Room(String name, List<GameItem> items, Requirement requirement){
+        this.roomName = name; 
+        this.itemsInRoom = items;
+        this.npcInRoom = Optional.empty();
+        this.entryRequirement = requirement; 
+    }
     
-    public Room(String nome, List<GameItem> items){
-        this.nomeStanza = nome; 
-        this.oggettiInStanza = items;
-        this.npcInStanza = Optional.empty();
-    }
-
+    // GETTERS 
     public String getRoomName(){
-        return nomeStanza;
+        return roomName;
     }
 
-    public List<GameItem> getOggettiInRoom() {
-        return oggettiInStanza;
+    public List<GameItem> getItemsInRoom() {
+        return itemsInRoom;
     }
 
     public Optional<NPC> getNpcInRoom() {
-        return npcInStanza;
+        return npcInRoom;
     }
 
+    public Requirement getEntryRequirement() {
+        return this.entryRequirement; 
+    }
+
+    /**
+     * Shows if there is an NPC in the room 
+     * @param n
+     * @return
+     */
     public boolean hasNpc(NPC n){
-        return this.npcInStanza.isPresent();
+        return this.npcInRoom.isPresent();
     }
 
-    public boolean hasOggettoRoom(GameItem o){
-        return oggettiInStanza.stream()
-                .anyMatch(oggetto -> oggetto.getName().equals(o.getName()));
+    /**
+     * Checks if an item is in the room 
+     * @param o
+     * @return
+     */
+    public boolean hasItemRoom(GameItem o){
+        return itemsInRoom.stream()
+                .anyMatch(item -> item.getName().equals(o.getName()));
     }
     
     public void setNpc(NPC n) {
-        npcInStanza = Optional.of(n);
+        npcInRoom = Optional.of(n);
     };
 
-    public void addOggettoRoom(GameItem o){
-        this.oggettiInStanza.add(o);
+    /**
+     * Adds an item in the room
+     * @param o
+     */
+    public void addItemRoom(GameItem o){
+        this.itemsInRoom.add(o);
     };
     
-    public void removeOggettoRoom(GameItem o){
-        this.oggettiInStanza.remove(o);
+    /**
+     * Removes an item in the room 
+     * @param o
+     */
+    public void removeItemRoom(GameItem o){
+        this.itemsInRoom.remove(o);
     };
 
-    @Override
+    /**
+     * Chcecks if the character can enter the room based on their level 
+     * @param character
+     * @return
+     */
+    public boolean canEnter(MainCharacter character) {
+        return entryRequirement.isSatisfiedBy(character); 
+    }
+
+    /**
+     * Tells why the character cannot enter the room 
+     * @param character
+     * @return
+     */
+    public List<String> getEntryFailureReasons(MainCharacter character) {
+        return this.entryRequirement.getFailureReasons(character); 
+    }
+
     public String toString(){
-    	String stringa = null;
-    	if(this.npcInStanza.isEmpty()) {
-    		stringa = "\nOggetti presenti: " + this.oggettiInStanza;
+    	String roomInfo = null;
+    	if(this.npcInRoom.isEmpty()) {
+    		roomInfo = "\nItems presenti: " + this.itemsInRoom;
     	}else {
-    		stringa = this.nomeStanza + "\nNPC presenti: " + this.npcInStanza.get().getRelationship() + "\nOggetti presenti: " + this.oggettiInStanza;
+    		roomInfo = this.roomName + "\nNPC presenti: " + this.npcInRoom.get().getRelationship() + "\nItems presenti: " + this.itemsInRoom;
     	}
-        return stringa;
+        return roomInfo;
     }
 }

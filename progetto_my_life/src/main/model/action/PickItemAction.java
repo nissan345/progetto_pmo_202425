@@ -9,7 +9,7 @@ public class PickItemAction {
 	public ActionResult execute(MainCharacter character, GameItem item) {
         Room room = character.getCurrentRoom();
 
-        if (!room.hasOggettoRoom(item)) {
+        if (!room.hasItemRoom(item)) {
             return new ActionResult("L'oggetto non è presente nella stanza!");
         }
 
@@ -18,7 +18,7 @@ public class PickItemAction {
             return new ActionResult("Inventario pieno! Non puoi raccogliere " + item.getName());
         }
 
-        room.removeOggettoRoom(item);
+        room.removeItemRoom(item);
         return new ActionResult("Hai raccolto " + item.getName() + "!");
     }
 }

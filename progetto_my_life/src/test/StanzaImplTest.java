@@ -4,9 +4,8 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import main.aboufaris.classes.StanzaImpl;
-import model.character.npc.Brother;
-import model.world.gameItem.GameItem;
+import main.model.character.npc.Brother;
+import main.model.world.gameItem.GameItem;
 
 import java.util.ArrayList;
 import java.util.List;

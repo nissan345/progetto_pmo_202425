@@ -4,14 +4,13 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import main.giuseppetti.classes.Fratello;
-import model.world.IRoom;
-import model.world.gameItem.GameItem;
+import main.model.world.Room;
+import main.model.world.gameItem.GameItem;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class IRoomTest {
+public class RoomTest {
 /*
     private IRoom room;
     private OggettoGenerico divano;

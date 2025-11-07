@@ -5,11 +5,11 @@ import java.util.List;
 
 import main.model.character.MainCharacter;
 
-public class CanCookRequirement implements Requirement{
+public class CanEatRequirement implements Requirement{
 
 	@Override
 	public boolean isSatisfiedBy(MainCharacter c) {
-		return c.getStats().canCook();
+		return c.getStats().canEat();
 	}
 
 	@Override

@@ -46,7 +46,7 @@ public class ItemFactory {
                         int duration = (en < ENERGY_LOW) ? HIGH_DURATION : (en < ENERGY_MID ? MID_DURATION : LOW_DURATION);
                         int hyg = -LOW_GAIN;
                         return new ActionResult(self.message, 0, 0, gain, hyg, duration);
-                    })
+                    }) 
                     .requirement(new CanSleepRequirement())
                     .build(), 
                     
@@ -87,7 +87,7 @@ public class ItemFactory {
                             int hygieneCost  = -LOW_GAIN;
                             return new ActionResult(self.message, satietyGain, NO_EFFECT, energyCost, hygieneCost, durationSec);
                         })
-                        .requirement(new CanCookRequirement())
+                        .requirement(new CanEatRequirement())
                         .build(),
                         
                 new Refrigerator(),

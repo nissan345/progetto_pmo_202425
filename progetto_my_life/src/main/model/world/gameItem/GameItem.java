@@ -18,7 +18,7 @@ public class GameItem{
     protected String room;
     private boolean specialInteraction;
     private int deltaSatiety, deltaHydration, deltaEnergy, deltaHygiene;
-    private final Requirement requirement;
+    protected final Requirement requirement;
     private BiFunction<MainCharacter, GameItem, ActionResult> dynamicUse; 
     
     public GameItem(Builder builder) {
@@ -70,12 +70,12 @@ public class GameItem{
     // Additional methods
     public boolean requiresChoice() { return false; }
 
-    public List<?> availableOptions(Character c) { 
+    public List<?> availableOptions() { 
         return List.of(); 
     }
 
-    public ActionResult use(MainCharacter c, FoodType food) {
-        return use(c);
+    public ActionResult useWithChoice(MainCharacter character, FoodType choice) {
+        return new ActionResult("This item doesn't support choices.");
     }
 
     /**

@@ -43,11 +43,11 @@ public class GameItem{
      * @return
      */
     public ActionResult use(MainCharacter character) {
-        if (dynamicUse != null) {
-            return dynamicUse.apply(character, this);
-        }
         if (!requirement.isSatisfiedBy(character)) {
             return new ActionResult(requirement.getFailureReasons(character));  // Restituisce il motivo del fallimento
+        }
+		if (dynamicUse != null) {
+            return dynamicUse.apply(character, this);
         }
         return new ActionResult(message, deltaSatiety, deltaHydration, deltaEnergy, deltaHygiene);
     }

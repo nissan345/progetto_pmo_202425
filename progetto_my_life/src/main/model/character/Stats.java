@@ -18,6 +18,11 @@ public class Stats {
 
     private static final int SHOWER_MIN_ENERGY = 20;
     private static final int SHOWER_MAX_HYGIENE = 70;
+
+	private static final int MAX_STAT = 100;
+	private static final int MIN_STAT = 0;
+	private static final int CONTROL_STAT = 20;	
+	private static final int STAT_DECAY = -2;
 	
 	private int satiety;
 	private int hygiene;
@@ -75,13 +80,13 @@ public class Stats {
         hygiene = clamp(hygiene + delta);
     }
     
-    public boolean isExhausted() { return energy < 20; }
-    public boolean isStarving()  { return satiety < 20; }
-    public boolean isDehydrated(){ return hydration < 20; }
-    public boolean isDirty()     { return hygiene < 20; }
+    public boolean isExhausted() { return energy < CONTROL_STAT; }
+    public boolean isStarving()  { return satiety < CONTROL_STAT; }
+    public boolean isDehydrated(){ return hydration < CONTROL_STAT; }
+    public boolean isDirty()     { return hygiene < CONTROL_STAT; }
 
     private int clamp(int value) {
-        return Math.max(0, Math.min(100, value));
+        return Math.max(MIN_STAT, Math.min(MAX_STAT, value));
     }
 
     public int getEnergy() { return energy; }
@@ -91,10 +96,10 @@ public class Stats {
     
     
     public void decay(){
-    	changeEnergy(-2);
-    	changeSatiety(-2);
-    	changeHydration(-2);
-    	changeHygiene(-2);
+    	changeEnergy(STAT_DECAY);
+    	changeSatiety(STAT_DECAY);
+    	changeHydration(STAT_DECAY);
+    	changeHygiene(STAT_DECAY);
     }
     
 }

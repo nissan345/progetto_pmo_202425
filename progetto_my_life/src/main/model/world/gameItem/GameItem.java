@@ -2,7 +2,6 @@ package main.model.world.gameItem;
 
 import java.util.List;
 import java.util.function.BiFunction;
-
 import main.model.action.ActionResult;
 import main.model.character.MainCharacter;
 import main.model.requirement.Requirement;
@@ -46,9 +45,10 @@ public class GameItem{
         if (!requirement.isSatisfiedBy(character)) {
             return new ActionResult(requirement.getFailureReasons(character));  // Restituisce il motivo del fallimento
         }
-		if (dynamicUse != null) {
+        if (dynamicUse != null) {
             return dynamicUse.apply(character, this);
         }
+        
         return new ActionResult(message, deltaSatiety, deltaHydration, deltaEnergy, deltaHygiene);
     }
     

@@ -4,19 +4,15 @@ import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.IntConsumer;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
-import main.aboufaris.interfaces.*;
 import main.control.Control;
-import main.fabbri.classes.Character;
-import main.giuseppetti.classes.*;
-import main.neri.classes.*;
+
 
 public class View {
 	
 	private JFrame frame;
+
     private JLabel roomLabel;
     private JTextArea descriptionArea;
     private JTextArea logArea;
@@ -60,7 +56,6 @@ public class View {
 	private JPanel buildTop() {
 	    JPanel top = new JPanel(new BorderLayout(6,6));
 	    top.setBorder(new EmptyBorder(0, 0, 6, 0));
-	    
         roomLabel = new JLabel("Room: --");
         roomLabel.setFont(roomLabel.getFont().deriveFont(Font.BOLD, 18f));
         top.add(roomLabel, BorderLayout.NORTH);
@@ -121,7 +116,7 @@ public class View {
 
 	private JPanel buildRight() {
 		JPanel right = new JPanel(new BorderLayout(6, 6));
-        right.setBorder(BorderFactory.createTitledBorder("Stato Personaggio / Questi"));
+        right.setBorder(BorderFactory.createTitledBorder("Stato MainCharacter / Questi"));
 
         stateArea = new JTextArea(10, 20);
         stateArea.setEditable(false);
@@ -163,7 +158,9 @@ public class View {
 	}
 	
 	
-	public String chiediNamePersonaggio() {
+
+	public String chiediNameMainCharacter() {
+
 		JPanel panel = new JPanel();
         final JLabel label = new JLabel("Insert your Name:");
         JTextField textField = new JTextField(20);
@@ -173,7 +170,9 @@ public class View {
         int result = JOptionPane.showConfirmDialog(
                 frame, 
                 panel, 
-                "Name Personaggio", 
+
+                "Name MainCharacter", 
+
                 JOptionPane.OK_CANCEL_OPTION, 
                 JOptionPane.QUESTION_MESSAGE
             );
@@ -181,44 +180,16 @@ public class View {
            
 	}
 	
-	public int mostraOpzioniPersonalizzazione(String messaggio, List<String> opzioni) {
-		if (opzioni == null || opzioni.isEmpty()) {
-            return -1;
-        }
-    	// Converti la lista in array per JOptionPanel
-        String[] opzioniArray = opzioni.toArray(new String[0]);
-        
-        // Mostra il dialog di selezione
-        Object selezione = JOptionPane.showInputDialog(
-            frame,
-            messaggio,
-            "Personalizzazione Personaggio",
-            JOptionPane.QUESTION_MESSAGE,
-            null,
-            opzioniArray,
-            opzioniArray[0] 
-        );
-        
-        // Se l'utente ha cancellato o chiuso il dialog
-        if (selezione == null) {
-            return -1;
-        }
-        
-        // Trova l'indice dell'opzione selezionata
-        for (int i = 0; i < opzioniArray.length; i++) {
-            if (opzioniArray[i].equals(selezione)) {
-                return i;
-            }
-        }
-        return -1;
-	}
+	
 	
 	public void mostraCasa(){
 		JDialog mappaDialog = new JDialog(frame, "Mappa della Casa", true);
         mappaDialog.setSize(600, 400);
         mappaDialog.setLayout(new BorderLayout());
         
+
         JLabel titolo = new JLabel("Seleziona una Room", SwingConstants.CENTER);
+
         titolo.setFont(new Font("Arial", Font.BOLD, 18));
         mappaDialog.add(titolo, BorderLayout.NORTH);
         
@@ -229,6 +200,8 @@ public class View {
         // Lista delle stanze disponibili (puoi personalizzare questa lista)
         String[] stanze = {"Bagno", "Camera da Letto", "Cucina", "Salotto", "Giardino", "Sgabuzzino"};
         
+
+
         for (String room : stanze) {
             JButton roomBtn = new JButton(room);
             roomBtn.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -242,6 +215,7 @@ public class View {
             });
             
             mappaPanel.add(roomBtn);
+
         }
         
         mappaDialog.add(mappaPanel, BorderLayout.CENTER);
@@ -256,19 +230,23 @@ public class View {
         
 	}
 
+
 	public void mostraRoom(String name, String description){
 		roomLabel.setText("Room: " + (name == null ? "--" : name));
 	    descriptionArea.setText(description == null ? "" : description);
 	    appendLog("Entrato in room: " + name);
 	}
 	public void mostraOggettiInRoom(List<String> labels, IntConsumer onClickIndex) {
+
 	    SwingUtilities.invokeLater(() -> {
 	        if (oggettiPanel == null) return;
 
 	        oggettiPanel.removeAll();
 
 	        if (labels == null || labels.isEmpty()) {
+
 	            JLabel none = new JLabel("Nessun oggetto in questa room");
+
 	            none.setAlignmentX(Component.LEFT_ALIGNMENT);
 	            oggettiPanel.add(none);
 	        } else {
@@ -312,7 +290,9 @@ public class View {
 	    });
 	}
 	
+
 	public void mostraNpcInterattivi(String nameNpc,
+
             String relazioneNpc,
             Runnable onDialogo,
             Runnable onOpzioni) {
@@ -320,6 +300,7 @@ public class View {
 		azioniContextPanel.removeAll();
 		
 		JButton dialogoBtn = new JButton("Parla con " + nameNpc);
+
 		dialogoBtn.addActionListener(e -> { if (onDialogo != null) onDialogo.run(); });
 		
 		JButton opzioniBtn = new JButton("Opzioni con " + relazioneNpc);
@@ -336,13 +317,14 @@ public class View {
 
 	public int mostraAzioni(List<String> a){return 1;}
 	
+
     public void mostraQuestAttiva(String name, String description) {
     	 SwingUtilities.invokeLater(() -> {
              appendLog("Quest attiva: " + name + " - " + description);
              stateArea.append("Quest: " + name + " - " + description + "\n");
          });
     }
-    public void aggiornaStatoPersonaggio(String state){
+    public void aggiornaStatoMainCharacter(String state){
     	SwingUtilities.invokeLater(() -> {
             stateArea.setText(state);
         });
@@ -351,6 +333,7 @@ public class View {
     public void mostraStatistiche(String state) {
     	SwingUtilities.invokeLater(() -> {
             stateArea.setText(state);
+
         });
     }
     
@@ -360,7 +343,7 @@ public class View {
     	SwingUtilities.invokeLater(() -> appendLog(s));
     }
     
-    public int mostraOpzioniIndice(String titolo, String messaggio, List<String> labels) {
+    public int mostraOpzioniIndice(String titolo, String message, List<String> labels) {
         if (labels == null || labels.isEmpty()) {
             mostraMessaggio("Nessuna opzione disponibile");
             return -1;
@@ -369,7 +352,7 @@ public class View {
         String[] array = labels.toArray(String[]::new);
         int scelta = JOptionPane.showOptionDialog(
                 frame,
-                messaggio,
+                message,
                 titolo,
                 JOptionPane.DEFAULT_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
@@ -387,26 +370,6 @@ public class View {
         }
     }
     
-    public <T> Optional<T> mostraDialogSceltaGenerica(String titolo, String messaggio, List<T> opzioni) {
-        if (opzioni == null || opzioni.isEmpty()) return Optional.empty();
-        String[] labels = opzioni.stream().map(Object::toString).toArray(String[]::new);
 
-        int scelta = JOptionPane.showOptionDialog(
-                frame, messaggio, titolo,
-                JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
-                null, labels, labels[0]);
-
-        if (scelta >= 0 && scelta < opzioni.size()) return Optional.of(opzioni.get(scelta));
-        return Optional.empty();
-    }
-    
-   
-    public void mostraVittoria(){
-        SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(frame, "Hai vinto!", "Vittoria", JOptionPane.INFORMATION_MESSAGE));
-    }
-
-    public void mostraSconfitta(){
-        SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(frame, "Hai perso...", "Sconfitta", JOptionPane.INFORMATION_MESSAGE));
-    }
     
 }

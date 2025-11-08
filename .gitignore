@@ -1,6 +1,9 @@
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 /.metadata/
 =======
+=======
+>>>>>>> main
 # Eclipse
 bin/
 .settings/
@@ -15,11 +18,16 @@ bin/
 .vscode/
 .yscode/
 
+<<<<<<< HEAD
 *.class*.class
+=======
+*.class
+>>>>>>> main
 bin/
 target/
 build/
 target/
+<<<<<<< HEAD
 build/
 
 # Per l'UML
@@ -27,3 +35,6 @@ docs/uml/out/
 *.png
 *.svg
 >>>>>>> Stashed changes
+=======
+build/
+>>>>>>> main

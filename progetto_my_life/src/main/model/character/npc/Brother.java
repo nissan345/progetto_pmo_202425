@@ -44,7 +44,7 @@ public class Brother extends NPC {
                                    this, 
                                    20,
                                    25, 
-                                   Arrays.asList(new CompletionCondition("Stove"))
+                                   Arrays.asList(new CompletionCondition("Fornelli"))
                             );
         this.addQuest(kitchenQuest);
     }

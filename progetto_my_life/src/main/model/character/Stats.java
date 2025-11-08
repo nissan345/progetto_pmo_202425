@@ -10,7 +10,7 @@ public class Stats {
 
     private static final int EAT_MIN_ENERGY = 40;
     private static final int EAT_MIN_HYGIENE = 50;
-    private static final int EAT_MIN_SATIETY = 60; 
+    private static final int EAT_MIN_SATIETY = 85; 
 
     private static final int DRINK_MIN_HYDRATION = 70; 
     

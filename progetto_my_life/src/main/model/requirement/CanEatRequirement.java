@@ -16,7 +16,7 @@ public class CanEatRequirement implements Requirement{
 	public List<String> getFailureReasons(MainCharacter c){
 		List<String> reasons = new ArrayList<>();
 
-        if (c.getStats().getSatiety() >= 60) {
+        if (c.getStats().getSatiety() >= 85) {
             reasons.add("Non hai abbastanza fame per managiare.");
         }
 

@@ -31,7 +31,6 @@ class RefrigeratorTest {
         assertEquals("Cucina", refrigerator.getRoom());
         assertEquals(90, refrigerator.getSize());
         assertTrue(refrigerator.requiresChoice());
-        assertTrue(refrigerator.hasSpecialInteraction());
         assertTrue(refrigerator.getRequirement() instanceof CanEatRequirement);
     }
 

@@ -79,8 +79,8 @@ public class ItemFactory {
                         .message("Cuoci un buon pasto.")
                         .dynamic((mc, self) -> {
                             int en = mc.getStats().getEnergy();
-                            int energyCost   = (en < ENERGY_LOW) ? HIGH_COST : (en < ENERGY_MID ? MID_COST : LOW_COST); 
-                            int durationSec  = (en < ENERGY_LOW) ?  HIGH_DURATION : (en < ENERGY_MID ?  MID_DURATION :   LOW_DURATION);  
+                            int energyCost   = (en < ENERGY_MID ? MID_COST : LOW_COST); 
+                            int durationSec  = (en < ENERGY_MID ?  MID_DURATION :   LOW_DURATION);  
                             int satietyGain  = -HIGH_COST;
                             int hygieneCost  = -LOW_GAIN;
                             return new ActionResult(self.getMessage(), satietyGain, NO_EFFECT, energyCost, hygieneCost, durationSec);
@@ -107,7 +107,7 @@ public class ItemFactory {
     // Bagno
     public static Room createBathroom() {
         List<GameItem> items = new ArrayList<>(List.of(new GameItem.Builder("Doccia", "Bagno", BIG_SIZE)
-                        .message("You take a refreshing shower.")
+                        .message("Fai una doccia rinfrescante.")
                         .dynamic((mc, self) -> {
                             int currentHyg   = mc.getStats().getHygiene();
                             int hygieneGain  = (currentHyg < HYGIENE_LOW) ? HIGH_GAIN : (currentHyg < HYGIENE_MID  ? MID_GAIN : LOW_GAIN);

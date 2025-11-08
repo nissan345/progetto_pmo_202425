@@ -97,7 +97,6 @@ class GameItemTest {
 	    ActionResult result3 = item.use(character);
 		assertEquals(25 ,character.getStats().getEnergy());
 		assertEquals(20, result3.getDeltaEnergy());
-		
 	}
 
 }

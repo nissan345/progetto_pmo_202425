@@ -15,8 +15,7 @@ public class Refrigerator extends GameItem {
     public Refrigerator() {
         super(new Builder("Frigorifero", "Cucina", 90)
                 .message("Apri il frigorifero, scegli cosa mangiare!")
-                .requirement(new CanEatRequirement())
-                .specialInteraction(true));
+                .requirement(new CanEatRequirement()));
         
         this.foodEffects = new EnumMap<>(FoodType.class);
         for (FoodType food : FoodType.values()) {

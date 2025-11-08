@@ -45,7 +45,7 @@ public class ItemFactory {
                         int gain = (en < ENERGY_LOW) ? HIGH_GAIN : (en < ENERGY_MID ? MID_GAIN : LOW_GAIN);
                         int duration = (en < ENERGY_LOW) ? HIGH_DURATION : (en < ENERGY_MID ? MID_DURATION : LOW_DURATION);
                         int hyg = -LOW_GAIN;
-                        return new ActionResult(self.message, 0, 0, gain, hyg, duration);
+                        return new ActionResult(self.getMessage(), 0, 0, gain, hyg, duration);
                     }) 
                     .requirement(new CanSleepRequirement())
                     .build(), 
@@ -59,7 +59,7 @@ public class ItemFactory {
                         int hyg         = LOW_COST;
                         int sat         = LOW_COST;
                         int hyd         = LOW_COST;
-                        return new ActionResult(self.message, sat, hyd, energyCost, hyg, durationSec);
+                        return new ActionResult(self.getMessage(), sat, hyd, energyCost, hyg, durationSec);
                     })
                     .requirement(new CanPlayRequirement())
                     .build(),
@@ -68,8 +68,6 @@ public class ItemFactory {
                     .message("Provi dei nuovi outfit!")
                     .energy(LOW_COST)
                     .hygiene(HIGH_GAIN)
-                    .hydration(NO_EFFECT)
-                    .satiety(NO_EFFECT)
                     .build()
         ));
         return new Room("Camera Da Letto", items, new LevelRequirement(1));
@@ -85,7 +83,7 @@ public class ItemFactory {
                             int durationSec  = (en < ENERGY_LOW) ?  HIGH_DURATION : (en < ENERGY_MID ?  MID_DURATION :   LOW_DURATION);  
                             int satietyGain  = -HIGH_COST;
                             int hygieneCost  = -LOW_GAIN;
-                            return new ActionResult(self.message, satietyGain, NO_EFFECT, energyCost, hygieneCost, durationSec);
+                            return new ActionResult(self.getMessage(), satietyGain, NO_EFFECT, energyCost, hygieneCost, durationSec);
                         })
                         .requirement(new CanEatRequirement())
                         .build(),
@@ -99,7 +97,7 @@ public class ItemFactory {
                             int energyCost  = (en < ENERGY_LOW) ? HIGH_COST : (en < ENERGY_MID ? MID_COST : LOW_COST);   
                             int durationSec = (en < ENERGY_LOW) ? HIGH_DURATION : (en < ENERGY_MID ? MID_DURATION :  LOW_DURATION);
                             int hygieneCost = LOW_COST;
-                            return new ActionResult(self.message, NO_EFFECT, NO_EFFECT, energyCost, hygieneCost, durationSec);
+                            return new ActionResult(self.getMessage(), NO_EFFECT, NO_EFFECT, energyCost, hygieneCost, durationSec);
                         })
                         .build()
         ));	
@@ -115,24 +113,19 @@ public class ItemFactory {
                             int hygieneGain  = (currentHyg < HYGIENE_LOW) ? HIGH_GAIN : (currentHyg < HYGIENE_MID  ? MID_GAIN : LOW_GAIN);
                             int durationSec  = (currentHyg < HYGIENE_LOW) ? HIGH_DURATION : (currentHyg <  HYGIENE_MID ? MID_DURATION : LOW_DURATION);
                             int energyCost   = LOW_COST; 
-                            return new ActionResult(self.message, NO_EFFECT, NO_EFFECT, energyCost, hygieneGain, durationSec);
+                            return new ActionResult(self.getMessage(), NO_EFFECT, NO_EFFECT, energyCost, hygieneGain, durationSec);
                         })
                         .requirement(new CanShowerRequirement())
                         .build(),
                 
-                new GameItem.Builder("Toilet", "Bagno", BIG_SIZE)
-                        .message("You feel relieved after using the Bagno.")
-                        .satiety(NO_EFFECT)
-                        .hydration(NO_EFFECT)
+                new GameItem.Builder("WC", "Bagno", BIG_SIZE)
+                        .message("Ti senti sollevato, dopo aver usato il bagno.")
                         .hygiene(LOW_GAIN)
                         .energy(LOW_GAIN)
                         .build(),
                 
-                new GameItem.Builder("Washing Machine", "Bagno", BIG_SIZE)
-                        .message("You put your clothes in the washing machine. The house is tidier!")
-                        .satiety(NO_EFFECT)
-                        .hydration(NO_EFFECT)
-                        .hygiene(NO_EFFECT)
+                new GameItem.Builder("Lavatrice", "Bagno", BIG_SIZE)
+                        .message("Metti i vestiti in lavatrice!")
                         .energy(LOW_COST)
                         .build()
         ));
@@ -142,7 +135,7 @@ public class ItemFactory {
     // Salotto
     public static Room createLivingRoom() {
         List<GameItem> items = new ArrayList<>(List.of(new GameItem.Builder("Televisione", "Salotto", MID_SIZE)
-                        .message("You watch TV and relax.")
+                        .message("Guardi la tv, rilassandoti")
                         .satiety(LOW_COST)
                         .hydration(LOW_COST)
                         .hygiene(LOW_COST)
@@ -150,36 +143,28 @@ public class ItemFactory {
                         .build(),
         
                 new GameItem.Builder("Stereo", "Salotto", NORMAL_SIZE)
-                        .message("You listen to Billie Eilish.")
-                        .satiety(NO_EFFECT)
-                        .hydration(NO_EFFECT)
-                        .hygiene(NO_EFFECT)
+                        .message("Ascolti Billie Eilish.")
                         .energy(MID_GAIN)
                         .build(),
         
-                new GameItem.Builder("Sofa", "Salotto", BIG_SIZE)
-                        .message("You sit on the sofa and rest a bit.")
+                new GameItem.Builder("Divano", "Salotto", BIG_SIZE)
+                        .message("Fai un pisolino sul divano")
                         .dynamic((mc, self) -> {
                             int en = mc.getStats().getEnergy();
                             int gain = (en < ENERGY_LOW) ? HIGH_GAIN : LOW_GAIN;  
-                            return new ActionResult(self.message, NO_EFFECT, NO_EFFECT, gain, NO_EFFECT, 5);
+                            return new ActionResult(self.getMessage(), NO_EFFECT, NO_EFFECT, gain, NO_EFFECT, 5);
                         })
                         .requirement(new CanSleepRequirement())
                         .build(),
         
-                new GameItem.Builder("Bookshelf", "Salotto", BIG_SIZE)
-                        .message("You just finished reading Harry Potter and the Philosopher’s Stone!")
+                new GameItem.Builder("Libreria", "Salotto", BIG_SIZE)
+                        .message("Hai appena finito di leggere Harry Potter e la Pietra Filosofale")
                         .satiety(LOW_COST)
-                        .hydration(NO_EFFECT)
-                        .hygiene(NO_EFFECT)
                         .energy(LOW_COST)
                         .build(),
         
-                new GameItem.Builder("Photo Album", "Salotto", SMALL_SIZE)
-                        .message("You picked up the old photo album.")
-                        .satiety(NO_EFFECT)
-                        .hydration(NO_EFFECT)
-                        .hygiene(NO_EFFECT)
+                new GameItem.Builder("Album", "Salotto", SMALL_SIZE)
+                        .message("Hai preso un vecchio album.")
                         .energy(LOW_COST)
                         .build()
         ));
@@ -189,11 +174,8 @@ public class ItemFactory {
     
     // Sgabuzzino
     public static Room createStorageRoom() {
-        List<GameItem> items = new ArrayList<>(List.of(new GameItem.Builder("Vacuum Cleaner", "Sgabuzzino", MID_SIZE)
-                    .message("You use the vacuum cleaner and clean the room.")
-                    .satiety(NO_EFFECT)
-                    .hydration(NO_EFFECT)
-                    .hygiene(NO_EFFECT)
+        List<GameItem> items = new ArrayList<>(List.of(new GameItem.Builder("Aspirapolvere", "Sgabuzzino", MID_SIZE)
+                    .message("Pulisci la stanza con un aspirapolvere.")
                     .energy(MID_COST)
                     .build()
         ));
@@ -202,16 +184,13 @@ public class ItemFactory {
             
     // Giardino
     public static Room createGarden() {
-        List<GameItem> items = new ArrayList<>(List.of(new GameItem.Builder("Watering Can", "Giardino", SMALL_SIZE)
-                    .message("You water the plants: they look greener now.")
-                    .satiety(NO_EFFECT)
-                    .hydration(NO_EFFECT)
-                    .hygiene(NO_EFFECT)
+        List<GameItem> items = new ArrayList<>(List.of(new GameItem.Builder("Annaffiatoio", "Giardino", SMALL_SIZE)
+                    .message("Annaffi le piante.")
                     .energy(LOW_COST)
                     .build(),
        
-                new GameItem.Builder("Ball", "Giardino", SMALL_SIZE)
-                    .message("You play with the ball and get some exercise.")
+                new GameItem.Builder("Palla", "Giardino", SMALL_SIZE)
+                    .message("Giochi con la palla.")
                     .satiety(HIGH_COST)
                     .hydration(HIGH_COST)
                     .hygiene(HIGH_COST)
@@ -219,17 +198,14 @@ public class ItemFactory {
                     .requirement(new CanPlayRequirement())
                     .build(),
        
-                new GameItem.Builder("Swing", "Giardino", BIG_SIZE)
-                    .message("You swing back and forth, having fun and relaxing.")
-                    .satiety(NO_EFFECT)
-                    .hydration(NO_EFFECT)
+                new GameItem.Builder("Altalena", "Giardino", BIG_SIZE)
+                    .message("Ti diverti sull'altalena")
                     .hygiene(MID_COST )
-                    .energy(NO_EFFECT)
                     .requirement(new CanPlayRequirement())
                     .build(),
        
-                new GameItem.Builder("Car", "Giardino", BIG_SIZE)
-                    .message("You take the car and go for a drive.")
+                new GameItem.Builder("Macchina", "Giardino", BIG_SIZE)
+                    .message("Vai in città in macchina.")
                     .satiety(HIGH_COST)
                     .hydration(HIGH_COST)
                     .hygiene(HIGH_GAIN)

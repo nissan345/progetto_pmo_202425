@@ -53,7 +53,6 @@ public final class Control {
         view.mostraMenu();
         creaMainCharacterPersonalizzato();
         creaMondo();
-        avviaTimerBisogni();
         view.mostraStatistiche(character.printState());
         view.mostraCasa();
     }
@@ -98,24 +97,7 @@ public final class Control {
     }
     
  
-    
-    // FUNZIONA
-    // Metodo che gestisce il timer, serve per il decadimento dei bisogni
-    private void avviaTimerBisogni(){
-        gameTimer = new Timer(DECADIMENTO_STATO, e-> {
-                character.stateDecay();
-                List<String> avvisi = controllaStatiCritici();
-                if(!avvisi.isEmpty()){
-                    for(String a : avvisi){
-                        view.mostraAvviso(a); 
-                    }
-                }
-                view.mostraStatistiche(this.character.printState());
-                gestisciSconfitta();
-            
-        });
-        gameTimer.start();
-    }
+
     
     public void aggiornaBottoniNpc(NPC npc) {
         // qui decidi quali label mostrare
@@ -142,12 +124,7 @@ public final class Control {
       return character;
     }
 
-    // DA VEDERE
-    private boolean isSconfitta(){
-        // MainCharacter muore perché uno dei suoi bisogni è sotto la soglia
-        return character.getEnergy() == 0 || character.getSatiety() ==0 || character.getHygiene() == 0 
-        || character.getSatiety() == 0;
-    }
+
 
     // Funziona
      public void onClickEntra(String nameRoom){
@@ -203,18 +180,7 @@ public final class Control {
     }
 
 
-    // Metodo che verifica se i bisogni sono sotto la soglia
-    private List<String> controllaStatiCritici(){
-        List<String> avvisi = new ArrayList<>();
-        String name = character.getName();
 
-        aggiungiAvvisoBisogno(avvisi, character.getSatiety(), name, " deve mangiare!", "STA PER SVENIRE DALLA FAME!");
-        aggiungiAvvisoBisogno(avvisi, character.getEnergy(), name, " deve dormire!", "STA PER PERDERE I SENSI!");
-        aggiungiAvvisoBisogno(avvisi, character.getHygiene(), name, " deve lavarsi!", "NON SI RIESCE A RESPIRARGLI VICINO!");
-        aggiungiAvvisoBisogno(avvisi, character.getSatiety(), name, " deve bere!", "STA PER DISIDRATARSI!");
-        
-        return avvisi;
-    }
 
     private void aggiungiAvvisoBisogno(List<String> avvisi, int valore, String name, String messaggioBasso, String messaggioCritico){
         if(valore < SOGLIA_CRITICA) {
@@ -236,13 +202,7 @@ public final class Control {
        
     }
 
-    public void gestisciSconfitta(){
-        // MainCharacter muore perché uno dei suoi bisogni è sotto la soglia
-        if(isSconfitta()){
-         
-            gameTimer.stop();
-        }
-    }
+  
 
 	public void onOpzioneScelta(String valueOf) {
 		// TODO Auto-generated method stub

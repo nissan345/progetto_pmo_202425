@@ -16,16 +16,16 @@ public class CanEatRequirement implements Requirement{
 	public List<String> getFailureReasons(MainCharacter c){
 		List<String> reasons = new ArrayList<>();
 
-        if (c.getStats().getSatiety() >= 40) {
-            reasons.add("Non hai abbastanza fame per cucinare.");
+        if (c.getStats().getSatiety() >= 60) {
+            reasons.add("Non hai abbastanza fame per managiare.");
         }
 
-        if (c.getStats().getEnergy() < 40) {
-            reasons.add("Non hai abbastanza energia per cucinare.");
+        if (c.getStats().getEnergy() <= 40) {
+            reasons.add("Non hai abbastanza energia per mangiare.");
         }
 
-        if (c.getStats().getHygiene() < 50) {
-            reasons.add("Sei troppo sporco per cucinare.");
+        if (c.getStats().getHygiene() <= 50) {
+            reasons.add("Sei troppo sporco per mangiare.");
         }
 
         return reasons; 

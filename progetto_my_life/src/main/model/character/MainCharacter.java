@@ -248,10 +248,6 @@ public class MainCharacter {
      */
     public String applyActionResult(ActionResult result, String nameItem) {
 
-        String controlMessage = checkActionUsefulness(result);
-        if (controlMessage != null) {
-            return controlMessage;
-        }
         recordItemsUsedForQuests(nameItem);
         stats.changeEnergy(result.getDeltaEnergy());
         stats.changeHydration(result.getDeltaHydration());
@@ -287,28 +283,7 @@ public class MainCharacter {
         return new DropItemAction().execute(this, item);
     }
 
-    
-    
-    @Deprecated
-    private String checkActionUsefulness(ActionResult result) {
-    	
-        if (result.getDeltaEnergy() > 0 && stats.getEnergy() >= 100) {
-            return "Sei già pieno di energy, non ha senso riposare ora!";
-        }else if (result.getDeltaSatiety() < 0 && stats.getSatiety() <= 0) {
-            return "Non hai satiety, non ha senso mangiare ora!";
-        }else if (result.getDeltaHydration() < 0 && stats.getHydration() <= 0) {
-            return "Non hai hydration, non ha senso bere ora!";
-        }else if (result.getDeltaHygiene() > 0 && stats.getHygiene() >= 100) {
-            return "Sei già pulitissimo, non serve lavarti!";
-        }else {
-        	return null;
-        }
-    }
-    
-    @Deprecated public int getSatiety() { return stats.getSatiety(); }
-    @Deprecated public int getHydration() { return stats.getHydration(); }
-    @Deprecated public int getEnergy() { return stats.getEnergy(); }
-    @Deprecated public int getHygiene() { return stats.getHygiene(); }
+   
     public void stateDecay(){
         stats.decay();
     }

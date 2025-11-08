@@ -1,112 +1,151 @@
 
-
 import static org.junit.Assert.*;
+
+import java.util.Map;
+import java.util.Optional;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import main.model.character.Hair;
+import main.model.character.MainCharacter;
+import main.model.character.Outfit;
+import main.model.character.npc.Brother;
+import main.model.character.npc.Dad;
+import main.model.character.npc.Mum;
+import main.model.world.House;
 import main.model.world.Room;
+import main.model.world.factory.ItemFactory;
 import main.model.world.gameItem.GameItem;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class RoomTest {
-/*
-    private IRoom room;
-    private OggettoGenerico divano;
-    private OggettoGenerico libreria;
-    private Fratello fratello;
-
-    // Inizializzazione dei soggetti di test ---------------------------------------------------------------------------------
-    @Before
-    public void setUp() {
-        List<GameItem> oggetti = new ArrayList<>();
-        divano = new OggettoGenerico(TipoOggetto.DIVANO);
-        libreria = new OggettoGenerico(TipoOggetto.LIBRERIA);
+	
+	private MainCharacter c; 
+	
+	private House h;  
+	
+	private Room bedroom; 
+	private Room livingRoom; 
+	private Room kitchen; 
+	private Room bathroom; 
+	private Room storageRoom; 
+	private Room garden; 
+	
+	private Mum mum; 
+	private Dad dad;
+	private Brother brother; 
+	
+	
+	
+	
+	@Before 
+	public void setUp() {
+		c = new MainCharacter("Ari", Outfit.CASUAL, Hair.CURLY_LONG);
+		h = new House(); 
+	    
+        bedroom     = ItemFactory.createBedroom();
+        livingRoom  = ItemFactory.createLivingRoom();
+        kitchen     = ItemFactory.createKitchen();
+        bathroom    = ItemFactory.createBathroom();
+        storageRoom = ItemFactory.createStorageRoom();
+        garden      = ItemFactory.createGarden();
         
-        oggetti.add(divano);
-        room = new IRoom("Salotto", oggetti);
-        fratello = new Fratello(room);
-    }
-
-    // TEST PER GLI NPC DELLA STANZA -------------------------------------------------------------------------------------
-    @Test
-    public void testGestioneNPC() {
-        // Verifica iniziale che non ci siano NPC
-        assertFalse(room.getNpcInRoom().isPresent());
-        assertFalse(room.hasNpc(fratello));
-
-        // Aggiungi NPC e verifica presenza
-        room.setNpc(fratello);
-        assertTrue(room.getNpcInRoom().isPresent());
-        assertTrue(room.hasNpc(fratello));
-        assertEquals(fratello, room.getNpcInRoom().get());
-    }
-
-    @Test
-    public void testHasNpcConQualsiasiNPC() {
-        Fratello altroFratello = new Fratello(room);
-        room.setNpc(fratello);
+        h.addRoom(bedroom);
+        h.addRoom(livingRoom);
+        h.addRoom(kitchen);
+        h.addRoom(bathroom);
+        h.addRoom(storageRoom);
+        h.addRoom(garden);
         
-        assertTrue(room.hasNpc(altroFratello));
-    }
+        mum = new Mum(livingRoom);
+        dad = new Dad(garden);
+        brother = new Brother(kitchen);
 
-    // TEST PER GLI OGGETTI DELLA STANZA -------------------------------------------------------------------------------------
-    @Test
-    public void testGestioneOggetti() {
-        // Verifica oggetto iniziale
-        assertTrue(room.hasOggettoRoom(divano));
-        assertFalse(room.hasOggettoRoom(libreria));
-        assertEquals(1, room.getOggettiInRoom().size());
+        livingRoom.setNpc(mum);
+        garden.setNpc(dad);
+        kitchen.setNpc(brother);
+	}
+	
+	
+	@Test 
+	public void testHouseCreation() {
+		
+	    assertEquals("House should have 6 rooms", 6, h.getRooms().size());
+	    
+	    assertTrue("House should contain bedroom", h.getRooms().containsKey("Camera Da Letto"));
+	    assertTrue("House should contain living room", h.getRooms().containsKey("Salotto"));
+	    
+		assertNotNull("Room should be created", bedroom);
+        assertEquals("Room name should match", "Camera Da Letto", bedroom.getRoomName());
+        assertNotNull("Items list should not be null", bedroom.getItemsInRoom());
+        assertFalse("Items list should not be empty initially", bedroom.getItemsInRoom().isEmpty());
+        assertFalse("NPC should not be present", bedroom.getNpcInRoom().isPresent());
+		
+	}
+	
+	@Test
+	public void testEnterExitRoom() {
+	    Optional<Room> enteredRoom = h.enterRoom("Camera Da Letto");
+	    assertTrue("Should successfully enter room", enteredRoom.isPresent());
+	    assertEquals("Current room should be bedroom", bedroom, h.getCurrentRoom().get());
+	    
+	    Map<String, Room> rooms = h.exitRoom();
+	    assertNotNull("Should return rooms map", rooms);
+	}
+	
 
-        // Aggiungi secondo oggetto
-        room.addOggettoRoom(libreria);
-        assertTrue(room.hasOggettoRoom(libreria));
-        assertEquals(2, room.getOggettiInRoom().size());
+	@Test
+	public void testRoomWithNPC() {
+		// check the setting of NPC
+	}
+	
+	@Test
+	public void testRoomsWithoutNPCStayEmpty() {
 
-        // Rimuovi oggetto
-        room.removeOggettoRoom(divano);
-        assertFalse(room.hasOggettoRoom(divano));
-        assertEquals(1, room.getOggettiInRoom().size());
-    }
+		// bedroom, bathroom and storage room never have a NPC inside 
+	    assertFalse("Bedroom should not have NPC", bedroom.getNpcInRoom().isPresent());
+	    assertFalse("Bathroom should not have NPC", bathroom.getNpcInRoom().isPresent());
+	    assertFalse("Storage room should not have NPC", storageRoom.getNpcInRoom().isPresent());
+	    
 
-    @Test
-    public void testRoomConVariOggetti() {
-        OggettoGenerico televisione = new OggettoGenerico(TipoOggetto.TELEVISIONE);
-        OggettoGenerico stereo = new OggettoGenerico(TipoOggetto.STEREO);
-        
-        room.addOggettoRoom(libreria);
-        room.addOggettoRoom(televisione);
-        room.addOggettoRoom(stereo);
-        
-        List<GameItem> oggetti = room.getOggettiInRoom();
-        assertEquals(4, oggetti.size());
-        assertTrue(oggetti.contains(divano));
-        assertTrue(oggetti.contains(libreria));
-        assertTrue(oggetti.contains(televisione));
-        assertTrue(oggetti.contains(stereo));
-    }
+	    assertFalse("Bedroom should not have any NPC", bedroom.hasNpc(mum));
+	    assertFalse("Storage room should not have any NPC", storageRoom.hasNpc(dad));
+	}
+	
+	@Test
+	public void testRoomRequirements() {
+	    c.addXp(200);
+	    // check that character level is 2 
+	    assertEquals("Character level is 2", 2, c.getLvl());
+	    
+	    assertTrue("Character should be able to enter bedroom", bedroom.canEnter(c));
+	    assertTrue("Character should be able to enter kitchen", kitchen.canEnter(c));
+	    
+	    // Character cannot enter storage room and garden 
+	    assertFalse("Character should not be able to enter storage room", storageRoom.canEnter(c));
+	    assertFalse("Character should not be able to enter garden", garden.canEnter(c));
+	}
 
-    @Test
-    public void testRoomVuota() {
-        List<GameItem> listaVuota = new ArrayList<>();
-        IRoom roomVuota = new IRoom("Room Vuota", listaVuota);
-        
-        assertTrue(roomVuota.getOggettiInRoom().isEmpty());
-        assertFalse(roomVuota.getNpcInRoom().isPresent());
-    }
+	@Test
+	public void testRoomItems() {
+		assertEquals("Bedroom should have 3 items", 3, bedroom.getItemsInRoom().size());
+		assertEquals("Kitchen should have 3 items", 3, kitchen.getItemsInRoom().size());
+		assertEquals("Bathroom should have 3 items", 3,bathroom.getItemsInRoom().size());
+	}
+	
+	
 
-    @Test
-    public void testInterazioneOggettiReali() {
-        // Verifica che gli oggetti reali funzionino correttamente
-        room.addOggettoRoom(libreria);
-        
-        // Test interazione con oggetto reale
-        main.neri.classes.ActionResult risultato = divano.usa(null);
-        assertNotNull(risultato);
-        assertTrue(risultato.getMessaggio().contains("Ti siedi sul divano"));
-        
-        // Verifica che l'oggetto sia effettivamente nella room
-        assertTrue(room.hasOggettoRoom(libreria));
-    }*/
+	@Test
+	public void testAddRemoveItems() {
+	    GameItem testItem = new GameItem.Builder("Test Item", "Camera Da Letto", 10).build();
+	    
+	    int initialSize = bedroom.getItemsInRoom().size();
+	    bedroom.addItemRoom(testItem);
+	    assertEquals("Should have one more item", initialSize + 1, bedroom.getItemsInRoom().size());
+	    assertTrue("Should contain the added item", bedroom.hasItemRoom(testItem));
+	    
+	    bedroom.removeItemRoom(testItem);
+	    assertEquals("Should return to original size", initialSize, bedroom.getItemsInRoom().size());
+}
+
 }

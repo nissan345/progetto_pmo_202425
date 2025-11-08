@@ -17,8 +17,8 @@ public class CanDrinkRequirement implements Requirement{
 		List<String> reasons = new ArrayList<>();
 
         // Controlla se la fame è sufficiente
-        if (c.getStats().getHydration() <= 70) {
-            reasons.add("Non hai abbastanza fame per cucinare.");
+        if (c.getStats().getHydration() >= 70) {
+            reasons.add("Non hai abbastanza sete per bere.");
         }
 
 

@@ -14,12 +14,36 @@ public class GameItem{
     protected final String name;
     protected final String description;
     protected final int size;
-    public String message;
-    protected String room;
+    private String message;
+    public String getMessage() {
+		return message;
+	}
+
+	protected String room;
     private boolean specialInteraction;
     private int deltaSatiety, deltaHydration, deltaEnergy, deltaHygiene;
-    protected final Requirement requirement;
-    private BiFunction<MainCharacter, GameItem, ActionResult> dynamicUse; 
+    public int getDeltaSatiety() {
+		return deltaSatiety;
+	}
+
+	public int getDeltaHydration() {
+		return deltaHydration;
+	}
+
+	public int getDeltaEnergy() {
+		return deltaEnergy;
+	}
+
+	public int getDeltaHygiene() {
+		return deltaHygiene;
+	}
+
+	protected final Requirement requirement;
+    public Requirement getRequirement() {
+		return requirement;
+	}
+
+	private BiFunction<MainCharacter, GameItem, ActionResult> dynamicUse; 
     
     public GameItem(Builder builder) {
         this.name = builder.name;
@@ -59,24 +83,16 @@ public class GameItem{
     public String getRoom() { return room; }
    
     @Override
-    public String toString() {
-        return name + " (" + room + ")";
-    }
+    public String toString() {return name + " (" + room + ")";}
     
-    public boolean hasSpecialInteraction() {
-        return specialInteraction;
-    }
+    public boolean hasSpecialInteraction() {return specialInteraction;}
     
     // Additional methods
     public boolean requiresChoice() { return false; }
 
-    public List<?> availableOptions() { 
-        return List.of(); 
-    }
+    public List<?> availableOptions() {return List.of(); }
 
-    public ActionResult useWithChoice(MainCharacter character, FoodType choice) {
-        return new ActionResult("This item doesn't support choices.");
-    }
+    public ActionResult useWithChoice(MainCharacter character, FoodType choice) {return new ActionResult("This item doesn't support choices.");}
 
     /**
      * Builder class used to create GameItem instances.
@@ -88,7 +104,7 @@ public class GameItem{
         private final String room;
         private final int size;
         
-        // Optional fields with default values
+        // default values of the optional fields
         private String description = "";
         private String message = "You use the item.";
         private boolean specialInteraction = false;
@@ -115,7 +131,7 @@ public class GameItem{
             this.dynamicUse = fn;
             return this;
         }
-        // Fluent builder methods
+        
         public Builder description(String val) {
             this.description = val;
             return this;

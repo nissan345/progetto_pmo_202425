@@ -19,12 +19,12 @@ public class CanSleepRequirement implements Requirement{
 		List<String> reasons = new ArrayList<>();
 
         // Controlla se l'energia è sufficiente
-        if (c.getStats().getEnergy() <= 70) {
+        if (c.getStats().getEnergy() >= 70) {
             reasons.add("Non puoi dormire adesso, sei troppo energetico");
         }
 
         // Controlla se l'igiene è sufficiente
-        if (c.getStats().getHygiene() < 30) {
+        if (c.getStats().getHygiene() <= 30) {
             reasons.add("Sei troppo sporco per dormire. Le lenzuola patiranno");
         }
 

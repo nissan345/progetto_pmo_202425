@@ -21,7 +21,7 @@ public class Refrigerator extends GameItem {
         this.foodEffects = new EnumMap<>(FoodType.class);
         for (FoodType food : FoodType.values()) {
             foodEffects.put(food, new ActionResult(
-                "Mangi " + food.name(), 
+                "Mangi " + food.getName(), 
                 food.getSatiety(), 
                 food.getHydration(), 
                 food.getEnergy(),
@@ -53,7 +53,7 @@ public class Refrigerator extends GameItem {
     	if(deny != null) {
     		return deny;
     	}
-    	 if (!foodEffects.containsKey(choice)) {
+    	 if (!foodEffects.containsKey(choice) || choice == null) {
              return new ActionResult("Questo cibo non è disponibile nel frigorifero!");
          }
 

@@ -1,1 +1,29 @@
+<<<<<<< Updated upstream
 /.metadata/
+=======
+# Eclipse
+bin/
+.settings/
+.metadata/
+*.tmp
+
+# File specifici di Eclipse
+.classpath
+.project
+
+# VSCode (se vuoi mantenere)
+.vscode/
+.yscode/
+
+*.class*.class
+bin/
+target/
+build/
+target/
+build/
+
+# Per l'UML
+docs/uml/out/
+*.png
+*.svg
+>>>>>>> Stashed changes

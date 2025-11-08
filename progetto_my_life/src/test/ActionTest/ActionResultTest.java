@@ -26,7 +26,7 @@ class ActionResultTest {
         var character = new main.model.character.MainCharacter("Mario");
 
         int sat = character.getSatiety();
-        int hyd = character.getHydration(); 
+        int hyd = character.getHydration();
 
         ActionResult r = new ActionResult("Drink", 0, 10, 0, 0, 5);
         r.applyEffects(character);

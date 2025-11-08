@@ -37,8 +37,6 @@ public class ActionResult {
     }
 
 
-
-    
     // Getters
     public String getMessage() { return message; }
     public int getDeltaSatiety() { return deltaSatiety; }

@@ -50,7 +50,7 @@ public class MainCharacter {
         this.usedItems = new ArrayList<>();
     }
     
-    // GETTERS AND SETTER -------------------------------------------------------------------
+    // GETTERS ---------------------------------------------------------------------------
     public String getName() {return name;}    
     public Outfit getOutfit() { return outfit; }
     public Hair getHair() { return hair;}
@@ -65,6 +65,7 @@ public class MainCharacter {
     
     /**
      * Prints the current state of the MainCharacter stats.
+     * @return
      */
     public String printState() {
         StringBuilder state = new StringBuilder();
@@ -130,6 +131,7 @@ public class MainCharacter {
     /**
      * Creates a progressive growth of xp needed to level up
      * @param level  
+     * @return
      */
     private int computeXpToNext(int level) {
         double inc = Math.pow(Math.max(0, level - 1), 1.2);
@@ -182,7 +184,7 @@ public class MainCharacter {
     /**
      * Verifies if the MainCharacter has active quests with a specific NPC
      * @param npc
-     * @return 
+     * @return
      */
     public boolean hasActiveQuestWithNPC(NPC npc) {
         return ongoingQuests.stream()
@@ -214,14 +216,23 @@ public class MainCharacter {
 
     /**
      * Automatically verifies the completion of every active quest with a specific NPC
-     * @param 
+     * @param npc
+     * @return
      */
-    // TODO
+    public List<Quest> getOngoingQuestsWithNPC(NPC npc) {
+        List<Quest> questsWithNPC = new ArrayList<>();
+        for (Quest q : ongoingQuests) {
+            if (q.getAssignerNPC().equals(npc)) {
+                questsWithNPC.add(q);
+            }
+        }
+        return questsWithNPC;
+    }
 
-    // METHODS TO INTERACT WITH AN Item -------------------------------------------------------
+    // METHODS TO INTERACT WITH ITEMS -------------------------------------------------------
     
     /**
-     * registers the use of an Item
+     * Registers the use of an Item for an ongoing quest
      * @param ItemName
      */
     public void recordItemsUsedForQuests(String ItemName) {
@@ -231,7 +242,7 @@ public class MainCharacter {
     }
     
     /**
-     * Verifies whether an Item has been used or not
+     * Verifies whether an Item has been used or not for a specific quest
      * @param nameItem
      * @param quest
      * @return
@@ -241,17 +252,12 @@ public class MainCharacter {
     }
     
     /**
-     * Performs an action
+     * Applies the result of an action to the MainCharacter stats
      * @param result
      * @param nameItem
      * @return
      */
     public String applyActionResult(ActionResult result, String nameItem) {
-
-        String controlMessage = checkActionUsefulness(result);
-        if (controlMessage != null) {
-            return controlMessage;
-        }
         recordItemsUsedForQuests(nameItem);
         stats.changeEnergy(result.getDeltaEnergy());
         stats.changeHydration(result.getDeltaHydration());
@@ -260,55 +266,38 @@ public class MainCharacter {
         
         return result.getMessage();
     }
-
-    // Registra l'uso di un item
-    public void registerItemUse(String nameItem) {
-        if (!usedItems.contains(nameItem)) {
-            usedItems.add(nameItem);
-        }
-    }
-    
-    // Verifica se un item è state usato
-    public boolean hasUsedItem(String nameItem) {
-        return usedItems.contains(nameItem);
-    }
-    
-    
+   
+    /**
+     * Interacts with a GameItem
+     * @param item
+     * @return
+     */
     public String interact(GameItem item) {
         ActionResult result = item.use(this);
         return applyActionResult(result, item.getName());
     }
     
+    /**
+     * Picks up a GameItem and puts in the inventory
+     * @param item
+     * @return
+     */
     public ActionResult pickUp(GameItem item) {
         return new PickItemAction().execute(this, item);
     }
 
+    /**
+     * Removes a GameItem from the inventory
+     * @param item
+     * @return
+     */
     public ActionResult drop(GameItem item) {
         return new DropItemAction().execute(this, item);
     }
-
-    
-    
-    @Deprecated
-    private String checkActionUsefulness(ActionResult result) {
-    	
-        if (result.getDeltaEnergy() > 0 && stats.getEnergy() >= 100) {
-            return "Sei già pieno di energy, non ha senso riposare ora!";
-        }else if (result.getDeltaSatiety() < 0 && stats.getSatiety() <= 0) {
-            return "Non hai satiety, non ha senso mangiare ora!";
-        }else if (result.getDeltaHydration() < 0 && stats.getHydration() <= 0) {
-            return "Non hai hydration, non ha senso bere ora!";
-        }else if (result.getDeltaHygiene() > 0 && stats.getHygiene() >= 100) {
-            return "Sei già pulitissimo, non serve lavarti!";
-        }else {
-        	return null;
-        }
-    }
-    
-    @Deprecated public int getSatiety() { return stats.getSatiety(); }
-    @Deprecated public int getHydration() { return stats.getHydration(); }
-    @Deprecated public int getEnergy() { return stats.getEnergy(); }
-    @Deprecated public int getHygiene() { return stats.getHygiene(); }
+   
+    /**
+     * Applies the natural decay of stats over time
+     */
     public void stateDecay(){
         stats.decay();
     }

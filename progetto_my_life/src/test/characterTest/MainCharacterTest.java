@@ -1,3 +1,4 @@
+package characterTest;
 
 
 import static org.junit.Assert.*;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class MainCharacterTest {
-/*
+
     private MainCharacter character;
     private MainCharacter characterVegano;
 
@@ -278,7 +279,7 @@ public class MainCharacterTest {
         assertEquals(Integer.valueOf(100), state.get("hydration"));
         assertEquals(Integer.valueOf(100), state.get("energy"));
         assertEquals(Integer.valueOf(100), state.get("hygiene"));
-}*/
+
 }
 
 

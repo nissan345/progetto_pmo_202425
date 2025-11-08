@@ -7,9 +7,7 @@ import java.util.function.IntConsumer;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import main.control.Control;
-import main.giuseppetti.classes.*;
-import main.neri.classes.*;
-import model.character.MainCharacter;
+
 
 public class View {
 	
@@ -182,37 +180,7 @@ public class View {
            
 	}
 	
-	public int mostraOpzioniPersonalizzazione(String message, List<String> opzioni) {
-		if (opzioni == null || opzioni.isEmpty()) {
-            return -1;
-        }
-    	// Converti la lista in array per JOptionPanel
-        String[] opzioniArray = opzioni.toArray(new String[0]);
-        
-        // Mostra il dialog di selezione
-        Object selezione = JOptionPane.showInputDialog(
-            frame,
-            messaggio,
-            "Personalizzazione MainCharacter",
-            JOptionPane.QUESTION_MESSAGE,
-            null,
-            opzioniArray,
-            opzioniArray[0] 
-        );
-        
-        // Se l'utente ha cancellato o chiuso il dialog
-        if (selezione == null) {
-            return -1;
-        }
-        
-        // Trova l'indice dell'opzione selezionata
-        for (int i = 0; i < opzioniArray.length; i++) {
-            if (opzioniArray[i].equals(selezione)) {
-                return i;
-            }
-        }
-        return -1;
-	}
+	
 	
 	public void mostraCasa(){
 		JDialog mappaDialog = new JDialog(frame, "Mappa della Casa", true);
@@ -402,26 +370,6 @@ public class View {
         }
     }
     
-    public <T> Optional<T> mostraDialogSceltaGenerica(String titolo, String message, List<T> opzioni) {
-        if (opzioni == null || opzioni.isEmpty()) return Optional.empty();
-        String[] labels = opzioni.stream().map(Object::toString).toArray(String[]::new);
 
-        int scelta = JOptionPane.showOptionDialog(
-                frame, message, titolo,
-                JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
-                null, labels, labels[0]);
-
-        if (scelta >= 0 && scelta < opzioni.size()) return Optional.of(opzioni.get(scelta));
-        return Optional.empty();
-    }
-    
-   
-    public void mostraVittoria(){
-        SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(frame, "Hai vinto!", "Vittoria", JOptionPane.INFORMATION_MESSAGE));
-    }
-
-    public void mostraSconfitta(){
-        SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(frame, "Hai perso...", "Sconfitta", JOptionPane.INFORMATION_MESSAGE));
-    }
     
 }

@@ -31,7 +31,11 @@ public class MainCharacter {
     private Map<Quest, Set<String>> objectUsedForQuests;
     private List<Quest> ongoingQuests;
 <<<<<<< Updated upstream:progetto_my_life/src/model/character/MainCharacter.java
+<<<<<<< Updated upstream:progetto_my_life/src/model/character/MainCharacter.java
     private List<String> usedObjects; // Keeps track of used objects
+=======
+    private List<GameItem> usedItems; // Keeps track of used Items
+>>>>>>> Stashed changes:progetto_my_life/src/main/model/character/MainCharacter.java
 =======
     private List<GameItem> usedItems; // Keeps track of used Items
 >>>>>>> Stashed changes:progetto_my_life/src/main/model/character/MainCharacter.java
@@ -213,6 +217,7 @@ public class MainCharacter {
     /**
      * Automatically verifies the completion of every active quest with a specific NPC
      * @param 
+<<<<<<< Updated upstream:progetto_my_life/src/model/character/MainCharacter.java
      */
     // TODO
 
@@ -250,6 +255,32 @@ public class MainCharacter {
     public boolean hasUsedObjectForQuest(String nameObject, Quest quest) {
         return objectUsedForQuests.getOrDefault(quest, Set.of()).contains(nameObject);
 =======
+=======
+     */
+    public List<Quest> getOngoingQuestsWithNPC(NPC npc) {
+        List<Quest> questsWithNPC = new ArrayList<>();
+        for (Quest q : ongoingQuests) {
+            if (q.getAssignerNPC().equals(npc)) {
+                questsWithNPC.add(q);
+            }
+        }
+        return questsWithNPC;
+    }
+
+    // METHODS TO INTERACT WITH AN ITEM -------------------------------------------------------
+    
+    /**
+     * registers the use of an Item
+     * @param item
+     */
+    public void recordItemsUsedForQuests(GameItem item) {
+        for (Quest q : ongoingQuests) {
+            ItemUsedForQuests.computeIfAbsent(q, k -> new HashSet<>()).add(item.getName());
+        }
+    }
+    
+    /**
+>>>>>>> Stashed changes:progetto_my_life/src/main/model/character/MainCharacter.java
      * Verifies whether an Item has been used or not
      * @param nameItem
      * @param quest
@@ -257,6 +288,9 @@ public class MainCharacter {
      */
     public boolean hasUsedItemForQuest(GameItem item, Quest quest) {
         return ItemUsedForQuests.getOrDefault(quest, Set.of()).contains(item.getName());
+<<<<<<< Updated upstream:progetto_my_life/src/model/character/MainCharacter.java
+>>>>>>> Stashed changes:progetto_my_life/src/main/model/character/MainCharacter.java
+=======
 >>>>>>> Stashed changes:progetto_my_life/src/main/model/character/MainCharacter.java
     }
     
@@ -266,6 +300,7 @@ public class MainCharacter {
      * @param nameObject
      * @return
      */
+<<<<<<< Updated upstream:progetto_my_life/src/model/character/MainCharacter.java
 <<<<<<< Updated upstream:progetto_my_life/src/model/character/MainCharacter.java
     public String applyActionResult(ActionResult result, String nameObject) {
 
@@ -279,6 +314,11 @@ public class MainCharacter {
 
         recordItemsUsedForQuests(item);
 >>>>>>> Stashed changes:progetto_my_life/src/main/model/character/MainCharacter.java
+=======
+    public String applyActionResult(ActionResult result, GameItem item) {
+
+        recordItemsUsedForQuests(item);
+>>>>>>> Stashed changes:progetto_my_life/src/main/model/character/MainCharacter.java
         stats.changeEnergy(result.getDeltaEnergy());
         stats.changeHydration(result.getDeltaHydration());
         stats.changeHygiene(result.getDeltaHygiene());
@@ -287,6 +327,7 @@ public class MainCharacter {
         return result.getMessage();
     }
 <<<<<<< Updated upstream:progetto_my_life/src/model/character/MainCharacter.java
+<<<<<<< Updated upstream:progetto_my_life/src/model/character/MainCharacter.java
 
     // Registra l'uso di un oggetto
     public void registerObjectUse(String nameObject) {
@@ -294,6 +335,8 @@ public class MainCharacter {
             usedObjects.add(nameObject);
         }
 =======
+=======
+>>>>>>> Stashed changes:progetto_my_life/src/main/model/character/MainCharacter.java
     
     /**
      * Interacts with a GameItem
@@ -302,6 +345,9 @@ public class MainCharacter {
      */
     public boolean hasUsedItem(GameItem item) {
         return usedItems.contains(item);
+<<<<<<< Updated upstream:progetto_my_life/src/model/character/MainCharacter.java
+>>>>>>> Stashed changes:progetto_my_life/src/main/model/character/MainCharacter.java
+=======
 >>>>>>> Stashed changes:progetto_my_life/src/main/model/character/MainCharacter.java
     }
     
@@ -340,9 +386,13 @@ public class MainCharacter {
         stats.decay();
     }
 <<<<<<< Updated upstream:progetto_my_life/src/model/character/MainCharacter.java
+<<<<<<< Updated upstream:progetto_my_life/src/model/character/MainCharacter.java
 }
 
     
+=======
+}
+>>>>>>> Stashed changes:progetto_my_life/src/main/model/character/MainCharacter.java
 =======
 }
 >>>>>>> Stashed changes:progetto_my_life/src/main/model/character/MainCharacter.java

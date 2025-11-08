@@ -4,50 +4,49 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import main.aboufaris.classes.RoomImpl;
-import main.giuseppetti.classes.Fratello;
-import main.neri.classes.OggettoGioco;
+import main.model.character.npc.Brother;
+import main.model.world.gameItem.GameItem;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RoomImplTest {
+public class StanzaImplTest {
 /*
-    private RoomImpl room;
+    private StanzaImpl room;
     private OggettoGenerico divano;
     private OggettoGenerico libreria;
-    private Fratello fratello;
+    private Brother brother;
 
     // Inizializzazione dei soggetti di test ---------------------------------------------------------------------------------
     @Before
     public void setUp() {
-        List<OggettoGioco> oggetti = new ArrayList<>();
+        List<GameItem> oggetti = new ArrayList<>();
         divano = new OggettoGenerico(TipoOggetto.DIVANO);
         libreria = new OggettoGenerico(TipoOggetto.LIBRERIA);
         
         oggetti.add(divano);
-        room = new RoomImpl("Salotto", oggetti);
-        fratello = new Fratello(room);
+        room = new StanzaImpl("Salotto", oggetti);
+        brother = new Brother(room);
     }
 
     // TEST PER GLI NPC DELLA STANZA -------------------------------------------------------------------------------------
     @Test
     public void testGestioneNPC() {
         // Verifica iniziale che non ci siano NPC
-        assertFalse(room.getNpcInRoom().isPresent());
-        assertFalse(room.hasNpc(fratello));
+        assertFalse(room.getNpcInStanza().isPresent());
+        assertFalse(room.hasNpc(brother));
 
         // Aggiungi NPC e verifica presenza
-        room.setNpc(fratello);
-        assertTrue(room.getNpcInRoom().isPresent());
-        assertTrue(room.hasNpc(fratello));
-        assertEquals(fratello, room.getNpcInRoom().get());
+        room.setNpc(brother);
+        assertTrue(room.getNpcInStanza().isPresent());
+        assertTrue(room.hasNpc(brother));
+        assertEquals(brother, room.getNpcInStanza().get());
     }
 
     @Test
     public void testHasNpcConQualsiasiNPC() {
-        Fratello altroFratello = new Fratello(room);
-        room.setNpc(fratello);
+        Brother altroFratello = new Brother(room);
+        room.setNpc(brother);
         
         assertTrue(room.hasNpc(altroFratello));
     }
@@ -56,31 +55,31 @@ public class RoomImplTest {
     @Test
     public void testGestioneOggetti() {
         // Verifica oggetto iniziale
-        assertTrue(room.hasOggettoRoom(divano));
-        assertFalse(room.hasOggettoRoom(libreria));
-        assertEquals(1, room.getOggettiInRoom().size());
+        assertTrue(room.hasOggettoStanza(divano));
+        assertFalse(room.hasOggettoStanza(libreria));
+        assertEquals(1, room.getOggettiInStanza().size());
 
         // Aggiungi secondo oggetto
-        room.addOggettoRoom(libreria);
-        assertTrue(room.hasOggettoRoom(libreria));
-        assertEquals(2, room.getOggettiInRoom().size());
+        room.addOggettoStanza(libreria);
+        assertTrue(room.hasOggettoStanza(libreria));
+        assertEquals(2, room.getOggettiInStanza().size());
 
         // Rimuovi oggetto
-        room.removeOggettoRoom(divano);
-        assertFalse(room.hasOggettoRoom(divano));
-        assertEquals(1, room.getOggettiInRoom().size());
+        room.removeOggettoStanza(divano);
+        assertFalse(room.hasOggettoStanza(divano));
+        assertEquals(1, room.getOggettiInStanza().size());
     }
 
     @Test
-    public void testRoomConVariOggetti() {
+    public void testStanzaConVariOggetti() {
         OggettoGenerico televisione = new OggettoGenerico(TipoOggetto.TELEVISIONE);
         OggettoGenerico stereo = new OggettoGenerico(TipoOggetto.STEREO);
         
-        room.addOggettoRoom(libreria);
-        room.addOggettoRoom(televisione);
-        room.addOggettoRoom(stereo);
+        room.addOggettoStanza(libreria);
+        room.addOggettoStanza(televisione);
+        room.addOggettoStanza(stereo);
         
-        List<OggettoGioco> oggetti = room.getOggettiInRoom();
+        List<GameItem> oggetti = room.getOggettiInStanza();
         assertEquals(4, oggetti.size());
         assertTrue(oggetti.contains(divano));
         assertTrue(oggetti.contains(libreria));
@@ -89,25 +88,25 @@ public class RoomImplTest {
     }
 
     @Test
-    public void testRoomVuota() {
-        List<OggettoGioco> listaVuota = new ArrayList<>();
-        RoomImpl roomVuota = new RoomImpl("Room Vuota", listaVuota);
+    public void testStanzaVuota() {
+        List<GameItem> listaVuota = new ArrayList<>();
+        StanzaImpl stanzaVuota = new StanzaImpl("Room Vuota", listaVuota);
         
-        assertTrue(roomVuota.getOggettiInRoom().isEmpty());
-        assertFalse(roomVuota.getNpcInRoom().isPresent());
+        assertTrue(stanzaVuota.getOggettiInStanza().isEmpty());
+        assertFalse(stanzaVuota.getNpcInStanza().isPresent());
     }
 
     @Test
     public void testInterazioneOggettiReali() {
         // Verifica che gli oggetti reali funzionino correttamente
-        room.addOggettoRoom(libreria);
+        room.addOggettoStanza(libreria);
         
         // Test interazione con oggetto reale
-        main.neri.classes.RisultatoAzione risultato = divano.usa(null);
+        main.neri.classes.ActionResult risultato = divano.usa(null);
         assertNotNull(risultato);
         assertTrue(risultato.getMessaggio().contains("Ti siedi sul divano"));
         
         // Verifica che l'oggetto sia effettivamente nella room
-        assertTrue(room.hasOggettoRoom(libreria));
+        assertTrue(room.hasOggettoStanza(libreria));
     }*/
 }

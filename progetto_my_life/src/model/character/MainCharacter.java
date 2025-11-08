@@ -30,7 +30,11 @@ public class MainCharacter {
 	private Room currentRoom;
     private Map<Quest, Set<String>> objectUsedForQuests;
     private List<Quest> ongoingQuests;
+<<<<<<< Updated upstream:progetto_my_life/src/model/character/MainCharacter.java
     private List<String> usedObjects; // Keeps track of used objects
+=======
+    private List<GameItem> usedItems; // Keeps track of used Items
+>>>>>>> Stashed changes:progetto_my_life/src/main/model/character/MainCharacter.java
  
     // CONSTRUCTOR ------------------------------------------------------------------------
     public MainCharacter(String name, Outfit outfit, Hair hair) {
@@ -212,6 +216,7 @@ public class MainCharacter {
      */
     // TODO
 
+<<<<<<< Updated upstream:progetto_my_life/src/model/character/MainCharacter.java
     // METHODS TO INTERACT WITH AN OBJECT -------------------------------------------------------
     
     /**
@@ -221,10 +226,22 @@ public class MainCharacter {
     public void recordObjectsUsedForQuests(String objectName) {
         for (Quest q : ongoingQuests) {
             objectUsedForQuests.computeIfAbsent(q, k -> new HashSet<>()).add(objectName);
+=======
+    // METHODS TO INTERACT WITH AN ITEM -------------------------------------------------------
+    
+    /**
+     * registers the use of an Item
+     * @param item
+     */
+    public void recordItemsUsedForQuests(GameItem item) {
+        for (Quest q : ongoingQuests) {
+            ItemUsedForQuests.computeIfAbsent(q, k -> new HashSet<>()).add(item.getName());
+>>>>>>> Stashed changes:progetto_my_life/src/main/model/character/MainCharacter.java
         }
     }
     
     /**
+<<<<<<< Updated upstream:progetto_my_life/src/model/character/MainCharacter.java
      * Verifies whether an object has been used or not
      * @param nameObject
      * @param quest
@@ -232,6 +249,15 @@ public class MainCharacter {
      */
     public boolean hasUsedObjectForQuest(String nameObject, Quest quest) {
         return objectUsedForQuests.getOrDefault(quest, Set.of()).contains(nameObject);
+=======
+     * Verifies whether an Item has been used or not
+     * @param nameItem
+     * @param quest
+     * @return
+     */
+    public boolean hasUsedItemForQuest(GameItem item, Quest quest) {
+        return ItemUsedForQuests.getOrDefault(quest, Set.of()).contains(item.getName());
+>>>>>>> Stashed changes:progetto_my_life/src/main/model/character/MainCharacter.java
     }
     
     /**
@@ -240,6 +266,7 @@ public class MainCharacter {
      * @param nameObject
      * @return
      */
+<<<<<<< Updated upstream:progetto_my_life/src/model/character/MainCharacter.java
     public String applyActionResult(ActionResult result, String nameObject) {
 
         String controlMessage = checkActionUsefulness(result);
@@ -247,6 +274,11 @@ public class MainCharacter {
             return controlMessage;
         }
         recordObjectsUsedForQuests(nameObject);
+=======
+    public String applyActionResult(ActionResult result, GameItem item) {
+
+        recordItemsUsedForQuests(item);
+>>>>>>> Stashed changes:progetto_my_life/src/main/model/character/MainCharacter.java
         stats.changeEnergy(result.getDeltaEnergy());
         stats.changeHydration(result.getDeltaHydration());
         stats.changeHygiene(result.getDeltaHygiene());
@@ -254,12 +286,23 @@ public class MainCharacter {
         
         return result.getMessage();
     }
+<<<<<<< Updated upstream:progetto_my_life/src/model/character/MainCharacter.java
 
     // Registra l'uso di un oggetto
     public void registerObjectUse(String nameObject) {
         if (!usedObjects.contains(nameObject)) {
             usedObjects.add(nameObject);
         }
+=======
+    
+    /**
+     * Interacts with a GameItem
+     * @param item
+     * @return
+     */
+    public boolean hasUsedItem(GameItem item) {
+        return usedItems.contains(item);
+>>>>>>> Stashed changes:progetto_my_life/src/main/model/character/MainCharacter.java
     }
     
     // Verifica se un oggetto è state usato
@@ -296,6 +339,10 @@ public class MainCharacter {
     public void stateDecay(){
         stats.decay();
     }
+<<<<<<< Updated upstream:progetto_my_life/src/model/character/MainCharacter.java
 }
 
     
+=======
+}
+>>>>>>> Stashed changes:progetto_my_life/src/main/model/character/MainCharacter.java

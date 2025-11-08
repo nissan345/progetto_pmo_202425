@@ -50,7 +50,7 @@ public class MainCharacter {
         this.usedItems = new ArrayList<>();
     }
     
-    // GETTERS AND SETTER -------------------------------------------------------------------
+    // GETTERS ---------------------------------------------------------------------------
     public String getName() {return name;}    
     public Outfit getOutfit() { return outfit; }
     public Hair getHair() { return hair;}
@@ -65,6 +65,7 @@ public class MainCharacter {
     
     /**
      * Prints the current state of the MainCharacter stats.
+     * @return
      */
     public String printState() {
         StringBuilder state = new StringBuilder();
@@ -105,6 +106,7 @@ public class MainCharacter {
     /**
      * Creates a progressive growth of xp needed to level up
      * @param level  
+     * @return
      */
     private int computeXpToNext(int level) {
         double inc = Math.pow(Math.max(0, level - 1), 1.2);
@@ -157,7 +159,7 @@ public class MainCharacter {
     /**
      * Verifies if the MainCharacter has active quests with a specific NPC
      * @param npc
-     * @return 
+     * @return
      */
     public boolean hasActiveQuestWithNPC(NPC npc) {
         return ongoingQuests.stream()
@@ -189,7 +191,8 @@ public class MainCharacter {
 
     /**
      * Automatically verifies the completion of every active quest with a specific NPC
-     * @param 
+     * @param npc
+     * @return
      */
     public List<Quest> getOngoingQuestsWithNPC(NPC npc) {
         List<Quest> questsWithNPC = new ArrayList<>();
@@ -201,11 +204,11 @@ public class MainCharacter {
         return questsWithNPC;
     }
 
-    // METHODS TO INTERACT WITH AN ITEM -------------------------------------------------------
+    // METHODS TO INTERACT WITH ITEMS -------------------------------------------------------
     
     /**
-     * registers the use of an Item
-     * @param item
+     * Registers the use of an Item for an ongoing quest
+     * @param ItemName
      */
     public void recordItemsUsedForQuests(GameItem item) {
         for (Quest q : ongoingQuests) {
@@ -214,7 +217,7 @@ public class MainCharacter {
     }
     
     /**
-     * Verifies whether an Item has been used or not
+     * Verifies whether an Item has been used or not for a specific quest
      * @param nameItem
      * @param quest
      * @return
@@ -224,7 +227,7 @@ public class MainCharacter {
     }
     
     /**
-     * Performs an action
+     * Applies the result of an action to the MainCharacter stats
      * @param result
      * @param nameItem
      * @return

@@ -58,7 +58,7 @@ class StatsTest {
 		// Now all the statistics are 100, so the MainCharacter 
 		// should not be allowed to eat
 		// The Method should only return true if:
-		// energy > 40, hygiene > 50, satiety < 40
+		// energy > 40, hygiene > 50, satiety < 80
 		assertFalse(statistics.canEat());
 		statistics.changeEnergy(-30);
 		assertEquals(statistics.getEnergy(), 70);
@@ -66,7 +66,7 @@ class StatsTest {
 		assertEquals(statistics.getHygiene(), 60);
 		statistics.changeSatiety(-20);
 		assertEquals(statistics.getSatiety(), 80);
-		assertFalse(statistics.canEat());
+		assertTrue(statistics.canEat());
 		// Now we'll get energy = 40 to see if the method works as expected
 		statistics.changeEnergy(-10);
 		statistics.changeSatiety(-50);

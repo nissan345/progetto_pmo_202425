@@ -219,7 +219,7 @@ class MainCharacterTest {
         assertTrue(bedroom.hasItemRoom(computer));
 
         // First pickup -> Ends up in the inventory
-        character.pickUp(computer);
+        character.pickUpItemAction(computer);
         assertEquals(1, character.getInventory().getUsedSpace());
         assertTrue(character.getInventory().hasItem("Computer"));
 
@@ -228,7 +228,7 @@ class MainCharacterTest {
         assertFalse(bedroom.hasItemRoom(computer));
 
         // Second pickup -> Should be impossible
-        character.pickUp(computer);
+        character.pickUpItemAction(computer);
         assertEquals(1, character.getInventory().getUsedSpace());
         assertTrue(character.getInventory().hasItem("Computer"));
     }
@@ -246,10 +246,10 @@ class MainCharacterTest {
         assertTrue(bedroom.hasItemRoom(phone));
         assertTrue(bedroom.hasItemRoom(book));
 
-        character.pickUp(phone);
+        character.pickUpItemAction(phone);
         bedroom.removeItemRoom(phone);
 
-        character.pickUp(book);
+        character.pickUpItemAction(book);
         bedroom.removeItemRoom(book);
 
         assertEquals(2, character.getInventory().getUsedSpace());
@@ -270,13 +270,13 @@ class MainCharacterTest {
         bedroom.addItemRoom(mug);
         assertTrue(bedroom.hasItemRoom(mug));
 
-        character.pickUp(mug);
+        character.pickUpItemAction(mug);
         bedroom.removeItemRoom(mug);
 
         assertEquals(1, character.getInventory().getUsedSpace());
 
         // Drop -> The item is removed from the inventory
-        character.drop(mug);
+        character.dropItemAction(mug);
         assertEquals(0, character.getInventory().getUsedSpace());
 
         // Adding the item back into the room

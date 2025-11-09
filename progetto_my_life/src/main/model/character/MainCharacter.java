@@ -44,7 +44,7 @@ public class MainCharacter {
         this.currentRoom = null; // There's no room in the beginning
         this.ongoingQuests = new ArrayList<>();
         this.usedItems = new ArrayList<>();
-        this.inventory = new Inventory(10);
+        this.inventory = new Inventory(0);
     }
     
     // GETTERS ---------------------------------------------------------------------------
@@ -244,35 +244,20 @@ public class MainCharacter {
    
     
     /**
-     * Picks up a GameItem and puts in the inventory
-     * @param item
-     * @return
-     */
-    public ActionResult pickUp(GameItem item) {
-        return new PickItemAction().execute(this, item);
-    }
-
-    /**
-     * Removes a GameItem from the inventory
-     * @param item
-     * @return
-     */
-    public ActionResult drop(GameItem item) {
-        return new DropItemAction().execute(this, item);
-    }
-   
-    /**
      * Applies the natural decay of stats over time
      */
     public void stateDecay() {
     	stats.decay();
     }
 
-    public ActionResult PickItemAction(GameItem item) {
+    //raccoglie un oggetto
+    public ActionResult pickUpItemAction(GameItem item) {
     return new PickItemAction().execute(this, item);
 }
 
-public ActionResult DropItemAction(GameItem item) {
+    
+    //rimuove un oggetto
+public ActionResult dropItemAction(GameItem item) {
     return new DropItemAction().execute(this, item);
 }
 

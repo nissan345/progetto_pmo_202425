@@ -12,40 +12,18 @@ import main.model.requirement.Requirement;
  * Base class for all items present in the house.
  */
 public class GameItem{
+	
+	// Variables definition
     protected final String name;
     protected final String description;
     protected final int size;
+    protected final Requirement requirement;
+    protected String room;
     private String message;
-    public String getMessage() {
-		return message;
-	}
-
-	protected String room;
-    private boolean specialInteraction;
     private int deltaSatiety, deltaHydration, deltaEnergy, deltaHygiene;
-    public int getDeltaSatiety() {
-		return deltaSatiety;
-	}
-
-	public int getDeltaHydration() {
-		return deltaHydration;
-	}
-
-	public int getDeltaEnergy() {
-		return deltaEnergy;
-	}
-
-	public int getDeltaHygiene() {
-		return deltaHygiene;
-	}
-
-	protected final Requirement requirement;
-    public Requirement getRequirement() {
-		return requirement;
-	}
-
-	private BiFunction<MainCharacter, GameItem, ActionResult> dynamicUse; 
+	private BiFunction<MainCharacter, GameItem, ActionResult> dynamicUse; // If set, this function will be called to perform the action, instead of use() method
     
+	// CONSTRUCTOR
     public GameItem(Builder builder) {
         this.name = builder.name;
         this.description = builder.description;
@@ -60,11 +38,23 @@ public class GameItem{
         this.requirement = (builder.requirement != null ? builder.requirement : new AlwaysTrueRequirement());
 
     }
+    
+ // Getters
+    public String getName() { return name; }
+    public String getDescription() { return description; }
+    public int getSize() { return size; }
+    public String getRoom() { return room; }
+    public String getMessage() {return message;}
+    public int getDeltaSatiety() {return deltaSatiety;}
+	public int getDeltaHydration() {return deltaHydration;}
+	public int getDeltaEnergy() { return deltaEnergy;}
+	public int getDeltaHygiene() { return deltaHygiene; }
+	public Requirement getRequirement() {return requirement;}
       
     /**
      * Executes the default action associated with this item. 
      * @param character
-     * @return
+     * @return the result of the action
      */
     public ActionResult use(MainCharacter character) {
         if (!requirement.isSatisfiedBy(character)) {
@@ -77,40 +67,49 @@ public class GameItem{
         return new ActionResult(message, deltaSatiety, deltaHydration, deltaEnergy, deltaHygiene);
     }
     
-    // Getters
-    public String getName() { return name; }
-    public String getDescription() { return description; }
-    public int getSize() { return size; }
-    public String getRoom() { return room; }
-   
-    @Override
-    public String toString() {return name + " (" + room + ")";}
-    
-    
-    // Additional methods
+    /**
+     * Checks if the GameItem requires a choice when used. Default implementation returns false. 
+     * If a subclass implements this method, it can override it and return true in case the GameItem 
+     * requires a choice
+     * @return true if item requires choice, false otherwise
+     */
     public boolean requiresChoice() { return false; }
-
+    
+    /**
+     * Shows a list of options that can be made when interacting with GameItem that requires choice
+     * @return list of available options
+     */
     public List<?> availableOptions() {return List.of(); }
+    
+    /**
+     * This is for GameItems that require choice, basic GameItems don't support choices. This method is meant to be overridden 
+     * by GameItems that support a choice.
+     * @param character
+     * @param choice
+     * @return the ActionResult of an item that doesn't support a choice
+     */
 
     public ActionResult useWithChoice(MainCharacter character, FoodType choice) {return new ActionResult("This item doesn't support choices.");}
 
+    
     /**
      * Builder class used to create GameItem instances.
      */
     public static class Builder {
-        public Requirement requirement;
+        
 		// Required fields
         private final String name;
         private final String room;
         private final int size;
+        private Requirement requirement;
         
         // default values of the optional fields
-        private String description = "";
-        private String message = "You use the item.";
         private int deltaSatiety = 0;
         private int deltaHydration = 0;
         private int deltaEnergy = 0;
         private int deltaHygiene = 0;
+        private String description = "";
+        private String message = "You use the item.";
 		private BiFunction<MainCharacter, GameItem, ActionResult> dynamicUse;
         
         // Constructor with required fields

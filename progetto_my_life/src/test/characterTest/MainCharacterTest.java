@@ -11,6 +11,7 @@ import main.model.character.MainCharacter;
 import main.model.character.NPC;
 import main.model.character.Outfit;
 import main.model.character.npc.Mum;
+import main.model.world.House;
 import main.model.world.Room;
 import main.model.world.factory.ItemFactory;
 import main.model.world.gameItem.GameItem;
@@ -24,7 +25,9 @@ class MainCharacterTest {
     private Room kitchen;
     private Room bathroom;
     private Room garden;
+    private Room livingroom;
     private NPC questGiver;
+    private House h;
 
     @BeforeEach
     void setUp() {
@@ -34,11 +37,21 @@ class MainCharacterTest {
         assertNotNull(character.getInventory());
         assertEquals(0, character.getInventory().getCapacity());
 
+        h = new House(); 
         bedroom    = ItemFactory.createBedroom();
         kitchen    = ItemFactory.createKitchen();
         bathroom   = ItemFactory.createBathroom();
         garden     = ItemFactory.createGarden();
-        questGiver = new Mum(kitchen);
+        livingroom = ItemFactory.createLivingRoom();
+
+        
+        h.addRoom(bedroom);
+        h.addRoom(kitchen);
+        h.addRoom(bathroom);
+        h.addRoom(garden);
+        h.addRoom(livingroom);
+        
+        questGiver = new Mum(kitchen, h);
     }
 
 
@@ -175,14 +188,14 @@ class MainCharacterTest {
                 .message("Usi il PC.")
                 .build();
 
-        assertFalse(character.hasUsedItemForQuest(computer, q));
+        assertFalse(character.hasUsedItemForQuest(computer));
 
         character.recordItemsUsedForQuests(computer);
 
-        assertTrue(character.hasUsedItemForQuest(computer, q));
+        assertTrue(character.hasUsedItemForQuest(computer));
 
         GameItem pentola = new GameItem.Builder("Pentola", "Kitchen", 10).build();
-        assertFalse(character.hasUsedItemForQuest(pentola, q));
+        assertFalse(character.hasUsedItemForQuest(pentola));
     }
 
     // Test for CompletionCondition with GameItem
@@ -193,7 +206,7 @@ class MainCharacterTest {
 
         GameItem computer = new GameItem.Builder("Computer", "Bedroom", 20).build();
 
-        CompletionCondition cond = new CompletionCondition(computer, q);
+        CompletionCondition cond = new CompletionCondition(computer);
 
         // Before -> false
         assertFalse(cond.checkCompletion(character));
@@ -219,16 +232,16 @@ class MainCharacterTest {
         assertTrue(bedroom.hasItemRoom(computer));
 
         // First pickup -> Ends up in the inventory
-        character.pickUp(computer);
+        character.pickUpItemAction(computer);
         assertEquals(1, character.getInventory().getUsedSpace());
         assertTrue(character.getInventory().hasItem("Computer"));
 
         // The item is removed from the room
-        bedroom.removeItemRoom(computer);
+
         assertFalse(bedroom.hasItemRoom(computer));
 
         // Second pickup -> Should be impossible
-        character.pickUp(computer);
+        character.pickUpItemAction(computer);
         assertEquals(1, character.getInventory().getUsedSpace());
         assertTrue(character.getInventory().hasItem("Computer"));
     }
@@ -236,6 +249,9 @@ class MainCharacterTest {
     // Test for picking up multiple items
     @Test
     void TestPickUpTwoDifferentItems() {
+    	
+    	character.pickCurrentRoom(bedroom);
+    	
         GameItem phone = new GameItem.Builder("Telefono", "Bedroom", 5)
                 .message("Controlli i messaggi.")
                 .build();
@@ -246,15 +262,15 @@ class MainCharacterTest {
         assertTrue(bedroom.hasItemRoom(phone));
         assertTrue(bedroom.hasItemRoom(book));
 
-        character.pickUp(phone);
-        bedroom.removeItemRoom(phone);
+        character.pickUpItemAction(phone);
 
-        character.pickUp(book);
-        bedroom.removeItemRoom(book);
+
+        character.pickUpItemAction(book);
+
 
         assertEquals(2, character.getInventory().getUsedSpace());
-        assertTrue(character.getInventory().hasItem("Phone"));
-        assertTrue(character.getInventory().hasItem("Book"));
+        assertTrue(character.getInventory().hasItem("Telefono"));
+        assertTrue(character.getInventory().hasItem("Libro"));
 
         assertFalse(bedroom.hasItemRoom(phone));
         assertFalse(bedroom.hasItemRoom(book));
@@ -270,13 +286,13 @@ class MainCharacterTest {
         bedroom.addItemRoom(mug);
         assertTrue(bedroom.hasItemRoom(mug));
 
-        character.pickUp(mug);
+        character.pickUpItemAction(mug);
         bedroom.removeItemRoom(mug);
 
         assertEquals(1, character.getInventory().getUsedSpace());
 
         // Drop -> The item is removed from the inventory
-        character.drop(mug);
+        character.dropItemAction(mug);
         assertEquals(0, character.getInventory().getUsedSpace());
 
         // Adding the item back into the room

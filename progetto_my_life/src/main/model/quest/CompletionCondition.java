@@ -6,14 +6,12 @@ import main.model.world.gameItem.GameItem;
 public class CompletionCondition {
 	
 	private GameItem item;
-	private Quest quest;
 	    
-	public CompletionCondition(GameItem item, Quest quest) {
+	public CompletionCondition(GameItem item) {
 		this.item = item;
-		this.quest = quest;
 	}
 	
 	public boolean checkCompletion(MainCharacter character) {
-		return character.hasUsedItemForQuest(item,quest);
+		return character.hasUsedItemForQuest(item);
 	}
 }

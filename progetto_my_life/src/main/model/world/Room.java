@@ -11,7 +11,7 @@ public class Room {
 
     private String roomName;
     private Optional<NPC> npcInRoom;               // Indica gli oggetti presenti nella room
-    private final List<GameItem> itemsInRoom;  // Indica gli NPC presenti nella room 
+    private final List<GameItem> itemsInRoom;      // Indica gli NPC presenti nella room 
     private Requirement entryRequirement; 
     public Room(String name, List<GameItem> items, Requirement requirement){
         this.roomName = name; 

@@ -44,7 +44,7 @@ public class MainCharacter {
         this.currentRoom = null; // There's no room in the beginning
         this.ongoingQuests = new ArrayList<>();
         this.usedItems = new ArrayList<>();
-        this.inventory = new Inventory(0);
+        this.inventory = new Inventory(30);
     }
     
     // GETTERS ---------------------------------------------------------------------------

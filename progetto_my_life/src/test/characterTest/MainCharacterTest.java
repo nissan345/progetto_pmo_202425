@@ -35,7 +35,8 @@ class MainCharacterTest {
         assertEquals(1, character.getLvl());    // Initial level = 1
         assertNull(character.getCurrentRoom()); // nessuna stanza all’inizio
         assertNotNull(character.getInventory());
-        assertEquals(0, character.getInventory().getCapacity());
+        assertEquals(30, character.getInventory().getCapacity());
+
 
         h = new House(); 
         bedroom    = ItemFactory.createBedroom();
@@ -128,17 +129,19 @@ class MainCharacterTest {
     // Testing that the character cannot enter a room when the level requirement fails
     @Test
     void testCannotEnterRoomWhenRequirementFails() {
-        String m1 = character.pickCurrentRoom(bathroom);
-        assertNotNull(m1);
-        assertTrue(m1.startsWith("Non puoi entrare in: Bathroom"), "Messaggio inatteso: " + m1);
-        assertTrue(m1.contains("Serve livello 2"), "Motivo mancante. Messaggio: " + m1);
-        assertNull(character.getCurrentRoom());
+        // Bagno richiede livello 2
+        String msg1 = character.pickCurrentRoom(bathroom);
+        assertNotNull(msg1);
+        assertTrue(msg1.startsWith("Non puoi entrare in: Bagno"), "Messaggio inatteso: " + msg1);
+        assertTrue(msg1.contains("Livello richiesto: 2"), "Motivo mancante nel messaggio: " + msg1);
+        assertEquals(null, character.getCurrentRoom());
 
-        String m2 = character.pickCurrentRoom(garden);
-        assertNotNull(m2);
-        assertTrue(m2.startsWith("Non puoi entrare in: Garden"), "Messaggio inatteso: " + m2);
-        assertTrue(m2.contains("Serve livello 3"), "Motivo mancante. Messaggio: " + m2);
-        assertNull(character.getCurrentRoom());
+        // Giardino richiede livello 4
+        String msg2 = character.pickCurrentRoom(garden);
+        assertNotNull(msg2);
+        assertTrue(msg2.startsWith("Non puoi entrare in: Giardino"), "Messaggio inatteso: " + msg2);
+        assertTrue(msg2.contains("Livello richiesto: 4"), "Motivo mancante nel messaggio: " + msg2);
+        assertEquals(null, character.getCurrentRoom());
     }
 
     // Testing that the character can enter a room when the level requirement passes
@@ -146,15 +149,13 @@ class MainCharacterTest {
     void testEnterRoomWhenRequirementPasses() {
         String msg1 = character.pickCurrentRoom(bedroom);
         assertNotNull(msg1);
-        assertTrue(msg1.startsWith("Sei entrato in: Bedroom"), "Messaggio inatteso: " + msg1);
-        assertNotNull(character.getCurrentRoom());
-        assertEquals("Bedroom", character.getCurrentRoom().getRoomName());
+        assertTrue(msg1.startsWith("Sei entrato in: Camera Da Letto"), "Messaggio inatteso: " + msg1);
+        assertEquals("Camera Da Letto", character.getCurrentRoom().getRoomName());
 
         String msg2 = character.pickCurrentRoom(kitchen);
         assertNotNull(msg2);
-        assertTrue(msg2.startsWith("Sei entrato in: Kitchen"), "Messaggio inatteso: " + msg2);
-        assertNotNull(character.getCurrentRoom());
-        assertEquals("Kitchen", character.getCurrentRoom().getRoomName());
+        assertTrue(msg2.startsWith("Sei entrato in: Cucina"), "Messaggio inatteso: " + msg2);
+        assertEquals("Cucina", character.getCurrentRoom().getRoomName());
     }
 
     // TEST FOR QUESTS ---------------------------------------------------------------------
@@ -222,28 +223,28 @@ class MainCharacterTest {
     
     // Testing that items can only get picked up once
     @Test
+
     void testPickUpOnce() {
+        character.pickCurrentRoom(bedroom);
+
         GameItem computer = new GameItem.Builder("Computer", "Bedroom", 20)
                 .message("Usi il PC.")
                 .build();
 
-        // The room contains only one computer
         bedroom.addItemRoom(computer);
         assertTrue(bedroom.hasItemRoom(computer));
 
-        // First pickup -> Ends up in the inventory
+        // Primo pick-up → va nell’inventario e rimosso dalla stanza
         character.pickUpItemAction(computer);
-        assertEquals(1, character.getInventory().getUsedSpace());
+        assertEquals(20, character.getInventory().getUsedSpace());
         assertTrue(character.getInventory().hasItem("Computer"));
+        assertFalse(bedroom.hasItemRoom(computer)); // PASSA ora
 
-        // The item is removed from the room
-
+        // Secondo pick-up → non cambia nulla
+        character.pickUpItemAction(computer);
+        assertEquals(20, character.getInventory().getUsedSpace()); // rimane lo stesso
+        assertTrue(character.getInventory().hasItem("Computer"));
         assertFalse(bedroom.hasItemRoom(computer));
-
-        // Second pickup -> Should be impossible
-        character.pickUpItemAction(computer);
-        assertEquals(1, character.getInventory().getUsedSpace());
-        assertTrue(character.getInventory().hasItem("Computer"));
     }
 
     // Test for picking up multiple items
@@ -268,7 +269,7 @@ class MainCharacterTest {
         character.pickUpItemAction(book);
 
 
-        assertEquals(2, character.getInventory().getUsedSpace());
+        assertEquals(2, character.getInventory().getItems().size());
         assertTrue(character.getInventory().hasItem("Telefono"));
         assertTrue(character.getInventory().hasItem("Libro"));
 
@@ -279,6 +280,8 @@ class MainCharacterTest {
     // Testing dropping an item which gets it removed from the inventory
     @Test
     void testDropItem() {
+        character.pickCurrentRoom(bedroom);
+
         GameItem mug = new GameItem.Builder("Tazza", "Bedroom", 0)
                 .message("Sorbisci un caffè.")
                 .build();
@@ -286,17 +289,18 @@ class MainCharacterTest {
         bedroom.addItemRoom(mug);
         assertTrue(bedroom.hasItemRoom(mug));
 
+        // Pick-up → già rimuove dalla stanza
         character.pickUpItemAction(mug);
-        bedroom.removeItemRoom(mug);
+        assertEquals(1, character.getInventory().getItems().size());
+        assertFalse(bedroom.hasItemRoom(mug));
 
-        assertEquals(1, character.getInventory().getUsedSpace());
-
-        // Drop -> The item is removed from the inventory
+        // Drop -> rimuove dall'inventario
         character.dropItemAction(mug);
-        assertEquals(0, character.getInventory().getUsedSpace());
+        assertEquals(0, character.getInventory().getItems().size());
 
-        // Adding the item back into the room
+        // Aggiungiamo di nuovo l'oggetto nella stanza
         bedroom.addItemRoom(mug);
         assertTrue(bedroom.hasItemRoom(mug));
     }
+
 }

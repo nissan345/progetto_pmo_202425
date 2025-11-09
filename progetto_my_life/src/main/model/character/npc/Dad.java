@@ -60,7 +60,7 @@ public class Dad extends NPC {
                 this, 
                 15, 
                 20,
-                Collections.singletonList(new CompletionCondition(annaffiatoio))
+                Collections.singletonList(createCondition(annaffiatoio))
             );
             this.addQuest(plantsQuest);
         }

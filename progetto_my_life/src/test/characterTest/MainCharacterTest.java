@@ -11,6 +11,7 @@ import main.model.character.MainCharacter;
 import main.model.character.NPC;
 import main.model.character.Outfit;
 import main.model.character.npc.Mum;
+import main.model.world.House;
 import main.model.world.Room;
 import main.model.world.factory.ItemFactory;
 import main.model.world.gameItem.GameItem;
@@ -25,6 +26,7 @@ class MainCharacterTest {
     private Room bathroom;
     private Room garden;
     private NPC questGiver;
+    private House h;
 
     @BeforeEach
     void setUp() {
@@ -34,11 +36,12 @@ class MainCharacterTest {
         assertNotNull(character.getInventory());
         assertEquals(0, character.getInventory().getCapacity());
 
+        h = new House(); 
         bedroom    = ItemFactory.createBedroom();
         kitchen    = ItemFactory.createKitchen();
         bathroom   = ItemFactory.createBathroom();
         garden     = ItemFactory.createGarden();
-        questGiver = new Mum(kitchen, null); // House non usata in questo test
+        questGiver = new Mum(kitchen, h);
     }
 
 

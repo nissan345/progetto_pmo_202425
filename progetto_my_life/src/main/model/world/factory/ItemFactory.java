@@ -7,36 +7,48 @@ import main.model.world.Room;
 import main.model.world.gameItem.GameItem;
 import main.model.world.gameItem.Refrigerator;
 
+/**
+ * Factory class to create Rooms with their interactive items.
+ */
 
 public class ItemFactory { 
 	
     private static final int NO_EFFECT = 0;
 
+    // Energy threshold for dynamic calculations
 	private static final int ENERGY_LOW = 40;
 	private static final int ENERGY_MID = 80;
 	
+	// Hygiene threshold for dynamic calculations
 	private static final int HYGIENE_LOW = 40;
 	private static final int HYGIENE_MID = 80;
 	
+	// Positive effect values
 	private static final int HIGH_GAIN = 30;
 	private static final int MID_GAIN = 20;
 	private static final int LOW_GAIN = 10;
 
+	// Negative effect values
     private static final int LOW_COST = -5;
 	private static final int MID_COST = -10;
 	private static final int HIGH_COST = -20;
 	
+	// Duration of dynamic actions values
 	private static final int LOW_DURATION = 2;
 	private static final int MID_DURATION = 5;
 	private static final int HIGH_DURATION = 10;
 
+	// Size of Item values
 	private static final int BIG_SIZE = 80;
 	private static final int MID_SIZE = 40;
 	private static final int NORMAL_SIZE = 20;
 	private static final int SMALL_SIZE = 10;
 	
    
-    // Bedroom
+    /**
+     * Creates Bedroom with interactive objects that offer resting and entertainment
+     * @return Bedroom with Level Requirement 1
+     */
     public static Room createBedroom() {
         List<GameItem> items = new ArrayList<>(List.of(new GameItem.Builder("Letto", "Camera da Letto", BIG_SIZE)
                     .message("Ti sdrai e ti riposi")
@@ -73,7 +85,10 @@ public class ItemFactory {
         return new Room("Camera Da Letto", items, new LevelRequirement(1));
     }
     
-    // Kitchen
+    /**
+     * Creates Kitchen with interactive objects that allow the character to clean and eat
+     * @return Kitchen with levelRequirement 1
+     */
     public static Room createKitchen() {
         List<GameItem> items = new ArrayList<>(List.of(new GameItem.Builder("Fornelli", "Cucina", BIG_SIZE)
                         .message("Cuoci un buon pasto.")
@@ -104,7 +119,10 @@ public class ItemFactory {
         return new Room("Cucina", items, new LevelRequirement(1));
     }
    
-    // Bagno
+    /**
+     * Creates Bathroom with interactive Items that boost hygiene
+     * @return Bathroom with levelRequirement 2
+     */
     public static Room createBathroom() {
         List<GameItem> items = new ArrayList<>(List.of(new GameItem.Builder("Doccia", "Bagno", BIG_SIZE)
                         .message("Fai una doccia rinfrescante.")
@@ -132,7 +150,10 @@ public class ItemFactory {
         return new Room("Bagno", items, new LevelRequirement(2));
     }
     
-    // Salotto
+    /**
+     * Creates Living room with interactive Items that entertain and boost energy
+     * @return Living room with Level Requirement 2
+     */
     public static Room createLivingRoom() {
         List<GameItem> items = new ArrayList<>(List.of(new GameItem.Builder("Televisione", "Salotto", MID_SIZE)
                         .message("Guardi la tv, rilassandoti")
@@ -172,7 +193,10 @@ public class ItemFactory {
     }
     
     
-    // Sgabuzzino
+    /**
+     * Creates storage room that has a vacuum cleaner, to clean
+     * @return storage room with levelRequirement 3
+     */
     public static Room createStorageRoom() {
         List<GameItem> items = new ArrayList<>(List.of(new GameItem.Builder("Aspirapolvere", "Sgabuzzino", MID_SIZE)
                     .message("Pulisci la stanza con un aspirapolvere.")
@@ -182,7 +206,10 @@ public class ItemFactory {
         return new Room("Sgabuzzino", items, new LevelRequirement(3));
     }
             
-    // Giardino
+    /**
+     * Garden with interactive items to help in entertainment
+     * @return garden with levelRequirement 4
+     */
     public static Room createGarden() {
         List<GameItem> items = new ArrayList<>(List.of(new GameItem.Builder("Annaffiatoio", "Giardino", SMALL_SIZE)
                     .message("Annaffi le piante.")

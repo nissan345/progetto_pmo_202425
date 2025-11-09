@@ -58,7 +58,7 @@ public class Mum extends NPC {
                 this,
                 15,
                 20, 
-                Collections.singletonList(new CompletionCondition(album))
+                Collections.singletonList(createCondition(album))
             );
             this.addQuest(albumQuest);
         }

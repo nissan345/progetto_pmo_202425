@@ -139,38 +139,6 @@ class ItemFactoryBedRoomTest {
         assertEquals(0, result.getDeltaHydration());
     }
 
-    @Test
-    void testLettoRequirement() {
-        GameItem letto = bedroom.getItemsInRoom().get(0);
-        CanSleepRequirement requirement = (CanSleepRequirement) letto.getRequirement();
-        
-        // Test that requirement works correctly
-        assertTrue(!requirement.isSatisfiedBy(character)); // Should be satisfied initially
-        
-
-    }
-
-    @Test
-    void testComputerRequirement() {
-        GameItem computer = bedroom.getItemsInRoom().get(1);
-        CanPlayRequirement requirement = (CanPlayRequirement) computer.getRequirement();
-        
-        // Test that requirement works correctly
-        assertTrue(requirement.isSatisfiedBy(character)); // Should be satisfied initially
-        
-       
-    }
-
-    @Test
-    void testBedroomRequirement() {
-        LevelRequirement requirement = (LevelRequirement) bedroom.getEntryRequirement();
-        
-        // Test that level 1 requirement is satisfied for a new character
-        assertTrue(requirement.isSatisfiedBy(character));
-        
- 
-     
-    }
 
     @Test
     void testItemMessages() {

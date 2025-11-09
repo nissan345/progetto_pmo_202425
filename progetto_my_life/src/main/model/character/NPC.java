@@ -1,10 +1,12 @@
 package main.model.character;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.function.BiPredicate;
 import main.model.quest.Quest;
+import main.model.quest.CompletionCondition;
 import main.model.world.Room;
+import main.model.world.House;
+import main.model.world.gameItem.GameItem;
 
 public abstract class NPC {
     private final String relationship;
@@ -12,102 +14,36 @@ public abstract class NPC {
     private int affinity;
     private List<Quest> availableQuests;
     private BiPredicate<MainCharacter, Room> triggerCondition;
+    private final House house;  // Reference to the house so that he can see the items in other rooms
 
-
-    public NPC(final String relationship, final Room s) {
+    public NPC(final String relationship, final Room s, House house) {
         this.relationship = relationship;
         this.position = s; 
         this.affinity = 0;
         this.availableQuests = new ArrayList<>();
-
-       // this.options = new ArrayList<>();
-       this.triggerCondition = (character, room) -> false; 
+        this.triggerCondition = (character, room) -> false;
+        this.house = house; 
         initializeQuests();
     }
 
     // ABSTRACT METHODS --------------------------------------------------------------
     
-    /**
-     * Adds a quest to the NPC's available quests
-     */  
     public abstract String getInitialDialogue();
-    
-    /**
-     * Dialogue when NPC assigns a quest
-     * @param quest 
-     */  
     public abstract String getQuestAssignedDialogue(Quest quest);
-    
-    /**
-     * Dialogue when quest is still in progress
-     * @param quest 
-     */  
     public abstract String getQuestInProgressDialogue(Quest quest);
-    
-    /**
-     * Dialogue when quest is completed
-     * @param quest 
-     */  
     public abstract String getQuestCompletionDialogue(Quest quest);
-    
-    /**
-     * Quest initialization method
-     */ 
     protected abstract void initializeQuests();
     
     // CONCRETE METHODS ------------------------------------------------------------ 
     
-    // DA ELIMINARE SE AUTOMATIZZIAMO LE QUEST
-    // Handles character-NPC interaction
-    /*
-     * 
-    public List<InteractionOption> getAvailableOptions(MainCharacter character) {
-        this.options.clear();
-
-        Optional<Quest> completedQuest = character.getCompletedQuestWithNPC(this);
-        Optional<Quest> activeQuest = character.getActiveQuestWithNPC(this);
-
-        if (completedQuest.isPresent()) {
-            this.options.add(InteractionOption.TURN_IN_QUEST);
-
-        } else if (activeQuest.isPresent()) {
-            this.options.add(InteractionOption.QUEST_IN_PROGRESS);
-
-        } else if (!availableQuests.isEmpty()) {
-            this.options.add(InteractionOption.REQUEST_QUEST);
-        }
-
-        this.options.add(InteractionOption.EXIT);
-        return this.options;
-    }
-    
-    public Quest assignQuest(MainCharacter character) {
-    	if(character.hasActiveQuestWithNPC(this) || availableQuests.isEmpty()) {
-    		return null;
-    	}
-    	Quest quest = availableQuests.remove(0);
-    	character.addQuest(quest);
-    	return quest;
-    }
-
-    public List<String> turnInQuest(MainCharacter character) {
-        List<String> messages = new ArrayList<>();
-        Optional<Quest> completedQuest = character.getCompletedQuestWithNPC(this);
-
-        if (completedQuest.isEmpty()) {
-            messages.add("Nessuna quest completata con " + this.relationship);
-            return messages;
-        }
-        
-        Quest quest = completedQuest.get();
-        increaseAffinity(quest.getAffinityPoints());
-        character.removeQuest(quest);
-        
-        messages.add("Quest '" + quest.getName() + "' completata!");
-        messages.add("affinità con " + this.relationship + ": " + this.affinity + "/100");
-        return messages;
-    }
+    /**
+     * Creates a single completion condition for an item
+     * @param item the item required for quest completion
+     * @return CompletionCondition object
      */
+    protected CompletionCondition createCondition(GameItem item) {
+        return new CompletionCondition(item);
+    }
 
     /**
      * Adds a quest to the NPC's available quests
@@ -118,14 +54,13 @@ public abstract class NPC {
     }
 
     /**
-     * Sets the trigger condition for offering quests
+     * Sets the trigger condition for the NPC
      * @param condition 
+     * @return
      */
     public BiPredicate<MainCharacter, Room> getTriggerCondition() {
         return this.triggerCondition;
     }
-
-    //  QUEST COMPLETION REWARD METHOD --------------------------------------------------------
 
     /**
      * Increases affinity between character and NPC (0-100 range)
@@ -137,19 +72,22 @@ public abstract class NPC {
 
     // GETTERS ---------------------------------------------------------------------
     public String getRelationship() { 
-    	return this.relationship; 
+        return this.relationship; 
     }
     
     public int getAffinity() { 
-    	return this.affinity; 
+        return this.affinity; 
     }
     
     public Room getPosition() { 
-    	return this.position; 
+        return this.position; 
+    }
+
+    public House getHouse() {
+        return this.house;
     }
 
     public List<Quest> getAvailableQuests() { 
         return new ArrayList<>(this.availableQuests); 
     }
-    
 }

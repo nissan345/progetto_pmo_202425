@@ -1,15 +1,17 @@
 package main.model.character.npc;
 
-import java.util.Arrays;
+import java.util.Collections;
+
 import main.model.character.NPC;
-import main.model.quest.CompletionCondition;
 import main.model.quest.Quest;
-import main.model.world.Room; 
+import main.model.world.Room;
+import main.model.world.House;
+import main.model.world.gameItem.GameItem; 
 
 public class Brother extends NPC {
     
-    public Brother(Room s) {
-        super("Brother", s);
+    public Brother(Room s, House house) {
+        super("Brother", s, house);
     }
     
     @Override
@@ -39,13 +41,22 @@ public class Brother extends NPC {
 
     @Override
     protected void initializeQuests() {
-        Quest kitchenQuest = new Quest("Cibo per tutti", 
-                				   "Dei nostri amici vengono a casa, potresti prepare qualcosa per tutti mentre io pulisco la mia camera", 
-                                   this, 
-                                   20,
-                                   25, 
-                                   Arrays.asList(new CompletionCondition("Fornelli"))
-                            );
-        this.addQuest(kitchenQuest);
+        Room kitchen = this.getHouse().getRoom("Cucina");
+        GameItem fornelli = kitchen.getItemsInRoom().stream()
+            .filter(item -> item.getName().equals("Fornelli"))
+            .findFirst()
+            .orElse(null);
+        
+        // Crea una lista con una sola condizione usando il metodo helper
+        Quest kitchenQuest = new Quest(
+            "Cibo per tutti", 
+            "Dei nostri amici vengono a casa, potresti prepare qualcosa per tutti mentre io pulisco la mia camera", 
+            this, 
+            20, 
+            25, 
+            Collections.singletonList(createCondition(fornelli))
+        );
+        
+        addQuest(kitchenQuest);
     }
 }

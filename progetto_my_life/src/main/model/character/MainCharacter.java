@@ -217,13 +217,15 @@ public class MainCharacter {
     }
     
     /**
-     * Verifies whether an Item has been used or not for a specific quest
-     * @param nameItem
-     * @param quest
+     * Verifies whether an Item has been used or not for any ongoing quest
+     * @param item
      * @return
      */
-    public boolean hasUsedItemForQuest(GameItem item, Quest quest) {
-        return ItemUsedForQuests.getOrDefault(quest, Set.of()).contains(item.getName());
+    public boolean hasUsedItemForQuest(GameItem item) {
+        return ongoingQuests.stream()
+            .anyMatch(quest -> 
+                ItemUsedForQuests.getOrDefault(quest, Set.of()).contains(item.getName())
+            );
     }
     
     /**

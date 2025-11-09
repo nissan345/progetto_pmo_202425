@@ -57,14 +57,17 @@ public class Room {
     /**
      * Setter of NPC, sets an NPC in a room
      * @param n
-     * @throws IllegalArgumentException if the npc is null
+     * @throws IllegalArgumentException if the npc is is in another room already
      */
     public void setNpc(NPC n) {
-    	if(n==null) {
-    		throw new IllegalArgumentException("Npc cannot be null!");
-    	}
+        if (n.getPosition() != null && n.getPosition() != this) {
+            throw new IllegalStateException(
+                "NPC " + n.getRelationship() + "  is already in another room " + 
+                n.getPosition().getRoomName() + ". Cannot be duplicated into: " + this.roomName
+            );
+        }
         npcInRoom = Optional.of(n);
-    };
+    }
 
     /**
      * Adds an item in the room

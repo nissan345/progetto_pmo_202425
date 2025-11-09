@@ -28,7 +28,7 @@ class PickItemActionTest {
         character.pickCurrentRoom(room);
 
         pickAction = new PickItemAction();
-        item = new GameItem.Builder("Apple", "TestRoom", 2).build();
+        item = new GameItem.Builder("Mela", "TestRoom", 2).build();
     }
 
     @Test
@@ -37,8 +37,8 @@ class PickItemActionTest {
 
         ActionResult result = pickAction.execute(character, item);
 
-        assertEquals("Hai raccolto Apple!", result.getMessage());
-        assertTrue(character.getInventory().hasItem("Apple"));
+        assertEquals("Hai raccolto Mela!", result.getMessage());
+        assertTrue(character.getInventory().hasItem("Mela"));
         assertFalse(room.hasItemRoom(item));
     }
 
@@ -47,7 +47,7 @@ class PickItemActionTest {
         ActionResult result = pickAction.execute(character, item);
 
         assertEquals("L'oggetto non è presente nella stanza!", result.getMessage());
-        assertFalse(character.getInventory().hasItem("Apple"));
+        assertFalse(character.getInventory().hasItem("Mela"));
     }
 
     @Test
@@ -55,13 +55,13 @@ class PickItemActionTest {
         room.addItemRoom(item);
         // riempiamo l'inventario oltre la capacità
         for (int i = 0; i < 10; i++) {
-            character.getInventory().addItem(new GameItem.Builder("Item" + i, "TestRoom", 1).build());
+            character.getInventory().addItem(new GameItem.Builder("Oggetto" + i, "TestRoom", 1).build());
         }
 
         ActionResult result = pickAction.execute(character, item);
 
-        assertEquals("Inventario pieno! Non puoi raccogliere Apple", result.getMessage());
+        assertEquals("Inventario pieno! Non puoi raccogliere Mela", result.getMessage());
         assertTrue(room.hasItemRoom(item));
-        assertFalse(character.getInventory().hasItem("Apple"));
+        assertFalse(character.getInventory().hasItem("Mela"));
     }
 }

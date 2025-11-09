@@ -35,7 +35,7 @@ class DropItemActionTest {
 
         dropAction = new DropItemAction();
 
-        item = new GameItem.Builder("Apple", "TestRoom", 2).build();
+        item = new GameItem.Builder("Mela", "TestRoom", 2).build();
     }
 
     @Test
@@ -44,8 +44,8 @@ class DropItemActionTest {
 
         ActionResult result = dropAction.execute(character, item);
 
-        assertEquals("Hai lasciato Apple nella stanza.", result.getMessage());
-        assertFalse(character.getInventory().hasItem("Apple"));
+        assertEquals("Hai lasciato Mela nella stanza.", result.getMessage());
+        assertFalse(character.getInventory().hasItem("Mela"));
         assertTrue(room.hasItemRoom(item));
     }
 
@@ -53,7 +53,7 @@ class DropItemActionTest {
     void testDropItemNotInInventory() {
         ActionResult result = dropAction.execute(character, item);
 
-        assertEquals("Non hai Apple nell'inventario!", result.getMessage());
+        assertEquals("Non hai Mela nell'inventario!", result.getMessage());
         assertFalse(room.hasItemRoom(item));
     }
 }

@@ -16,9 +16,9 @@ class ActionResultTest {
 
     @Test
     void testCostruttoreConSoloMessaggio() {
-        ActionResult result = new ActionResult("Test message");
+        ActionResult result = new ActionResult("Test messaggio");
 
-        assertEquals("Test message", result.getMessage());
+        assertEquals("Test messaggio", result.getMessage());
         assertEquals(0, result.getDeltaSatiety());
         assertEquals(0, result.getDeltaHydration());
         assertEquals(0, result.getDeltaEnergy());
@@ -40,9 +40,9 @@ class ActionResultTest {
 
     @Test
     void testCostruttoreCompletoConDurataPersonalizzata() {
-        ActionResult result = new ActionResult("Long action", 1, 2, 3, 4, 12);
+        ActionResult result = new ActionResult("azione lunga", 1, 2, 3, 4, 12);
 
-        assertEquals("Long action", result.getMessage());
+        assertEquals("azione lunga", result.getMessage());
         assertEquals(1, result.getDeltaSatiety());
         assertEquals(2, result.getDeltaHydration());
         assertEquals(3, result.getDeltaEnergy());
@@ -56,7 +56,7 @@ class ActionResultTest {
         ActionResult result = new ActionResult(messages);
 
         assertEquals(messages, result.getMessages());
-        assertNull(result.getMessage(), "Il campo message dovrebbe essere null quando si usa la lista di messaggi");
+        assertNull(result.getMessage(), "Il campo messaggio dovrebbe essere null quando si usa la lista di messaggi");
         assertEquals(5, result.getActionDuration()); // durata default
     }
 
@@ -68,7 +68,7 @@ class ActionResultTest {
 
     @Test
     void testCustomActionDurationQuandoImpostata() {
-        ActionResult result = new ActionResult("Custom", 0, 0, 0, 0, 8);
+        ActionResult result = new ActionResult("Personalizzata", 0, 0, 0, 0, 8);
         assertEquals(8, result.getActionDuration());
     }
 }

@@ -18,67 +18,67 @@ class InventoryTest {
 
     @Test
     void testAddItemSuccess() {
-        GameItem apple = new GameItem.Builder("Apple", "Kitchen", 2).build();
+        GameItem apple = new GameItem.Builder("Mela", "Cucina", 2).build();
         boolean added = inventory.addItem(apple);
 
         assertTrue(added);
         assertEquals(2, inventory.getUsedSpace());
-        assertTrue(inventory.hasItem("Apple"));
+        assertTrue(inventory.hasItem("Mela"));
         assertEquals(8, inventory.getRemainingCapacity());
     }
 
     @Test
     void testAddItemFailDueToCapacity() {
-        GameItem bigBox = new GameItem.Builder("Box", "Storage", 15).build();
+        GameItem bigBox = new GameItem.Builder("Scatola", "Sgabuzzino", 15).build();
         boolean added = inventory.addItem(bigBox);
 
         assertFalse(added);
         assertEquals(0, inventory.getUsedSpace());
-        assertFalse(inventory.hasItem("Box"));
+        assertFalse(inventory.hasItem("Scatola"));
     }
 
     @Test
     void testRemoveItemSuccess() {
-        GameItem apple = new GameItem.Builder("Apple", "Kitchen", 2).build();
+        GameItem apple = new GameItem.Builder("Mela", "Cucina", 2).build();
         inventory.addItem(apple);
 
-        Optional<GameItem> removed = inventory.removeItem("Apple");
+        Optional<GameItem> removed = inventory.removeItem("Mela");
 
         assertTrue(removed.isPresent());
-        assertEquals("Apple", removed.get().getName());
-        assertFalse(inventory.hasItem("Apple"));
+        assertEquals("Mela", removed.get().getName());
+        assertFalse(inventory.hasItem("Mela"));
         assertEquals(0, inventory.getUsedSpace());
     }
 
     @Test
     void testRemoveItemNotFound() {
-        Optional<GameItem> removed = inventory.removeItem("Ghost");
+        Optional<GameItem> removed = inventory.removeItem("Arancia");
         assertFalse(removed.isPresent());
     }
 
     @Test
     void testHasItem() {
-        GameItem bread = new GameItem.Builder("Bread", "Kitchen", 3).build();
+        GameItem bread = new GameItem.Builder("Pane", "Cucina", 3).build();
         inventory.addItem(bread);
 
-        assertTrue(inventory.hasItem("Bread"));
-        assertFalse(inventory.hasItem("Milk"));
+        assertTrue(inventory.hasItem("Pane"));
+        assertFalse(inventory.hasItem("Latte"));
     }
 
     @Test
     void testGetItemsReturnsImmutableList() {
-        GameItem bread = new GameItem.Builder("Bread", "Kitchen", 3).build();
+        GameItem bread = new GameItem.Builder("Pane", "Cucina", 3).build();
         inventory.addItem(bread);
 
         var items = inventory.getItems();
 
         assertEquals(1, items.size());
-        assertThrows(UnsupportedOperationException.class, () -> items.add(new GameItem.Builder("Cheese", "Kitchen", 1).build()));
+        assertThrows(UnsupportedOperationException.class, () -> items.add(new GameItem.Builder("Formaggio", "Cucina", 1).build()));
     }
 
     @Test
     void testToStringContainsUsefulInfo() {
-        GameItem apple = new GameItem.Builder("Apple", "Kitchen", 2).build();
+        GameItem apple = new GameItem.Builder("Mela", "Cucina", 2).build();
         inventory.addItem(apple);
         String result = inventory.toString();
 

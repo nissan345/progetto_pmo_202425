@@ -1,0 +1,60 @@
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.ArrayList;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import main.model.action.ActionResult;
+import main.model.action.DropItemAction;
+import main.model.character.MainCharacter;
+import main.model.world.Room;
+import main.model.world.gameItem.GameItem;
+import main.model.world.gameItem.Inventory;
+import main.model.requirement.AlwaysTrueRequirement;
+
+class DropItemActionTest {
+
+    private MainCharacter character;
+    private Room room;
+    private DropItemAction dropAction;
+    private GameItem item;
+
+    @BeforeEach
+    void setup() {
+        // Creiamo una room vuota con AlwaysTrueRequirement
+        room = new Room("TestRoom", new ArrayList<>(), new AlwaysTrueRequirement());
+
+        // Personaggio con inventario vuoto
+        character = new MainCharacter("Test", null, null);
+        character.getInventory().addItem(new GameItem.Builder("Dummy", "TestRoom", 1).build()); // serve perché l'inventario deve essere inizializzato
+        character.getInventory().removeItem("Dummy"); // rimuoviamo subito
+
+        // Impostiamo la stanza corrente
+        character.pickCurrentRoom(room);
+
+        dropAction = new DropItemAction();
+
+        item = new GameItem.Builder("Apple", "TestRoom", 2).build();
+    }
+
+    @Test
+    void testDropItemSuccess() {
+        character.getInventory().addItem(item);
+
+        ActionResult result = dropAction.execute(character, item);
+
+        assertEquals("Hai lasciato Apple nella stanza.", result.getMessage());
+        assertFalse(character.getInventory().hasItem("Apple"));
+        assertTrue(room.hasItemRoom(item));
+    }
+
+    @Test
+    void testDropItemNotInInventory() {
+        ActionResult result = dropAction.execute(character, item);
+
+        assertEquals("Non hai Apple nell'inventario!", result.getMessage());
+        assertFalse(room.hasItemRoom(item));
+    }
+}
+

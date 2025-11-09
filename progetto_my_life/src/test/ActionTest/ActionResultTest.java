@@ -6,44 +6,69 @@ import main.model.action.ActionResult;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.Test;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 class ActionResultTest {
 
     @Test
-    void testConstructorAndGetters() {
-        ActionResult r = new ActionResult(
-                "Ate food", 10, 5, -2, 0, 3
-        );
+    void testCostruttoreConSoloMessaggio() {
+        ActionResult result = new ActionResult("Test message");
 
-        assertEquals("Ate food", r.getMessage());
-        assertEquals(10, r.getDeltaSatiety());
-        assertEquals(5, r.getDeltaHydration());
-        assertEquals(-2, r.getDeltaEnergy());
-        assertEquals(0, r.getDeltaHygiene());
+        assertEquals("Test message", result.getMessage());
+        assertEquals(0, result.getDeltaSatiety());
+        assertEquals(0, result.getDeltaHydration());
+        assertEquals(0, result.getDeltaEnergy());
+        assertEquals(0, result.getDeltaHygiene());
+        assertEquals(5, result.getActionDuration()); // default duration
     }
 
     @Test
-    void testApplyEffects() {
-        var character = new main.model.character.MainCharacter("Mario");
+    void testCostruttoreCompletoSenzaDurataPersonalizzata() {
+        ActionResult result = new ActionResult("Ok", 10, -5, 15, 0);
 
-        int sat = character.getSatiety();
-        int hyd = character.getHydration();
-
-        ActionResult r = new ActionResult("Drink", 0, 10, 0, 0, 5);
-        r.applyEffects(character);
-
-        assertEquals(sat, character.getSatiety());
-        assertEquals(hyd + 10, character.getHydration());
+        assertEquals("Ok", result.getMessage());
+        assertEquals(10, result.getDeltaSatiety());
+        assertEquals(-5, result.getDeltaHydration());
+        assertEquals(15, result.getDeltaEnergy());
+        assertEquals(0, result.getDeltaHygiene());
+        assertEquals(5, result.getActionDuration()); // default duration
     }
 
     @Test
-    void testDurationDefault() {
-        ActionResult r = new ActionResult("Test", 0, 0, 0, 0, null);
-        assertEquals(5, r.getDurationSeconds()); // valore di default
+    void testCostruttoreCompletoConDurataPersonalizzata() {
+        ActionResult result = new ActionResult("Long action", 1, 2, 3, 4, 12);
+
+        assertEquals("Long action", result.getMessage());
+        assertEquals(1, result.getDeltaSatiety());
+        assertEquals(2, result.getDeltaHydration());
+        assertEquals(3, result.getDeltaEnergy());
+        assertEquals(4, result.getDeltaHygiene());
+        assertEquals(12, result.getActionDuration()); // custom duration
     }
 
     @Test
-    void testCustomDuration() {
-        ActionResult r = new ActionResult("Test", 0, 0, 0, 0, 20);
-        assertEquals(20, r.getDurationSeconds());
+    void testCostruttoreConListaDiMessaggi() {
+        List<String> messages = Arrays.asList("Step 1", "Step 2", "Step 3");
+        ActionResult result = new ActionResult(messages);
+
+        assertEquals(messages, result.getMessages());
+        assertNull(result.getMessage(), "Il campo message dovrebbe essere null quando si usa la lista di messaggi");
+        assertEquals(5, result.getActionDuration()); // durata default
+    }
+
+    @Test
+    void testDefaultActionDurationQuandoCustomNonImpostato() {
+        ActionResult result = new ActionResult("Default");
+        assertEquals(5, result.getActionDuration());
+    }
+
+    @Test
+    void testCustomActionDurationQuandoImpostata() {
+        ActionResult result = new ActionResult("Custom", 0, 0, 0, 0, 8);
+        assertEquals(8, result.getActionDuration());
     }
 }

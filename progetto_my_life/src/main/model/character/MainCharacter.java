@@ -27,7 +27,6 @@ public class MainCharacter {
     private int xp; 
     private int xpToNext; 
 	private Room currentRoom;
-	private Inventory inventory;
     private Map<Quest, Set<String>> ItemUsedForQuests;
     private List<Quest> ongoingQuests;
     private List<GameItem> usedItems; // Keeps track of used Items
@@ -45,6 +44,7 @@ public class MainCharacter {
         this.currentRoom = null; // There's no room in the beginning
         this.ongoingQuests = new ArrayList<>();
         this.usedItems = new ArrayList<>();
+        this.inventory = new Inventory(10);
     }
     
     // GETTERS ---------------------------------------------------------------------------
@@ -266,11 +266,11 @@ public class MainCharacter {
     	stats.decay();
     }
 
-    public ActionResult pickUp(GameObject item) {
+    public ActionResult PickItemAction(GameItem item) {
     return new PickItemAction().execute(this, item);
 }
 
-public ActionResult drop(GameObject item) {
+public ActionResult DropItemAction(GameItem item) {
     return new DropItemAction().execute(this, item);
 }
 

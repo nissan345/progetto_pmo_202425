@@ -25,6 +25,7 @@ class MainCharacterTest {
     private Room kitchen;
     private Room bathroom;
     private Room garden;
+    private Room livingroom;
     private NPC questGiver;
     private House h;
 
@@ -41,6 +42,15 @@ class MainCharacterTest {
         kitchen    = ItemFactory.createKitchen();
         bathroom   = ItemFactory.createBathroom();
         garden     = ItemFactory.createGarden();
+        livingroom = ItemFactory.createLivingRoom();
+
+        
+        h.addRoom(bedroom);
+        h.addRoom(kitchen);
+        h.addRoom(bathroom);
+        h.addRoom(garden);
+        h.addRoom(livingroom);
+        
         questGiver = new Mum(kitchen, h);
     }
 
@@ -227,7 +237,7 @@ class MainCharacterTest {
         assertTrue(character.getInventory().hasItem("Computer"));
 
         // The item is removed from the room
-        bedroom.removeItemRoom(computer);
+
         assertFalse(bedroom.hasItemRoom(computer));
 
         // Second pickup -> Should be impossible
@@ -239,6 +249,9 @@ class MainCharacterTest {
     // Test for picking up multiple items
     @Test
     void TestPickUpTwoDifferentItems() {
+    	
+    	character.pickCurrentRoom(bedroom);
+    	
         GameItem phone = new GameItem.Builder("Telefono", "Bedroom", 5)
                 .message("Controlli i messaggi.")
                 .build();
@@ -250,14 +263,14 @@ class MainCharacterTest {
         assertTrue(bedroom.hasItemRoom(book));
 
         character.pickUpItemAction(phone);
-        bedroom.removeItemRoom(phone);
+
 
         character.pickUpItemAction(book);
-        bedroom.removeItemRoom(book);
+
 
         assertEquals(2, character.getInventory().getUsedSpace());
-        assertTrue(character.getInventory().hasItem("Phone"));
-        assertTrue(character.getInventory().hasItem("Book"));
+        assertTrue(character.getInventory().hasItem("Telefono"));
+        assertTrue(character.getInventory().hasItem("Libro"));
 
         assertFalse(bedroom.hasItemRoom(phone));
         assertFalse(bedroom.hasItemRoom(book));

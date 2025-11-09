@@ -7,12 +7,17 @@ import main.model.character.NPC;
 import main.model.requirement.Requirement;
 import main.model.world.gameItem.GameItem;
 
+/**
+ * Basic implementation of a generic Room
+ */
 public class Room {
 
     private String roomName;
-    private Optional<NPC> npcInRoom;               // Indica gli oggetti presenti nella room
-    private final List<GameItem> itemsInRoom;  // Indica gli NPC presenti nella room 
+    private Optional<NPC> npcInRoom;     
+    private final List<GameItem> itemsInRoom;  
     private Requirement entryRequirement; 
+    
+    // CONSTRUCTOR
     public Room(String name, List<GameItem> items, Requirement requirement){
         this.roomName = name; 
         this.itemsInRoom = items;
@@ -21,42 +26,43 @@ public class Room {
     }
     
     // GETTERS 
-    public String getRoomName(){
-        return roomName;
-    }
-
-    public List<GameItem> getItemsInRoom() {
-        return itemsInRoom;
-    }
-
-    public Optional<NPC> getNpcInRoom() {
-        return npcInRoom;
-    }
-
-    public Requirement getEntryRequirement() {
-        return this.entryRequirement; 
-    }
-
+    public String getRoomName(){return roomName;}
+    public List<GameItem> getItemsInRoom() {return itemsInRoom;}
+    public Optional<NPC> getNpcInRoom() {return npcInRoom;}
+    public Requirement getEntryRequirement() {return this.entryRequirement;}
+    
+    
     /**
      * Shows if there is an NPC in the room 
      * @param n
-     * @return
+     * @return true if the NPC is in the room, false otherwise
      */
     public boolean hasNpc(NPC n){
-        return this.npcInRoom.isPresent();
+    	if(this.npcInRoom.isPresent()) {
+    		return this.npcInRoom.get().getRelationship().equals(n.getRelationship());
+    	}
+        return false;
     }
 
     /**
      * Checks if an item is in the room 
      * @param o
-     * @return
+     * @return true if the item is present, false otherwise
      */
     public boolean hasItemRoom(GameItem o){
         return itemsInRoom.stream()
                 .anyMatch(item -> item.getName().equals(o.getName()));
     }
     
+    /**
+     * Setter of NPC, sets an NPC in a room
+     * @param n
+     * @throws IllegalArgumentException if the npc is null
+     */
     public void setNpc(NPC n) {
+    	if(n==null) {
+    		throw new IllegalArgumentException("Npc cannot be null!");
+    	}
         npcInRoom = Optional.of(n);
     };
 
@@ -77,23 +83,25 @@ public class Room {
     };
 
     /**
-     * Chcecks if the character can enter the room based on their level 
+     * Checks if the character can enter the room based on their level 
      * @param character
-     * @return
+     * @return true if the levelRequirement is met, false otherwise
      */
     public boolean canEnter(MainCharacter character) {
         return entryRequirement.isSatisfiedBy(character); 
     }
 
     /**
-     * Tells why the character cannot enter the room 
+     * Tells the reason why the character cannot enter the room 
      * @param character
-     * @return
+     * @return a list of failure reasons
      */
     public List<String> getEntryFailureReasons(MainCharacter character) {
         return this.entryRequirement.getFailureReasons(character); 
     }
-
+    
+    
+    @Override
     public String toString(){
     	String roomInfo = null;
     	if(this.npcInRoom.isEmpty()) {

@@ -8,6 +8,11 @@ import main.model.action.ActionResult;
 import main.model.character.MainCharacter;
 import main.model.requirement.CanEatRequirement;
 
+/**
+ * Specialised GameItem representing a refrigerator that contains various food items. This class requires user choice, 
+ * when interacting with the refrigerator. The different choices that are offered modify the stats differently. Also validates
+ * requirements before allowing access to it 
+ */
 public class Refrigerator extends GameItem {
     
     private final Map<FoodType, ActionResult> foodEffects;
@@ -33,9 +38,7 @@ public class Refrigerator extends GameItem {
     public boolean requiresChoice() { return true; }
 
     @Override
-    public List<FoodType> availableOptions() { 
-        return new ArrayList<>(foodEffects.keySet()); 
-    }
+    public List<FoodType> availableOptions() { return new ArrayList<>(foodEffects.keySet()); }
 
     @Override
     public ActionResult use(MainCharacter character) { 

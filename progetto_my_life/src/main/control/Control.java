@@ -78,9 +78,9 @@ public final class Control {
         casa.addRoom(sgabuzzino);
 
         // Creazione Npc
-        Mum mum = new Mum(salotto);
-        Dad dad = new Dad(giardino);
-        Brother brother = new Brother(cucina);
+        Mum mum = new Mum(salotto, casa);
+        Dad dad = new Dad(giardino, casa);
+        Brother brother = new Brother(cucina, casa);
 
         // Aggiungere nelle stanze gli NPC
         salotto.setNpc(mum);

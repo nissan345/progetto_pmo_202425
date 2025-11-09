@@ -13,8 +13,8 @@ import main.model.world.gameItem.GameItem;
 public class Room {
 
     private String roomName;
-    private Optional<NPC> npcInRoom;     
-    private final List<GameItem> itemsInRoom;  
+    private Optional<NPC> npcInRoom;               // Indica gli oggetti presenti nella room
+    private final List<GameItem> itemsInRoom;      // Indica gli NPC presenti nella room 
     private Requirement entryRequirement; 
     
     // CONSTRUCTOR

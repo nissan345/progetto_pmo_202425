@@ -15,22 +15,18 @@ import main.model.world.Room;
 import main.model.world.gameItem.GameItem;
 import main.model.world.gameItem.Inventory;
 
-/**
- * The MainCharacter class represents the playable character in the game,
- */
-
 public class MainCharacter {
 
     // ATTRIBUTES ------------------------------------------------------------------------
     private String name;
     private Outfit outfit;
     private Hair hair;
+    private Inventory inventory;
     private Stats stats;
     private int lvl; 
     private int xp; 
     private int xpToNext; 
 	private Room currentRoom;
-	private Inventory inventory;
     private Map<Quest, Set<String>> ItemUsedForQuests;
     private List<Quest> ongoingQuests;
     private List<GameItem> usedItems; // Keeps track of used Items
@@ -48,6 +44,7 @@ public class MainCharacter {
         this.currentRoom = null; // There's no room in the beginning
         this.ongoingQuests = new ArrayList<>();
         this.usedItems = new ArrayList<>();
+        this.inventory = new Inventory(30);
     }
     
     // GETTERS ---------------------------------------------------------------------------
@@ -247,27 +244,21 @@ public class MainCharacter {
    
     
     /**
-     * Picks up a GameItem and puts in the inventory
-     * @param item
-     * @return
-     */
-    public ActionResult pickUp(GameItem item) {
-        return new PickItemAction().execute(this, item);
-    }
-
-    /**
-     * Removes a GameItem from the inventory
-     * @param item
-     * @return
-     */
-    public ActionResult drop(GameItem item) {
-        return new DropItemAction().execute(this, item);
-    }
-   
-    /**
      * Applies the natural decay of stats over time
      */
     public void stateDecay() {
     	stats.decay();
     }
+
+    //raccoglie un oggetto
+    public ActionResult pickUpItemAction(GameItem item) {
+    return new PickItemAction().execute(this, item);
+}
+
+    
+    //rimuove un oggetto
+public ActionResult dropItemAction(GameItem item) {
+    return new DropItemAction().execute(this, item);
+}
+
 }

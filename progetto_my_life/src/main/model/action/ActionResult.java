@@ -35,7 +35,8 @@ public class ActionResult {
     public ActionResult(List<String> messages) {
     	this.messages = messages;
     }
-    
+
+
     // Getters
     public String getMessage() { return message; }
     public int getDeltaSatiety() { return deltaSatiety; }

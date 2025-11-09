@@ -185,7 +185,7 @@ class MainCharacterTest {
         Quest q = new Quest("UsePC", "Usa il PC", questGiver, 0, 0, new ArrayList<>());
         character.addQuest(q);
 
-        GameItem computer = new GameItem.Builder("Computer", "Bedroom", 20)
+        GameItem computer = new GameItem.Builder("Computer", "Camera da Letto", 20)
                 .message("Usi il PC.")
                 .build();
 
@@ -227,24 +227,24 @@ class MainCharacterTest {
     void testPickUpOnce() {
         character.pickCurrentRoom(bedroom);
 
-        GameItem computer = new GameItem.Builder("Computer", "Bedroom", 20)
+        GameItem comb = new GameItem.Builder("Spazzola", "Camera Da Letto", 20)
                 .message("Usi il PC.")
                 .build();
 
-        bedroom.addItemRoom(computer);
-        assertTrue(bedroom.hasItemRoom(computer));
+        bedroom.addItemRoom(comb);
+        assertTrue(bedroom.hasItemRoom(comb));
 
-        // Primo pick-up → va nell’inventario e rimosso dalla stanza
-        character.pickUpItemAction(computer);
+        // Primo pick-up: va nell’inventario e rimosso dalla stanza
+        character.pickUpItemAction(comb);
         assertEquals(20, character.getInventory().getUsedSpace());
-        assertTrue(character.getInventory().hasItem("Computer"));
-        assertFalse(bedroom.hasItemRoom(computer)); // PASSA ora
+        assertTrue(character.getInventory().hasItem("Spazzola"));
+        assertFalse(bedroom.hasItemRoom(comb)); 
 
-        // Secondo pick-up → non cambia nulla
-        character.pickUpItemAction(computer);
-        assertEquals(20, character.getInventory().getUsedSpace()); // rimane lo stesso
-        assertTrue(character.getInventory().hasItem("Computer"));
-        assertFalse(bedroom.hasItemRoom(computer));
+        // Secondo pick-up: non cambia nulla
+        character.pickUpItemAction(comb);
+        assertEquals(20, character.getInventory().getUsedSpace()); 
+        assertTrue(character.getInventory().hasItem("Spazzola"));
+        assertFalse(bedroom.hasItemRoom(comb));
     }
 
     // Test for picking up multiple items
@@ -253,10 +253,10 @@ class MainCharacterTest {
     	
     	character.pickCurrentRoom(bedroom);
     	
-        GameItem phone = new GameItem.Builder("Telefono", "Bedroom", 5)
+        GameItem phone = new GameItem.Builder("Telefono", "Camera da Letto", 5)
                 .message("Controlli i messaggi.")
                 .build();
-        GameItem book = new GameItem.Builder("Libro", "Bedroom", 0).build();
+        GameItem book = new GameItem.Builder("Libro", "Camera da Letto", 0).build();
 
         bedroom.addItemRoom(phone);
         bedroom.addItemRoom(book);
@@ -282,7 +282,7 @@ class MainCharacterTest {
     void testDropItem() {
         character.pickCurrentRoom(bedroom);
 
-        GameItem mug = new GameItem.Builder("Tazza", "Bedroom", 0)
+        GameItem mug = new GameItem.Builder("Tazza", "Camera da Letto", 0)
                 .message("Sorbisci un caffè.")
                 .build();
 

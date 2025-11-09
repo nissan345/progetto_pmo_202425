@@ -33,8 +33,8 @@ class GameItemTest {
                 .build();
 		assertEquals("Provi dei nuovi outfit!", item.getMessage());
 		assertEquals("Camera da Letto", item.getRoom());
-		assertFalse(item.requiresChoice()); // Every GameItem by default doesn't require a choice
-		assertEquals(0, item.getDeltaSatiety()); // By default, if a value is not specified, it should be zero
+		assertFalse(item.requiresChoice()); 				// Every GameItem by default doesn't require a choice
+		assertEquals(0, item.getDeltaSatiety()); 			// By default, if a value is not specified, it should be zero
 		assertEquals(-5, item.getDeltaEnergy()); 
 	}
 	
@@ -60,7 +60,7 @@ class GameItemTest {
                 .message("Fai un pisolino sul divano")
                 .requirement(new CanSleepRequirement())
                 .build();
-		character.getStats().changeEnergy(-50); // The character should have 50 energy now
+		character.getStats().changeEnergy(-50); 				// The character should have 50 energy now
 		ActionResult result = item.use(character);
 		assertNotNull(result.getMessage());
 		assertEquals(item.getMessage(), result.getMessage());

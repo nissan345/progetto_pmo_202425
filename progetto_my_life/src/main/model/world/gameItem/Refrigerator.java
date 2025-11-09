@@ -8,6 +8,7 @@ import main.model.action.ActionResult;
 import main.model.character.MainCharacter;
 import main.model.requirement.CanEatRequirement;
 
+
 /**
  * Specialised GameItem representing a refrigerator that contains various food items. This class requires user choice, 
  * when interacting with the refrigerator. The different choices that are offered modify the stats differently. Also validates

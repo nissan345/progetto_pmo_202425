@@ -29,7 +29,7 @@ public class MainCharacter {
 	private Room currentRoom;
     private Map<Quest, Set<String>> ItemUsedForQuests;
     private List<Quest> ongoingQuests;
-    private List<GameItem> usedItems; // Keeps track of used Items
+    private List<GameItem> usedItems;                                       // Keeps track of used Items
  
     // CONSTRUCTOR ------------------------------------------------------------------------
     public MainCharacter(String name, Outfit outfit, Hair hair) {
@@ -41,7 +41,7 @@ public class MainCharacter {
         this.lvl = 1; 
         this.xp = 0;
         this.xpToNext = computeXpToNext(1);
-        this.currentRoom = null; // There's no room in the beginning
+        this.currentRoom = null;                                            // There's no room in the beginning
         this.ongoingQuests = new ArrayList<>();
         this.usedItems = new ArrayList<>();
         this.inventory = new Inventory(30);

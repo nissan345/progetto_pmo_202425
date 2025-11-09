@@ -2,10 +2,10 @@ package main.model.character;
 
 import java.util.*;
 import java.util.function.BiPredicate;
-import main.model.quest.Quest;
 import main.model.quest.CompletionCondition;
-import main.model.world.Room;
+import main.model.quest.Quest;
 import main.model.world.House;
+import main.model.world.Room;
 import main.model.world.gameItem.GameItem;
 
 public abstract class NPC {
@@ -14,7 +14,7 @@ public abstract class NPC {
     private int affinity;
     private List<Quest> availableQuests;
     private BiPredicate<MainCharacter, Room> triggerCondition;
-    private final House house;  // Reference to the house so that he can see the items in other rooms
+    private final House house;                                      // Reference to the house so that he can see the items in other rooms
 
     public NPC(final String relationship, final Room s, House house) {
         this.relationship = relationship;

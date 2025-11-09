@@ -20,23 +20,28 @@ import main.model.world.Room;
 import main.model.world.factory.ItemFactory;
 import main.model.world.gameItem.GameItem;
 
+/**
+ * Test class for House and Room functionality
+ * Contains unit tests for room management, NPC placement, and house operations
+ */
 public class HouseTest {
 	
 	private MainCharacter c; 
-	
 	private House h;  
-	
 	private Room bedroom; 
 	private Room livingRoom; 
 	private Room kitchen; 
 	private Room bathroom; 
 	private Room storageRoom; 
 	private Room garden; 
-	
 	private Mum mum; 
 	private Dad dad;
 	private Brother brother; 
 
+	/**
+	 * Sets up test fixtures before each test method
+	 * Initializes main character, house, rooms, and NPCs
+	 */
 	@Before 
 	public void setUp() {
 		c = new MainCharacter("Ari", Outfit.CASUAL, Hair.CURLY_LONG);
@@ -65,18 +70,23 @@ public class HouseTest {
         kitchen.setNpc(brother);
 	}
 	
+	// TEST HOUSE METHODS
 	
-	// TEST HOUSE 
-	
+	/**
+	 * Tests house creation and room management
+	 * Verifies that house contains correct number of rooms and specific room names
+	 */
 	@Test 
 	public void testHouseCreation() {
-		
-	    assertEquals("House should have 6 rooms", 6, h.getRooms().size());
-	    
-	    assertTrue("House should contain bedroom", h.getRooms().containsKey("Camera Da Letto"));
-	    assertTrue("House should contain living room", h.getRooms().containsKey("Salotto"));
+	    assertEquals(6, h.getRooms().size());
+	    assertTrue(h.getRooms().containsKey("Camera Da Letto"));
+	    assertTrue(h.getRooms().containsKey("Salotto"));
 	}
 	
+	/**
+	 * Tests room entry and exit functionality
+	 * Verifies that entering a room sets it as current room and exit returns room map
+	 */
 	@Test
 	public void testEnterExitRoom() {
 	    assertThrows(UnsupportedOperationException.class, () -> {
@@ -84,32 +94,44 @@ public class HouseTest {
 	    });
 	    
 	    Optional<Room> enteredRoom = h.enterRoom("Camera Da Letto");
-	    assertTrue("Should successfully enter room", enteredRoom.isPresent());
-	    assertEquals("Current room should be bedroom", bedroom, h.getCurrentRoom().get());
+	    assertTrue(enteredRoom.isPresent());
+	    assertEquals(bedroom, h.getCurrentRoom().get());
 	    
 	    Map<String, Room> rooms = h.exitRoom();
-	    assertNotNull("Should return rooms map", rooms);
+	    assertNotNull(rooms);
 	}
 	
+	/**
+	 * Tests behavior when attempting to enter non-existent room
+	 * Verifies that non-existent room returns empty optional and doesn't set current room
+	 */
 	@Test
 	public void testEnterNonExistentRoom() {
 	    Optional<Room> result = h.enterRoom("Non-existent Room");
-	    assertFalse("Should not enter non-existent room", result.isPresent());
+	    assertFalse(result.isPresent());
 	    
 	    assertThrows(UnsupportedOperationException.class, () -> {
 	        h.getCurrentRoom();
 	    });
 	}
 	
+	/**
+	 * Tests room retrieval by name functionality
+	 * Verifies that existing rooms are found and non-existent rooms return null
+	 */
 	@Test
 	public void testGetRoom() {
 		Room foundRoom = h.getRoom("Camera Da Letto");
-	    assertEquals("Should find bedroom by name", bedroom, foundRoom);
+	    assertEquals(bedroom, foundRoom);
 	        
         Room notFound = h.getRoom("Non-existent Room");
-        assertNull("Should return null for non-existent room", notFound);
+        assertNull(notFound);
 	}
 	    
+	/**
+	 * Tests exit room behavior when no current room is set
+	 * Verifies that exiting without current room throws appropriate exception
+	 */
 	@Test
 	public void testExitRoomWithoutCurrentRoom() {
 		House emptyHouse = new House();
@@ -118,85 +140,104 @@ public class HouseTest {
 	    });
 	}
 	
-	// TEST ROOM
+	// TEST ROOM METHODS
 	
+	/**
+	 * Tests basic room creation and initialization
+	 * Verifies room name, item list presence, and initial NPC absence
+	 */
 	@Test 
 	public void testRoomCreation() {
-		assertNotNull("Room should be created", bedroom);
-	    assertEquals("Room name should match", "Camera Da Letto", bedroom.getRoomName());
-        assertNotNull("Items list should not be null", bedroom.getItemsInRoom());
-        assertFalse("Items list should not be empty initially", bedroom.getItemsInRoom().isEmpty());
-        assertFalse("NPC should not be present", bedroom.getNpcInRoom().isPresent());
+		assertNotNull(bedroom);
+	    assertEquals("Camera Da Letto", bedroom.getRoomName());
+        assertNotNull(bedroom.getItemsInRoom());
+        assertFalse(bedroom.getItemsInRoom().isEmpty());
+        assertFalse(bedroom.getNpcInRoom().isPresent());
     }
 
+	/**
+	 * Tests NPC assignment to rooms and prevention of NPC duplication
+	 * Verifies correct NPC placement and exception when attempting duplicate assignment
+	 */
 	@Test
 	public void testRoomWithNPC() {
-		// check the setting of NPC 
-		assertTrue("Mum should be in living room", livingRoom.hasNpc(mum));
-	    
-	    assertTrue("Dad should be in garden", garden.hasNpc(dad));
-		    
-	    assertTrue("Brother should be in kitchen", kitchen.hasNpc(brother));
+		assertTrue(livingRoom.hasNpc(mum));
+	    assertTrue(garden.hasNpc(dad));
+	    assertTrue(kitchen.hasNpc(brother));
 		
 	    Exception exception = assertThrows(IllegalStateException.class, () -> {
 	        bedroom.setNpc(dad);
 	    });
 	    
-	    assertFalse("Dad should not be in bedroom", bedroom.hasNpc(dad));
+	    assertFalse(bedroom.hasNpc(dad));
 	}
 	
+	/**
+	 * Tests that rooms without NPCs remain empty
+	 * Verifies that bedroom, bathroom, and storage room have no NPCs assigned
+	 */
 	@Test
 	public void testRoomsWithoutNPCStayEmpty() {
-
-		// bedroom, bathroom and storage room don't have a NPC inside 
-	    assertFalse("Bedroom should not have NPC", bedroom.getNpcInRoom().isPresent());
-	    assertFalse("Bathroom should not have NPC", bathroom.getNpcInRoom().isPresent());
-	    assertFalse("Storage room should not have NPC", storageRoom.getNpcInRoom().isPresent());
+	    assertFalse(bedroom.getNpcInRoom().isPresent());
+	    assertFalse(bathroom.getNpcInRoom().isPresent());
+	    assertFalse(storageRoom.getNpcInRoom().isPresent());
 	}
 	
+	/**
+	 * Tests room entry requirements based on character level
+	 * Verifies that character can enter some rooms but not others based on level requirements
+	 */
 	@Test
 	public void testRoomRequirements() {
 	    c.addXp(200);
-	    // check that character level is 2 
-	    assertEquals("Character level is 2", 2, c.getLvl());
+	    assertEquals(2, c.getLvl());
 	    
-	    assertTrue("Character should be able to enter bedroom", bedroom.canEnter(c));
-	    assertTrue("Character should be able to enter kitchen", kitchen.canEnter(c));
+	    assertTrue(bedroom.canEnter(c));
+	    assertTrue(kitchen.canEnter(c));
 	    
-	    // Character cannot enter storage room and garden 
-	    assertFalse("Character should not be able to enter storage room", storageRoom.canEnter(c));
-	    assertFalse("Character should not be able to enter garden", garden.canEnter(c));
+	    assertFalse(storageRoom.canEnter(c));
+	    assertFalse(garden.canEnter(c));
 	    
 	    List<String> reasons = garden.getEntryFailureReasons(c);
-        assertNotNull("Failure reasons should not be null", reasons);
-        assertFalse("Failure reasons should not be empty", reasons.isEmpty());
+        assertNotNull(reasons);
+        assertFalse(reasons.isEmpty());
 	}
 
+	/**
+	 * Tests room item initialization
+	 * Verifies that each room contains the expected number of game items
+	 */
 	@Test
 	public void testRoomItems() {
-		assertEquals("Bedroom should have 3 items", 3, bedroom.getItemsInRoom().size());
-		assertEquals("Kitchen should have 3 items", 3, kitchen.getItemsInRoom().size());
-		assertEquals("Bathroom should have 3 items", 3,bathroom.getItemsInRoom().size());
+		assertEquals(3, bedroom.getItemsInRoom().size());
+		assertEquals(3, kitchen.getItemsInRoom().size());
+		assertEquals(3, bathroom.getItemsInRoom().size());
 	}
 
+	/**
+	 * Tests item management operations in rooms
+	 * Verifies adding and removing items from room inventory
+	 */
 	@Test
 	public void testAddRemoveItems() {
 	    GameItem testItem = new GameItem.Builder("Test Item", "Camera Da Letto", 10).build();
 	    
 	    int initialSize = bedroom.getItemsInRoom().size();
 	    bedroom.addItemRoom(testItem);
-	    assertEquals("Should have one more item", initialSize + 1, bedroom.getItemsInRoom().size());
-	    assertTrue("Should contain the added item", bedroom.hasItemRoom(testItem));
+	    assertEquals(initialSize + 1, bedroom.getItemsInRoom().size());
+	    assertTrue(bedroom.hasItemRoom(testItem));
 	    
 	    bedroom.removeItemRoom(testItem);
-	    assertEquals("Should return to original size", initialSize, bedroom.getItemsInRoom().size());
+	    assertEquals(initialSize, bedroom.getItemsInRoom().size());
 	}
 	
+	/**
+	 * Tests item presence checking for non-existent items
+	 * Verifies that hasItemRoom returns false for items not in the room
+	 */
 	@Test
     public void testHasItemRoomWhenNotPresent() {
         GameItem nonExistentItem = new GameItem.Builder("NonExistent", "Test", 10).build();
-        assertFalse("Should return false for non-existent item", 
-                   bedroom.hasItemRoom(nonExistentItem));
+        assertFalse(bedroom.hasItemRoom(nonExistentItem));
     }
-
 }

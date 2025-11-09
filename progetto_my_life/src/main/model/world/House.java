@@ -19,6 +19,9 @@ public class House {
     }
 
     public Optional<Room> getCurrentRoom(){
+    	if(currentRoom.isEmpty()) {
+    		throw new UnsupportedOperationException("You need to enter a room, to get inside");
+    	}
         return currentRoom;
     }
 

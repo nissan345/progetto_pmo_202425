@@ -13,6 +13,7 @@ public class Room {
     private Optional<NPC> npcInRoom;               // Indica gli oggetti presenti nella room
     private final List<GameItem> itemsInRoom;  // Indica gli NPC presenti nella room 
     private Requirement entryRequirement; 
+    
     public Room(String name, List<GameItem> items, Requirement requirement){
         this.roomName = name; 
         this.itemsInRoom = items;
@@ -30,7 +31,7 @@ public class Room {
     }
 
     public Optional<NPC> getNpcInRoom() {
-        return npcInRoom;
+        return this.npcInRoom;
     }
 
     public Requirement getEntryRequirement() {
@@ -43,7 +44,21 @@ public class Room {
      * @return
      */
     public boolean hasNpc(NPC n){
-        return this.npcInRoom.isPresent();
+    	 return this.npcInRoom.isPresent() && this.npcInRoom.get().equals(n);
+    }
+    
+    /**
+     * 
+     * @param n
+     */
+    public void setNpc(NPC n) {
+        if (n.getPosition() != null && n.getPosition() != this) {
+            throw new IllegalStateException(
+                "NPC " + n.getRelationship() + "  is already in another room " + 
+                n.getPosition().getRoomName() + ". Cannot be duplicated into: " + this.roomName
+            );
+        }
+        npcInRoom = Optional.of(n);
     }
 
     /**
@@ -55,10 +70,6 @@ public class Room {
         return itemsInRoom.stream()
                 .anyMatch(item -> item.getName().equals(o.getName()));
     }
-    
-    public void setNpc(NPC n) {
-        npcInRoom = Optional.of(n);
-    };
 
     /**
      * Adds an item in the room

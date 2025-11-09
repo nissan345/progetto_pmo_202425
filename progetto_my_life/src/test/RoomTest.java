@@ -57,9 +57,9 @@ public class RoomTest {
         h.addRoom(storageRoom);
         h.addRoom(garden);
         
-        mum = new Mum(livingRoom);
-        dad = new Dad(garden);
-        brother = new Brother(kitchen);
+        mum = new Mum(livingRoom, h);
+        dad = new Dad(garden, h);
+        brother = new Brother(kitchen, h);
 
         livingRoom.setNpc(mum);
         garden.setNpc(dad);

@@ -38,7 +38,7 @@ class MainCharacterTest {
         kitchen    = ItemFactory.createKitchen();
         bathroom   = ItemFactory.createBathroom();
         garden     = ItemFactory.createGarden();
-        questGiver = new Mum(kitchen);
+        questGiver = new Mum(kitchen, null); // House non usata in questo test
     }
 
 
@@ -175,14 +175,14 @@ class MainCharacterTest {
                 .message("Usi il PC.")
                 .build();
 
-        assertFalse(character.hasUsedItemForQuest(computer, q));
+        assertFalse(character.hasUsedItemForQuest(computer));
 
         character.recordItemsUsedForQuests(computer);
 
-        assertTrue(character.hasUsedItemForQuest(computer, q));
+        assertTrue(character.hasUsedItemForQuest(computer));
 
         GameItem pentola = new GameItem.Builder("Pentola", "Kitchen", 10).build();
-        assertFalse(character.hasUsedItemForQuest(pentola, q));
+        assertFalse(character.hasUsedItemForQuest(pentola));
     }
 
     // Test for CompletionCondition with GameItem
@@ -193,7 +193,7 @@ class MainCharacterTest {
 
         GameItem computer = new GameItem.Builder("Computer", "Bedroom", 20).build();
 
-        CompletionCondition cond = new CompletionCondition(computer, q);
+        CompletionCondition cond = new CompletionCondition(computer);
 
         // Before -> false
         assertFalse(cond.checkCompletion(character));

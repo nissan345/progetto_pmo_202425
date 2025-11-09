@@ -17,12 +17,12 @@ public class CanShowerRequirement implements Requirement{
 		List<String> reasons = new ArrayList<>();
 
         // Controlla se l'energia è sufficiente
-        if (c.getStats().getEnergy() > 20) {
+        if (c.getStats().getEnergy() <= 20) {
             reasons.add("Non hai abbastanza energia per lavarti, ");
         }
 
         // Controlla se l'igiene è sufficiente
-        if (c.getStats().getHygiene() < 70) {
+        if (c.getStats().getHygiene() >= 70) {
             reasons.add("Non c'è bisogno di lavarsi ora! Divertiti!");
         }
 

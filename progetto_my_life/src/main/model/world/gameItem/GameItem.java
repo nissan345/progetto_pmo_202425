@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 import main.model.action.ActionResult;
 import main.model.character.MainCharacter;
+import main.model.requirement.AlwaysTrueRequirement;
 import main.model.requirement.Requirement;
 
 
@@ -14,12 +15,36 @@ public class GameItem{
     protected final String name;
     protected final String description;
     protected final int size;
-    public String message;
-    protected String room;
+    private String message;
+    public String getMessage() {
+		return message;
+	}
+
+	protected String room;
     private boolean specialInteraction;
     private int deltaSatiety, deltaHydration, deltaEnergy, deltaHygiene;
-    private final Requirement requirement;
-    private BiFunction<MainCharacter, GameItem, ActionResult> dynamicUse; 
+    public int getDeltaSatiety() {
+		return deltaSatiety;
+	}
+
+	public int getDeltaHydration() {
+		return deltaHydration;
+	}
+
+	public int getDeltaEnergy() {
+		return deltaEnergy;
+	}
+
+	public int getDeltaHygiene() {
+		return deltaHygiene;
+	}
+
+	protected final Requirement requirement;
+    public Requirement getRequirement() {
+		return requirement;
+	}
+
+	private BiFunction<MainCharacter, GameItem, ActionResult> dynamicUse; 
     
     public GameItem(Builder builder) {
         this.name = builder.name;
@@ -31,9 +56,9 @@ public class GameItem{
         this.deltaHygiene = builder.deltaHygiene;
         this.deltaHydration = builder.deltaHydration;
         this.message = builder.message;
-        this.specialInteraction = builder.specialInteraction;
         this.dynamicUse = builder.dynamicUse;
-        this.requirement = builder.requirement;
+        this.requirement = (builder.requirement != null ? builder.requirement : new AlwaysTrueRequirement());
+
     }
       
     /**
@@ -43,7 +68,7 @@ public class GameItem{
      */
     public ActionResult use(MainCharacter character) {
         if (!requirement.isSatisfiedBy(character)) {
-            return new ActionResult(requirement.getFailureReasons(character));  // Restituisce il motivo del fallimento
+            return new ActionResult(requirement.getFailureReasons(character)); 
         }
         if (dynamicUse != null) {
             return dynamicUse.apply(character, this);
@@ -59,24 +84,15 @@ public class GameItem{
     public String getRoom() { return room; }
    
     @Override
-    public String toString() {
-        return name + " (" + room + ")";
-    }
+    public String toString() {return name + " (" + room + ")";}
     
-    public boolean hasSpecialInteraction() {
-        return specialInteraction;
-    }
     
     // Additional methods
     public boolean requiresChoice() { return false; }
 
-    public List<?> availableOptions(Character c) { 
-        return List.of(); 
-    }
+    public List<?> availableOptions() {return List.of(); }
 
-    public ActionResult use(MainCharacter c, FoodType food) {
-        return use(c);
-    }
+    public ActionResult useWithChoice(MainCharacter character, FoodType choice) {return new ActionResult("This item doesn't support choices.");}
 
     /**
      * Builder class used to create GameItem instances.
@@ -88,10 +104,9 @@ public class GameItem{
         private final String room;
         private final int size;
         
-        // Optional fields with default values
+        // default values of the optional fields
         private String description = "";
         private String message = "You use the item.";
-        private boolean specialInteraction = false;
         private int deltaSatiety = 0;
         private int deltaHydration = 0;
         private int deltaEnergy = 0;
@@ -115,7 +130,7 @@ public class GameItem{
             this.dynamicUse = fn;
             return this;
         }
-        // Fluent builder methods
+        
         public Builder description(String val) {
             this.description = val;
             return this;
@@ -143,11 +158,6 @@ public class GameItem{
         
         public Builder hygiene(int val) {
             this.deltaHygiene = val;
-            return this;
-        }
-        
-        public Builder specialInteraction(boolean interaction) {
-            this.specialInteraction = interaction;
             return this;
         }
         

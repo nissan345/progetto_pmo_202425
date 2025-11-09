@@ -30,7 +30,7 @@ public class MainCharacter {
 	private Inventory inventory;
     private Map<Quest, Set<String>> ItemUsedForQuests;
     private List<Quest> ongoingQuests;
-    private List<String> usedItems; // Keeps track of used Items
+    private List<GameItem> usedItems; // Keeps track of used Items
  
     // CONSTRUCTOR ------------------------------------------------------------------------
     public MainCharacter(String name, Outfit outfit, Hair hair) {
@@ -97,31 +97,6 @@ public class MainCharacter {
         this.currentRoom = room;
         return "Sei entrato in: " + room.getRoomName();
     }
-   
-    // METODI PER LA PERSONALIZZAZIONE -------------------------------------------------------
-
-    /* METODO PER CAMBIARE VESTITI
-    public String cambiaVestiti(Vestito nuoviVestiti) {
-        this.outfit = nuoviVestiti;
-        return "Hai cambiato i outfit in: " + nuoviVestiti.getName();
-    }
-    // DA TOGLIERE
-    // METODO PER CAMBIARE CAPELLI
-    public String cambiaCapelli(Capelli nuoviCapelli) {
-        this.hair = nuoviCapelli;
-        return "Hai cambiato i hair in: " + nuoviCapelli.getName();
-    }
-    // HA SENSO MA NON SAPPIAMO SE SERVE
-    // METODO PER MAPPARE LO STATO COMPLETO
-    public Map<String, Integer> getStatoCompleto() {
-        Map<String, Integer> state = new HashMap<>();
-        state.put("satiety", satiety);
-        state.put("hydration", hydration);
-        state.put("energy", energy);
-        state.put("hygiene", hygiene);
-        return state;
-    }
- */
 
     // LEVEL SYSTEM ----------------------------------------------------------------------------------
     
@@ -232,9 +207,9 @@ public class MainCharacter {
      * Registers the use of an Item for an ongoing quest
      * @param ItemName
      */
-    public void recordItemsUsedForQuests(String ItemName) {
+    public void recordItemsUsedForQuests(GameItem item) {
         for (Quest q : ongoingQuests) {
-            ItemUsedForQuests.computeIfAbsent(q, k -> new HashSet<>()).add(ItemName);
+            ItemUsedForQuests.computeIfAbsent(q, k -> new HashSet<>()).add(item.getName());
         }
     }
     
@@ -244,8 +219,8 @@ public class MainCharacter {
      * @param quest
      * @return
      */
-    public boolean hasUsedItemForQuest(String nameItem, Quest quest) {
-        return ItemUsedForQuests.getOrDefault(quest, Set.of()).contains(nameItem);
+    public boolean hasUsedItemForQuest(GameItem item, Quest quest) {
+        return ItemUsedForQuests.getOrDefault(quest, Set.of()).contains(item.getName());
     }
     
     /**
@@ -254,8 +229,9 @@ public class MainCharacter {
      * @param nameItem
      * @return
      */
-    public String applyActionResult(ActionResult result, String nameItem) {
-        recordItemsUsedForQuests(nameItem);
+    public String applyActionResult(ActionResult result, GameItem item) {
+
+        recordItemsUsedForQuests(item);
         stats.changeEnergy(result.getDeltaEnergy());
         stats.changeHydration(result.getDeltaHydration());
         stats.changeHygiene(result.getDeltaHygiene());
@@ -264,15 +240,6 @@ public class MainCharacter {
         return result.getMessage();
     }
    
-    /**
-     * Interacts with a GameItem
-     * @param item
-     * @return
-     */
-    public String interact(GameItem item) {
-        ActionResult result = item.use(this);
-        return applyActionResult(result, item.getName());
-    }
     
     /**
      * Picks up a GameItem and puts in the inventory
@@ -295,8 +262,8 @@ public class MainCharacter {
     /**
      * Applies the natural decay of stats over time
      */
-    public void stateDecay(){
-        stats.decay();
+    public void stateDecay() {
+    	stats.decay();
     }
 
     public ActionResult pickUp(GameObject item) {

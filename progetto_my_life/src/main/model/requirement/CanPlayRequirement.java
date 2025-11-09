@@ -17,7 +17,7 @@ public class CanPlayRequirement implements Requirement{
 		List<String> reasons = new ArrayList<>();
 
         // Controlla se l'energia è sufficiente
-        if (c.getStats().getEnergy() > 20) {
+        if (c.getStats().getEnergy() <= 20) {
             reasons.add("Non hai abbastanza energia per giocare.");
         }
 

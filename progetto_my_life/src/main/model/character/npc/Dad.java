@@ -1,8 +1,8 @@
 package main.model.character.npc;
 
 import java.util.Collections;
+
 import main.model.character.NPC;
-import main.model.quest.CompletionCondition;
 import main.model.quest.Quest;
 import main.model.world.Room;
 import main.model.world.House;
@@ -10,9 +10,12 @@ import main.model.world.gameItem.GameItem;
 
 public class Dad extends NPC {
 
+    // CONSTRUCTOR ---------------------------------------------------------------------
     public Dad(Room s, House house) {
         super("Dad", s, house);
     }
+    
+    // MAIN METHODS ------------------------------------------------------------------
     
     @Override
     public String getInitialDialogue() {

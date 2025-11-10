@@ -32,8 +32,8 @@ class MainCharacterTest {
     @BeforeEach
     void setUp() {
         character = new MainCharacter("Ahri", Outfit.CASUAL, Hair.CURLY_LONG);
-        assertEquals(1, character.getLvl());    // Initial level = 1
-        assertNull(character.getCurrentRoom()); // nessuna stanza all’inizio
+        assertEquals(1, character.getLvl());                                        // Initial level = 1
+        assertNull(character.getCurrentRoom());                                
         assertNotNull(character.getInventory());
         assertEquals(30, character.getInventory().getCapacity());
 
@@ -69,9 +69,9 @@ class MainCharacterTest {
         // Default progression state
         assertEquals(1, character.getLvl());
         assertEquals(0, character.getXp());
-        assertEquals(100, character.getXpToNext()); // computeXpToNext(1) = 100
+        assertEquals(100, character.getXpToNext());             // computeXpToNext(1) = 100
         assertNull(character.getCurrentRoom());
-        //assertNotNull(character.getInventory());    // se l’inventory parte null, cambiare
+        //assertNotNull(character.getInventory());              // se l’inventory parte null, cambiare
     }
 
     // TEST FOR XP AND LEVELING UP -------------------------------------------------------
@@ -98,10 +98,10 @@ class MainCharacterTest {
     // Test for adding XP that causes multiple level ups
     @Test
     void testAddXp_MultipleLevelUps() {
-        character.addXp(100 + 150 + 215 + 10); // 475
-        assertEquals(4, character.getLvl());    // 1→2→3→4
-        assertEquals(10, character.getXp());    // residue XP = 10
-        assertEquals(287, character.getXpToNext()); // XP to next level = 287
+        character.addXp(100 + 150 + 215 + 10);          // 475
+        assertEquals(4, character.getLvl());            // 1→2→3→4
+        assertEquals(10, character.getXp());            // residue XP = 10
+        assertEquals(287, character.getXpToNext());     // XP to next level = 287
     }
 
     // Test for direct level up call
@@ -120,7 +120,7 @@ class MainCharacterTest {
         int sat0 = character.getStats().getSatiety();
         character.stateDecay();
         int sat1 = character.getStats().getSatiety();
-        // checking that the satiety has decreased
+        // Checking that the satiety has decreased
         assertTrue(sat1 <= sat0);
     }
 
@@ -129,14 +129,14 @@ class MainCharacterTest {
     // Testing that the character cannot enter a room when the level requirement fails
     @Test
     void testCannotEnterRoomWhenRequirementFails() {
-        // Bagno richiede livello 2
+        // Bathroom requires level 2
         String msg1 = character.pickCurrentRoom(bathroom);
         assertNotNull(msg1);
         assertTrue(msg1.startsWith("Non puoi entrare in: Bagno"), "Messaggio inatteso: " + msg1);
         assertTrue(msg1.contains("Livello richiesto: 2"), "Motivo mancante nel messaggio: " + msg1);
         assertEquals(null, character.getCurrentRoom());
 
-        // Giardino richiede livello 4
+        // Garden requires level 4
         String msg2 = character.pickCurrentRoom(garden);
         assertNotNull(msg2);
         assertTrue(msg2.startsWith("Non puoi entrare in: Giardino"), "Messaggio inatteso: " + msg2);
@@ -234,13 +234,13 @@ class MainCharacterTest {
         bedroom.addItemRoom(comb);
         assertTrue(bedroom.hasItemRoom(comb));
 
-        // Primo pick-up: va nell’inventario e rimosso dalla stanza
+        // Adding object to the inventory
         character.pickUpItemAction(comb);
         assertEquals(20, character.getInventory().getUsedSpace());
         assertTrue(character.getInventory().hasItem("Spazzola"));
         assertFalse(bedroom.hasItemRoom(comb)); 
 
-        // Secondo pick-up: non cambia nulla
+
         character.pickUpItemAction(comb);
         assertEquals(20, character.getInventory().getUsedSpace()); 
         assertTrue(character.getInventory().hasItem("Spazzola"));
@@ -288,17 +288,17 @@ class MainCharacterTest {
 
         bedroom.addItemRoom(mug);
         assertTrue(bedroom.hasItemRoom(mug));
-
-        // Pick-up → già rimuove dalla stanza
+        
+        // Adds to inventory
         character.pickUpItemAction(mug);
         assertEquals(1, character.getInventory().getItems().size());
         assertFalse(bedroom.hasItemRoom(mug));
 
-        // Drop -> rimuove dall'inventario
+        // Removes from inventory
         character.dropItemAction(mug);
         assertEquals(0, character.getInventory().getItems().size());
 
-        // Aggiungiamo di nuovo l'oggetto nella stanza
+        // Add's the object back into the room
         bedroom.addItemRoom(mug);
         assertTrue(bedroom.hasItemRoom(mug));
     }

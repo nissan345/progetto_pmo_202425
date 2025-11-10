@@ -23,7 +23,7 @@ class ActionResultTest {
         assertEquals(0, result.getDeltaHydration());
         assertEquals(0, result.getDeltaEnergy());
         assertEquals(0, result.getDeltaHygiene());
-        assertEquals(5, result.getActionDuration()); // default duration
+        assertEquals(5, result.getActionDuration());            // default duration
     }
 
     @Test
@@ -35,7 +35,7 @@ class ActionResultTest {
         assertEquals(-5, result.getDeltaHydration());
         assertEquals(15, result.getDeltaEnergy());
         assertEquals(0, result.getDeltaHygiene());
-        assertEquals(5, result.getActionDuration()); // default duration
+        assertEquals(5, result.getActionDuration());            // default duration
     }
 
     @Test
@@ -47,7 +47,7 @@ class ActionResultTest {
         assertEquals(2, result.getDeltaHydration());
         assertEquals(3, result.getDeltaEnergy());
         assertEquals(4, result.getDeltaHygiene());
-        assertEquals(12, result.getActionDuration()); // custom duration
+        assertEquals(12, result.getActionDuration());           // custom duration
     }
 
     @Test
@@ -57,7 +57,7 @@ class ActionResultTest {
 
         assertEquals(messages, result.getMessages());
         assertNull(result.getMessage(), "Il campo messaggio dovrebbe essere null quando si usa la lista di messaggi");
-        assertEquals(5, result.getActionDuration()); // durata default
+        assertEquals(5, result.getActionDuration()); 
     }
 
     @Test

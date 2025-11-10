@@ -67,7 +67,7 @@ public class ItemFactory {
                     .dynamic((mc, self) -> {
                         int en = mc.getStats().getEnergy();
                         int energyCost  = (en < ENERGY_LOW) ? HIGH_COST : (en < ENERGY_MID ? MID_COST : LOW_COST);
-                        int durationSec = (en < ENERGY_LOW) ? HIGH_DURATION : (en < ENERGY_MID ? MID_DURATION : LOW_DURATION); // stanco = più lento
+                        int durationSec = (en < ENERGY_LOW) ? HIGH_DURATION : (en < ENERGY_MID ? MID_DURATION : LOW_DURATION); 
                         int hyg         = LOW_COST;
                         int sat         = LOW_COST;
                         int hyd         = LOW_COST;

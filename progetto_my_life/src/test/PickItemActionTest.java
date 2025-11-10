@@ -24,7 +24,7 @@ class PickItemActionTest {
         room = new Room("TestRoom", new ArrayList<>(), new AlwaysTrueRequirement());
         character = new MainCharacter("Test", null, null);
 
-        // Impostiamo la stanza corrente
+     // Set the current room
         character.pickCurrentRoom(room);
 
         pickAction = new PickItemAction();
@@ -53,7 +53,7 @@ class PickItemActionTest {
     @Test
     void testPickItemInventoryFull() {
         room.addItemRoom(item);
-        // riempiamo l'inventario oltre la capacità
+        //we fill the inventory beyond capacity
         for (int i = 0; i < 10; i++) {
             character.getInventory().addItem(new GameItem.Builder("Oggetto" + i, "TestRoom", 1).build());
         }

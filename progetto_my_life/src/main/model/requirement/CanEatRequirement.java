@@ -2,7 +2,6 @@ package main.model.requirement;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import main.model.character.MainCharacter;
 
 public class CanEatRequirement implements Requirement{

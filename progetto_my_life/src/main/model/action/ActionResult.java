@@ -11,8 +11,8 @@ public class ActionResult {
     private int deltaHydration;
     private int deltaEnergy;
     private int deltaHygiene;
-    private static final int ACTION_TIME = 5; // Usual duration of actions
-    private Integer customDurationSeconds;   // duration of actions for certain objects
+    private static final int ACTION_TIME = 5;       // Usual duration of actions
+    private Integer customDurationSeconds;          // duration of actions for certain objects
     private List<String> messages;
     
     public ActionResult(String message) {

@@ -2,7 +2,6 @@ package main.model.quest;
 
 import java.util.*;
 import java.util.function.BiPredicate;
-
 import main.model.character.MainCharacter;
 import main.model.character.NPC;
 import main.model.world.Room;
@@ -16,9 +15,9 @@ public class QuestSystem {
     // ATTRIBUTES ---------------------------------------------------------------------------
     // Mapping of quests to their trigger conditions
     private final Map<Quest, BiPredicate<MainCharacter, Room>> triggers = new HashMap<>();
-    private final List<Quest> catalog = new ArrayList<>(); // All registered quests
-    private final Set<Quest> offered = new HashSet<>(); // Quests already offered to the player
-    private final Set<Quest> turnedIn = new HashSet<>(); // Quests already turned in by the player
+    private final List<Quest> catalog = new ArrayList<>();                                  // All registered quests
+    private final Set<Quest> offered = new HashSet<>();                                     // Quests already offered to the player
+    private final Set<Quest> turnedIn = new HashSet<>();                                    // Quests already turned in by the player
 
     // MAIN METHODS ----------------------------------------------------------------
     
@@ -77,14 +76,14 @@ public class QuestSystem {
                     try {
                         shouldOffer = t.test(player, room);
                     } catch (RuntimeException ex) {
-                        shouldOffer = false; // Check failed, do not offer the quest
+                        shouldOffer = false;                        // Check failed, do not offer the quest
                     }
 
                     if (shouldOffer) {
-                        offered.add(quest); // Mark the quest as offered
+                        offered.add(quest);                         // Mark the quest as offered
                         newlyOffered.add(quest);
                         if (player != null) {
-                            player.addQuest(quest); // Assign the quest to the player
+                            player.addQuest(quest);                 // Assign the quest to the player
                         }
                     }
                 }

@@ -1,7 +1,5 @@
 package main.model.character.npc;
 
-
-import java.util.Arrays;
 import java.util.Collections;
 
 import main.model.character.NPC;
@@ -12,10 +10,13 @@ import main.model.world.gameItem.GameItem;
 
 public class Brother extends NPC {
     
+    // CONSTRUCTOR ---------------------------------------------------------------------
     public Brother(Room s, House house) {
         super("Brother", s, house);
     }
     
+    // MAIN METHODS ------------------------------------------------------------------
+
     @Override
     public String getInitialDialogue() {
         return "Non mi dare fastidio";
@@ -43,22 +44,24 @@ public class Brother extends NPC {
 
     @Override
     protected void initializeQuests() {
+        // Get the item from the kitchen room
         Room kitchen = this.getHouse().getRoom("Cucina");
         GameItem fornelli = kitchen.getItemsInRoom().stream()
             .filter(item -> item.getName().equals("Fornelli"))
             .findFirst()
             .orElse(null);
         
-        // Crea una lista con una sola condizione usando il metodo helper
-        Quest kitchenQuest = new Quest(
-            "Cibo per tutti", 
-            "Dei nostri amici vengono a casa, potresti prepare qualcosa per tutti mentre io pulisco la mia camera", 
-            this, 
-            20, 
-            25, 
-            Collections.singletonList(createCondition(fornelli))
-        );
-        
-        addQuest(kitchenQuest);
+        // If the item exists, create and add the quest
+        if (fornelli != null) {
+            Quest kitchenQuest = new Quest(
+                "Cibo per tutti", 
+                "Dei nostri amici vengono a casa, potresti prepare qualcosa per tutti mentre io pulisco la mia camera", 
+                this, 
+                20, 
+                25, 
+                Collections.singletonList(createCondition(fornelli))
+            );
+            addQuest(kitchenQuest);
+        }        
     }
 }

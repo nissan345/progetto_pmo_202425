@@ -22,15 +22,15 @@ class DropItemActionTest {
 
     @BeforeEach
     void setup() {
-        // Creiamo una room vuota con AlwaysTrueRequirement
+    	// Create an empty room with AlwaysTrueRequirement
         room = new Room("TestRoom", new ArrayList<>(), new AlwaysTrueRequirement());
 
-        // Personaggio con inventario vuoto
+     // Character with empty inventory
         character = new MainCharacter("Test", null, null);
         character.getInventory().addItem(new GameItem.Builder("Dummy", "TestRoom", 1).build()); // serve perché l'inventario deve essere inizializzato
         character.getInventory().removeItem("Dummy"); // rimuoviamo subito
 
-        // Impostiamo la stanza corrente
+        // Set the current room
         character.pickCurrentRoom(room);
 
         dropAction = new DropItemAction();

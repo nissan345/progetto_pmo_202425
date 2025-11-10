@@ -13,7 +13,7 @@ class InventoryTest {
 
     @BeforeEach
     void setup() {
-        inventory = new Inventory(10); // capacità massima 10
+        inventory = new Inventory(10); // maximum capacity 10
     }
 
     @Test

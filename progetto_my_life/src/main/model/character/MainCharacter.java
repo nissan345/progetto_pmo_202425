@@ -250,13 +250,13 @@ public class MainCharacter {
     	stats.decay();
     }
 
-    //raccoglie un oggetto
+  //collect an object
     public ActionResult pickUpItemAction(GameItem item) {
     return new PickItemAction().execute(this, item);
 }
 
     
-    //rimuove un oggetto
+  //remove an object
 public ActionResult dropItemAction(GameItem item) {
     return new DropItemAction().execute(this, item);
 }

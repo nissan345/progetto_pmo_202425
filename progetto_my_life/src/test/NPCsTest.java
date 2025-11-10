@@ -26,7 +26,7 @@ public class NPCsTest {
 
     @BeforeEach
     void setup() {
-        // Creo le stanze
+    	// I create the rooms
         house = new House();
         livingRoom = new Room("Salotto", Collections.emptyList(), new AlwaysTrueRequirement());
         kitchen = new Room("Cucina", Collections.emptyList(), new AlwaysTrueRequirement());
@@ -35,7 +35,7 @@ public class NPCsTest {
         house.addRoom(kitchen);
         house.addRoom(garden);
 
-        // Creo gli NPC
+     // I create the NPCs
         mum = new Mum(livingRoom, house);
         dad = new Dad(garden, house);
         brother = new Brother(kitchen, house);

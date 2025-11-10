@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+
 import main.model.action.ActionResult;
 import main.model.action.DropItemAction;
 import main.model.action.PickItemAction;
@@ -29,7 +30,7 @@ public class MainCharacter {
 	private Room currentRoom;
     private Map<Quest, Set<String>> ItemUsedForQuests;
     private List<Quest> ongoingQuests;
-    private List<GameItem> usedItems;                                       // Keeps track of used Items
+    // private List<GameItem> usedItems;                      // Keeps track of used Items
  
     // CONSTRUCTOR ------------------------------------------------------------------------
     public MainCharacter(String name, Outfit outfit, Hair hair) {
@@ -43,11 +44,12 @@ public class MainCharacter {
         this.xpToNext = computeXpToNext(1);
         this.currentRoom = null;                                            // There's no room in the beginning
         this.ongoingQuests = new ArrayList<>();
-        this.usedItems = new ArrayList<>();
+        // this.usedItems = new ArrayList<>();
         this.inventory = new Inventory(30);
     }
     
     // GETTERS ---------------------------------------------------------------------------
+
     public String getName() {return name;}    
     public Outfit getOutfit() { return outfit; }
     public Hair getHair() { return hair;}
@@ -124,7 +126,7 @@ public class MainCharacter {
     }
 
     /**
-     * Levels up the MainCharacter.
+     * Levels up the MainCharacter
      */
     public void levelUp() {
         this.lvl++; 
@@ -250,15 +252,22 @@ public class MainCharacter {
     	stats.decay();
     }
 
-  //collect an object
-    public ActionResult pickUpItemAction(GameItem item) {
-    return new PickItemAction().execute(this, item);
-}
-
-    
-  //remove an object
-public ActionResult dropItemAction(GameItem item) {
-    return new DropItemAction().execute(this, item);
-}
+    /**
+     * Picks up an item and adds it to the inventory
+     * @param item
+     * @return
+     */
+        public ActionResult pickUpItemAction(GameItem item) {
+        return new PickItemAction().execute(this, item);
+    }
+        
+    /**
+     * Drops an item from the inventory
+     * @param item
+     * @return
+     */    
+    public ActionResult dropItemAction(GameItem item) {
+        return new DropItemAction().execute(this, item);
+    }
 
 }

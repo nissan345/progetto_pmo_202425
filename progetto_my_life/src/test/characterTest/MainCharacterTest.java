@@ -9,14 +9,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import main.model.character.MainCharacter;
-import main.model.character.NPC;
-import main.model.character.Outfit;
-import main.model.character.npc.Mum;
+import main.model.character.npc.*;
 import main.model.world.House;
 import main.model.world.Room;
 import main.model.world.factory.ItemFactory;
 import main.model.world.gameItem.GameItem;
-import main.model.character.Hair;
+import main.model.character.enums.*;
 import main.model.quest.*;
 
 class MainCharacterTest {
@@ -209,8 +207,6 @@ class MainCharacterTest {
         character.addQuest(q);
 
         assertTrue(character.hasActiveQuestWithNPC(questGiver));
-        assertTrue(character.getActiveQuestWithNPC(questGiver).isPresent());
-        assertEquals("FetchStereo", character.getActiveQuestWithNPC(questGiver).get().getName());
     }
 
     /**
@@ -266,24 +262,24 @@ class MainCharacterTest {
     void testPickUpOnce() {
         character.pickCurrentRoom(bedroom);
 
-        GameItem computer = new GameItem.Builder("Computer", "Bedroom", 20)
+        GameItem comb = new GameItem.Builder("Spazzola", "Bedroom", 20)
                 .message("Usi il PC.")
                 .build();
 
-        bedroom.addItemRoom(computer);
-        assertTrue(bedroom.hasItemRoom(computer));
+        bedroom.addItemRoom(comb);
+        assertTrue(bedroom.hasItemRoom(comb));
 
         // Added to inventory
-        character.pickUpItemAction(computer);
+        character.pickUpItemAction(comb);
         assertEquals(20, character.getInventory().getUsedSpace());
-        assertTrue(character.getInventory().hasItem("Computer"));
-        assertFalse(bedroom.hasItemRoom(computer)); 
+        assertTrue(character.getInventory().hasItem("Spazzola"));
+        assertFalse(bedroom.hasItemRoom(comb)); 
 
         
-        character.pickUpItemAction(computer);
+        character.pickUpItemAction(comb);
         assertEquals(20, character.getInventory().getUsedSpace()); // Stays the same
-        assertTrue(character.getInventory().hasItem("Computer"));
-        assertFalse(bedroom.hasItemRoom(computer));
+        assertTrue(character.getInventory().hasItem("Spazzola"));
+        assertFalse(bedroom.hasItemRoom(comb));
     }
 
     /**

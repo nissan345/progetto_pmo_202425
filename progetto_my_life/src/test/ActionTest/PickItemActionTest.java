@@ -55,7 +55,7 @@ class PickItemActionTest {
     void testPickItemInventoryFull() {
         room.addItemRoom(item);
         //we fill the inventory beyond capacity
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 30; i++) {
             character.getInventory().addItem(new GameItem.Builder("Oggetto" + i, "TestRoom", 1).build());
         }
 

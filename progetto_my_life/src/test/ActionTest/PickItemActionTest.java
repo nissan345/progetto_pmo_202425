@@ -1,3 +1,4 @@
+package ActionTest;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import main.model.action.PickItemAction;
 import main.model.character.MainCharacter;
 import main.model.world.Room;
 import main.model.world.gameItem.GameItem;
-import main.model.requirement.AlwaysTrueRequirement;
+import main.model.requirement.requirementImpl.*;
 
 class PickItemActionTest {
 

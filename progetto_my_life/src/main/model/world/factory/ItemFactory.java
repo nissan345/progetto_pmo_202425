@@ -2,7 +2,7 @@ package main.model.world.factory;
 
 import java.util.*;
 import main.model.action.ActionResult;
-import main.model.requirement.*;
+import main.model.requirement.requirementImpl.*;
 import main.model.world.Room;
 import main.model.world.gameItem.GameItem;
 import main.model.world.gameItem.Refrigerator;

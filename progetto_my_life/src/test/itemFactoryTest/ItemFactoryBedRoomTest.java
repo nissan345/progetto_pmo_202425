@@ -5,12 +5,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import main.model.action.ActionResult;
-import main.model.character.Hair;
+import main.model.character.enums.*;
 import main.model.character.MainCharacter;
-import main.model.character.Outfit;
-import main.model.requirement.CanPlayRequirement;
-import main.model.requirement.CanSleepRequirement;
-import main.model.requirement.LevelRequirement;
+import main.model.requirement.requirementImpl.*;
 import main.model.world.Room;
 import main.model.world.factory.ItemFactory;
 import main.model.world.gameItem.GameItem;
@@ -66,7 +63,7 @@ class ItemFactoryBedRoomTest {
     void testBedDynamicBehavior() {
         GameItem letto = bedroom.getItemsInRoom().get(0);
 
-        // LOW: en=20 (<40) → +30 energy, -10 hygiene, duration 10
+        // if energy is low then it should be +30 energy, -10 hygiene, duration 10
         character.getStats().changeEnergy(-80); // 100 -> 20
         ActionResult low = letto.use(character);
         assertNotNull(low);
@@ -74,7 +71,7 @@ class ItemFactoryBedRoomTest {
         assertEquals(-10, low.getDeltaHygiene());
         assertEquals(10,  low.getActionDuration());
 
-        // MID: en=60 (40..79) → +20 energy, -10 hygiene, duration 5
+        // If energy is mid the actionResult should be +20 energy, -10 hygiene, duration 5
         int now = character.getStats().getEnergy();
         character.getStats().changeEnergy(60 - now); // -> 60
         ActionResult mid = letto.use(character);
@@ -94,7 +91,7 @@ class ItemFactoryBedRoomTest {
     void testComputerDynamicBehavior() {
         GameItem computer = bedroom.getItemsInRoom().get(1);
 
-        // LOW: en=30 (<40, >20) → -20, duration 10
+        // If the energy is low we should have -20 energy cost, duration 10
         character.getStats().changeEnergy(30 - character.getStats().getEnergy()); // 100 -> 30
         ActionResult low = computer.use(character);
         assertNotNull(low);
@@ -104,7 +101,7 @@ class ItemFactoryBedRoomTest {
         assertEquals(-5,  low.getDeltaHygiene());
         assertEquals(10,  low.getActionDuration());
 
-        // MID: en=70 → -10, duration 5
+        // If energy is mid the energy cost is mid and it should be -10, duration 5
         character.getStats().changeEnergy(70 - character.getStats().getEnergy());
         ActionResult mid = computer.use(character);
         assertNotNull(mid);
@@ -114,7 +111,7 @@ class ItemFactoryBedRoomTest {
         assertEquals(-5,  mid.getDeltaHygiene());
         assertEquals(5,   mid.getActionDuration());
 
-        // HIGH: en=90 → -5, duration 2
+        // If energy is high, the enrgy cost is low and it should be -5, duration 2
         character.getStats().changeEnergy(90 - character.getStats().getEnergy());
         ActionResult high = computer.use(character);
         assertNotNull(high);

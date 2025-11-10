@@ -5,11 +5,10 @@ import java.util.Arrays;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import main.model.character.Hair;
+import main.model.character.enums.*;
 import main.model.character.MainCharacter;
-import main.model.character.Outfit;
 import main.model.action.ActionResult;
-import main.model.requirement.CanEatRequirement;
+import main.model.requirement.requirementImpl.*;
 import main.model.world.gameItem.FoodType;
 import main.model.world.gameItem.Refrigerator;
 
@@ -54,7 +53,7 @@ class RefrigeratorTest {
 
     @Test
     void testUseWithChoice() {
-        // Tests the use of each type of food that is in the refrigeratos
+        // Tests the use of each type of food that is in the refrigerators
         for (FoodType food : FoodType.values()) {
         	character.getStats().changeSatiety(-50);
             ActionResult result = refrigerator.useWithChoice(character, food);

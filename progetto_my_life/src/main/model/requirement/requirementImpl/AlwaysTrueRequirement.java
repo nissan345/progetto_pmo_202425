@@ -1,8 +1,9 @@
-package main.model.requirement;
+package main.model.requirement.requirementImpl;
 
 import java.util.List;
 
 import main.model.character.MainCharacter;
+import main.model.requirement.Requirement;
 
 public class AlwaysTrueRequirement implements Requirement{
 

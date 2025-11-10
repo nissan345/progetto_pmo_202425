@@ -1,21 +1,17 @@
 package characterTest;
 
 import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.ArrayList;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import java.util.ArrayList;
 
 import main.model.character.MainCharacter;
-import main.model.character.NPC;
-import main.model.character.Outfit;
-import main.model.character.npc.Mum;
+import main.model.character.npc.*;
+import main.model.character.enums.*;
 import main.model.world.House;
 import main.model.world.Room;
 import main.model.world.factory.ItemFactory;
 import main.model.world.gameItem.GameItem;
-import main.model.character.Hair;
 import main.model.quest.*;
 
 class MainCharacterTest {
@@ -71,7 +67,7 @@ class MainCharacterTest {
         assertEquals(0, character.getXp());
         assertEquals(100, character.getXpToNext());             // computeXpToNext(1) = 100
         assertNull(character.getCurrentRoom());
-        //assertNotNull(character.getInventory());              // se l’inventory parte null, cambiare
+
     }
 
     // TEST FOR XP AND LEVELING UP -------------------------------------------------------
@@ -99,7 +95,7 @@ class MainCharacterTest {
     @Test
     void testAddXp_MultipleLevelUps() {
         character.addXp(100 + 150 + 215 + 10);          // 475
-        assertEquals(4, character.getLvl());            // 1→2→3→4
+        assertEquals(4, character.getLvl());           
         assertEquals(10, character.getXp());            // residue XP = 10
         assertEquals(287, character.getXpToNext());     // XP to next level = 287
     }
@@ -185,7 +181,7 @@ class MainCharacterTest {
         Quest q = new Quest("UsePC", "Usa il PC", questGiver, 0, 0, new ArrayList<>());
         character.addQuest(q);
 
-        GameItem computer = new GameItem.Builder("Computer", "Bedroom", 20)
+        GameItem computer = new GameItem.Builder("Computer", "Camera da Letto", 20)
                 .message("Usi il PC.")
                 .build();
 
@@ -227,24 +223,24 @@ class MainCharacterTest {
     void testPickUpOnce() {
         character.pickCurrentRoom(bedroom);
 
-        GameItem computer = new GameItem.Builder("Computer", "Bedroom", 20)
+        GameItem comb = new GameItem.Builder("Spazzola", "Camera Da Letto", 20)
                 .message("Usi il PC.")
                 .build();
 
-        bedroom.addItemRoom(computer);
-        assertTrue(bedroom.hasItemRoom(computer));
+        bedroom.addItemRoom(comb);
+        assertTrue(bedroom.hasItemRoom(comb));
 
-        // Added to inventory
-        character.pickUpItemAction(computer);
+        // Adding object to the inventory
+        character.pickUpItemAction(comb);
         assertEquals(20, character.getInventory().getUsedSpace());
-        assertTrue(character.getInventory().hasItem("Computer"));
-        assertFalse(bedroom.hasItemRoom(computer)); 
+        assertTrue(character.getInventory().hasItem("Spazzola"));
+        assertFalse(bedroom.hasItemRoom(comb)); 
 
-        
-        character.pickUpItemAction(computer);
-        assertEquals(20, character.getInventory().getUsedSpace()); // Stays the same
-        assertTrue(character.getInventory().hasItem("Computer"));
-        assertFalse(bedroom.hasItemRoom(computer));
+
+        character.pickUpItemAction(comb);
+        assertEquals(20, character.getInventory().getUsedSpace()); 
+        assertTrue(character.getInventory().hasItem("Spazzola"));
+        assertFalse(bedroom.hasItemRoom(comb));
     }
 
     // Test for picking up multiple items
@@ -253,10 +249,10 @@ class MainCharacterTest {
     	
     	character.pickCurrentRoom(bedroom);
     	
-        GameItem phone = new GameItem.Builder("Telefono", "Bedroom", 5)
+        GameItem phone = new GameItem.Builder("Telefono", "Camera da Letto", 5)
                 .message("Controlli i messaggi.")
                 .build();
-        GameItem book = new GameItem.Builder("Libro", "Bedroom", 0).build();
+        GameItem book = new GameItem.Builder("Libro", "Camera da Letto", 0).build();
 
         bedroom.addItemRoom(phone);
         bedroom.addItemRoom(book);
@@ -282,7 +278,7 @@ class MainCharacterTest {
     void testDropItem() {
         character.pickCurrentRoom(bedroom);
 
-        GameItem mug = new GameItem.Builder("Tazza", "Bedroom", 0)
+        GameItem mug = new GameItem.Builder("Tazza", "Camera da Letto", 0)
                 .message("Sorbisci un caffè.")
                 .build();
 
@@ -298,7 +294,7 @@ class MainCharacterTest {
         character.dropItemAction(mug);
         assertEquals(0, character.getInventory().getItems().size());
 
-        // Add's the object back into the room
+        // Addss the object back into the room
         bedroom.addItemRoom(mug);
         assertTrue(bedroom.hasItemRoom(mug));
     }

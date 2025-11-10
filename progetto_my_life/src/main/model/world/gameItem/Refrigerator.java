@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import main.model.action.ActionResult;
 import main.model.character.MainCharacter;
-import main.model.requirement.CanEatRequirement;
+import main.model.requirement.requirementImpl.*;
 
 
 /**

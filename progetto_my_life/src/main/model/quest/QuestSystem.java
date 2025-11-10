@@ -3,7 +3,7 @@ package main.model.quest;
 import java.util.*;
 import java.util.function.BiPredicate;
 import main.model.character.MainCharacter;
-import main.model.character.NPC;
+import main.model.character.npc.NPC;
 import main.model.world.Room;
 
 

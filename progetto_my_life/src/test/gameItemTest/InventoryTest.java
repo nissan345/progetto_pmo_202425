@@ -1,3 +1,4 @@
+package gameItemTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import main.model.world.gameItem.GameItem;

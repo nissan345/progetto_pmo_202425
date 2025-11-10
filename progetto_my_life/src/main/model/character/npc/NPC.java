@@ -1,7 +1,9 @@
-package main.model.character;
+package main.model.character.npc;
 
 import java.util.*;
 import java.util.function.BiPredicate;
+
+import main.model.character.MainCharacter;
 import main.model.quest.CompletionCondition;
 import main.model.quest.Quest;
 import main.model.world.House;

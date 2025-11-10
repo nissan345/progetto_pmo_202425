@@ -11,6 +11,8 @@ import java.util.Set;
 import main.model.action.ActionResult;
 import main.model.action.DropItemAction;
 import main.model.action.PickItemAction;
+import main.model.character.enums.*;
+import main.model.character.npc.NPC;
 import main.model.quest.Quest;
 import main.model.world.Room;
 import main.model.world.gameItem.GameItem;

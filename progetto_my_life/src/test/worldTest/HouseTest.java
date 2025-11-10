@@ -9,9 +9,8 @@ import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 
-import main.model.character.Hair;
+import main.model.character.enums.*;
 import main.model.character.MainCharacter;
-import main.model.character.Outfit;
 import main.model.character.npc.Brother;
 import main.model.character.npc.Dad;
 import main.model.character.npc.Mum;

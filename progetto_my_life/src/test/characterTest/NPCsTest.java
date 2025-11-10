@@ -1,10 +1,9 @@
+package characterTest;
 import main.model.world.Room;
 import main.model.world.House;
-import main.model.character.npc.Brother;
-import main.model.character.npc.Dad;
-import main.model.character.npc.Mum;
+import main.model.character.npc.*;
 import main.model.quest.Quest;
-import main.model.requirement.AlwaysTrueRequirement;
+import main.model.requirement.requirementImpl.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 import main.model.action.ActionResult;
 import main.model.character.MainCharacter;
-import main.model.requirement.AlwaysTrueRequirement;
+import main.model.requirement.requirementImpl.*;
 import main.model.requirement.Requirement;
 
 

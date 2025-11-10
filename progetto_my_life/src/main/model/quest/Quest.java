@@ -3,7 +3,7 @@ package main.model.quest;
 import java.util.ArrayList;
 import java.util.List;
 import main.model.character.MainCharacter;
-import main.model.character.NPC;
+import main.model.character.npc.NPC;
 
 public class Quest {
 

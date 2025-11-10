@@ -7,11 +7,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import main.model.action.ActionResult;
-import main.model.character.Hair;
+import main.model.character.enums.*;
 import main.model.character.MainCharacter;
-import main.model.character.Outfit;
-import main.model.requirement.CanEatRequirement;
-import main.model.requirement.LevelRequirement;
+import main.model.requirement.requirementImpl.*;
 import main.model.world.Room;
 import main.model.world.factory.ItemFactory;
 import main.model.world.gameItem.FoodType;

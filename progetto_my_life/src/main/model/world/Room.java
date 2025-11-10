@@ -3,7 +3,7 @@ package main.model.world;
 import java.util.List;
 import java.util.Optional;
 import main.model.character.MainCharacter;
-import main.model.character.NPC;
+import main.model.character.npc.NPC;
 import main.model.requirement.Requirement;
 import main.model.world.gameItem.GameItem;
 

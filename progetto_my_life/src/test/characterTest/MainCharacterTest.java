@@ -6,14 +6,12 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 
 import main.model.character.MainCharacter;
-import main.model.character.NPC;
-import main.model.character.Outfit;
-import main.model.character.npc.Mum;
+import main.model.character.npc.*;
+import main.model.character.enums.*;
 import main.model.world.House;
 import main.model.world.Room;
 import main.model.world.factory.ItemFactory;
 import main.model.world.gameItem.GameItem;
-import main.model.character.Hair;
 import main.model.quest.*;
 
 class MainCharacterTest {

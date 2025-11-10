@@ -1,17 +1,22 @@
+
 package characterTest;
 
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import main.model.character.MainCharacter;
-import main.model.character.npc.*;
-import main.model.character.enums.*;
+import main.model.character.NPC;
+import main.model.character.Outfit;
+import main.model.character.npc.Mum;
 import main.model.world.House;
 import main.model.world.Room;
 import main.model.world.factory.ItemFactory;
 import main.model.world.gameItem.GameItem;
+import main.model.character.Hair;
 import main.model.quest.*;
 
 class MainCharacterTest {
@@ -25,10 +30,15 @@ class MainCharacterTest {
     private NPC questGiver;
     private House h;
 
+    /**
+     * Initializes test environment before each test method execution.
+     * Creates a main character with default attributes and sets up house rooms.
+     * Verifies initial character state including level, room location, and inventory capacity.
+     */
     @BeforeEach
     void setUp() {
         character = new MainCharacter("Ahri", Outfit.CASUAL, Hair.CURLY_LONG);
-        assertEquals(1, character.getLvl());                                        // Initial level = 1
+        assertEquals(1, character.getLvl());                                        
         assertNull(character.getCurrentRoom());                                
         assertNotNull(character.getInventory());
         assertEquals(30, character.getInventory().getCapacity());
@@ -54,7 +64,10 @@ class MainCharacterTest {
 
     // TESTS -------------------------------------------------------------------------------
 
-    // Test for constructor and getters
+    /**
+     * Tests MainCharacter constructor and getter methods.
+     * Verifies correct initialization of name, outfit, hair style, stats, and default progression values.
+     */
     @Test
     void testConstructorAndGetters() {
         assertEquals("Ahri", character.getName());
@@ -67,12 +80,14 @@ class MainCharacterTest {
         assertEquals(0, character.getXp());
         assertEquals(100, character.getXpToNext());             // computeXpToNext(1) = 100
         assertNull(character.getCurrentRoom());
-
     }
 
     // TEST FOR XP AND LEVELING UP -------------------------------------------------------
 
-    // Test for adding XP without leveling up
+    /**
+     * Tests experience point accumulation without triggering level up.
+     * Verifies XP increases but level remains unchanged when XP threshold is not reached.
+     */
     @Test
     void testAddXp_NoLevelUp() {
         character.addXp(30);
@@ -81,7 +96,10 @@ class MainCharacterTest {
         assertEquals(100, character.getXpToNext());
     }
 
-    // Test for adding XP that causes exactly one level up
+    /**
+     * Tests experience point accumulation triggering exactly one level up.
+     * Verifies level increases, XP resets, and new XP threshold is set correctly.
+     */
     @Test
     void testAddXp_ExactlyLevelUp() {
         character.addXp(100);
@@ -91,16 +109,22 @@ class MainCharacterTest {
         assertEquals(150, character.getXpToNext());
     }
 
-    // Test for adding XP that causes multiple level ups
+    /**
+     * Tests experience point accumulation triggering multiple level ups.
+     * Verifies correct level progression, residual XP calculation, and updated XP threshold.
+     */
     @Test
     void testAddXp_MultipleLevelUps() {
         character.addXp(100 + 150 + 215 + 10);          // 475
-        assertEquals(4, character.getLvl());           
+        assertEquals(4, character.getLvl());            
         assertEquals(10, character.getXp());            // residue XP = 10
         assertEquals(287, character.getXpToNext());     // XP to next level = 287
     }
 
-    // Test for direct level up call
+    /**
+     * Tests direct level up method call.
+     * Verifies level increment and XP threshold update without XP accumulation.
+     */
     @Test
     void testLevelUpDirectCall() {
         // Both the level and the threshold should update
@@ -111,6 +135,10 @@ class MainCharacterTest {
 
     // TEST FOR STATE DECAY -----------------------------------------------------
 
+    /**
+     * Tests character state decay functionality.
+     * Verifies that state decay process executes without errors and decreases character's satiety.
+     */
     @Test
     void testStateDecayDoesNotCrash() {
         int sat0 = character.getStats().getSatiety();
@@ -122,7 +150,11 @@ class MainCharacterTest {
 
     // TEST FOR ROOM ENTRY ----------------------------------------------------------------------
     
-    // Testing that the character cannot enter a room when the level requirement fails
+    /**
+     * Tests room entry restrictions based on level requirements.
+     * Verifies that character cannot enter rooms with level requirements higher than current level.
+     * Checks appropriate error messages and maintains null current room after failed entry attempts.
+     */
     @Test
     void testCannotEnterRoomWhenRequirementFails() {
         // Bathroom requires level 2
@@ -140,7 +172,10 @@ class MainCharacterTest {
         assertEquals(null, character.getCurrentRoom());
     }
 
-    // Testing that the character can enter a room when the level requirement passes
+    /**
+     * Tests successful room entry when level requirements are met.
+     * Verifies entry messages and updates to character's current room.
+     */
     @Test
     void testEnterRoomWhenRequirementPasses() {
         String msg1 = character.pickCurrentRoom(bedroom);
@@ -156,7 +191,10 @@ class MainCharacterTest {
 
     // TEST FOR QUESTS ---------------------------------------------------------------------
 
-    // Test for adding a quest and checking active quest with NPC
+    /**
+     * Tests quest assignment and retrieval functionality.
+     * Verifies that quests can be added to character and retrieved by associated NPC.
+     */
     @Test
     void testAddActiveQuest() {
         Quest q = new Quest(
@@ -175,13 +213,16 @@ class MainCharacterTest {
         assertEquals("FetchStereo", character.getActiveQuestWithNPC(questGiver).get().getName());
     }
 
-    // Test for recording used items for quests and checking them
+    /**
+     * Tests quest item usage tracking.
+     * Verifies that items used for quests are properly recorded and recognized.
+     */
     @Test
     void testItemsForQuest() {
         Quest q = new Quest("UsePC", "Usa il PC", questGiver, 0, 0, new ArrayList<>());
         character.addQuest(q);
 
-        GameItem computer = new GameItem.Builder("Computer", "Camera da Letto", 20)
+        GameItem computer = new GameItem.Builder("Computer", "Bedroom", 20)
                 .message("Usi il PC.")
                 .build();
 
@@ -195,7 +236,10 @@ class MainCharacterTest {
         assertFalse(character.hasUsedItemForQuest(pentola));
     }
 
-    // Test for CompletionCondition with GameItem
+    /**
+     * Tests quest completion condition checking with game items.
+     * Verifies completion condition correctly identifies when required items have been used.
+     */
     @Test
     void testItemHasBeenUsed() {
         Quest q = new Quest("UsePC", "Usa il PC", questGiver, 0, 0, new ArrayList<>());
@@ -205,54 +249,56 @@ class MainCharacterTest {
 
         CompletionCondition cond = new CompletionCondition(computer);
 
-        // Before -> false
         assertFalse(cond.checkCompletion(character));
 
-        // Register the use
         character.recordItemsUsedForQuests(computer);
 
-        // After -> true
         assertTrue(cond.checkCompletion(character));
     }
 
     // TEST FOR ITEMS ---------------------------------------------------------------------
     
-    // Testing that items can only get picked up once
+    /**
+     * Tests item pickup restriction to prevent duplicate acquisitions.
+     * Verifies items can only be picked up once and inventory remains unchanged on duplicate attempts.
+     */
     @Test
-
     void testPickUpOnce() {
         character.pickCurrentRoom(bedroom);
 
-        GameItem comb = new GameItem.Builder("Spazzola", "Camera Da Letto", 20)
+        GameItem computer = new GameItem.Builder("Computer", "Bedroom", 20)
                 .message("Usi il PC.")
                 .build();
 
-        bedroom.addItemRoom(comb);
-        assertTrue(bedroom.hasItemRoom(comb));
+        bedroom.addItemRoom(computer);
+        assertTrue(bedroom.hasItemRoom(computer));
 
-        // Adding object to the inventory
-        character.pickUpItemAction(comb);
+        // Added to inventory
+        character.pickUpItemAction(computer);
         assertEquals(20, character.getInventory().getUsedSpace());
-        assertTrue(character.getInventory().hasItem("Spazzola"));
-        assertFalse(bedroom.hasItemRoom(comb)); 
+        assertTrue(character.getInventory().hasItem("Computer"));
+        assertFalse(bedroom.hasItemRoom(computer)); 
 
-
-        character.pickUpItemAction(comb);
-        assertEquals(20, character.getInventory().getUsedSpace()); 
-        assertTrue(character.getInventory().hasItem("Spazzola"));
-        assertFalse(bedroom.hasItemRoom(comb));
+        
+        character.pickUpItemAction(computer);
+        assertEquals(20, character.getInventory().getUsedSpace()); // Stays the same
+        assertTrue(character.getInventory().hasItem("Computer"));
+        assertFalse(bedroom.hasItemRoom(computer));
     }
 
-    // Test for picking up multiple items
+    /**
+     * Tests pickup of multiple distinct items.
+     * Verifies all items are correctly added to inventory and removed from room.
+     */
     @Test
     void TestPickUpTwoDifferentItems() {
     	
     	character.pickCurrentRoom(bedroom);
     	
-        GameItem phone = new GameItem.Builder("Telefono", "Camera da Letto", 5)
+        GameItem phone = new GameItem.Builder("Telefono", "Bedroom", 5)
                 .message("Controlli i messaggi.")
                 .build();
-        GameItem book = new GameItem.Builder("Libro", "Camera da Letto", 0).build();
+        GameItem book = new GameItem.Builder("Libro", "Bedroom", 0).build();
 
         bedroom.addItemRoom(phone);
         bedroom.addItemRoom(book);
@@ -273,12 +319,15 @@ class MainCharacterTest {
         assertFalse(bedroom.hasItemRoom(book));
     }
 
-    // Testing dropping an item which gets it removed from the inventory
+    /**
+     * Tests item dropping functionality.
+     * Verifies items are removed from inventory and returned to the current room.
+     */
     @Test
     void testDropItem() {
         character.pickCurrentRoom(bedroom);
 
-        GameItem mug = new GameItem.Builder("Tazza", "Camera da Letto", 0)
+        GameItem mug = new GameItem.Builder("Tazza", "Bedroom", 0)
                 .message("Sorbisci un caffè.")
                 .build();
 
@@ -294,7 +343,7 @@ class MainCharacterTest {
         character.dropItemAction(mug);
         assertEquals(0, character.getInventory().getItems().size());
 
-        // Addss the object back into the room
+        // Add's the object back into the room
         bedroom.addItemRoom(mug);
         assertTrue(bedroom.hasItemRoom(mug));
     }

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-
 import main.model.action.ActionResult;
 import main.model.action.DropItemAction;
 import main.model.action.PickItemAction;
@@ -168,17 +167,6 @@ public class MainCharacter {
     }
 
     /**
-     * Shows the ongoing quests with an NPC
-     * @param npc
-     * @return
-     */
-    public Optional<Quest> getActiveQuestWithNPC(NPC npc) {
-        return ongoingQuests.stream()
-            .filter(quest -> quest.getAssignerNPC().equals(npc))
-            .findFirst();
-    }
-
-    /**
      * Automatically verifies the completion of every active quest with a specific NPC
      * @param npc
      * @return
@@ -189,21 +177,6 @@ public class MainCharacter {
         .filter(q -> q.checkCompletion(this))
         .findFirst();
 	}
-
-    /**
-     * Automatically verifies the completion of every active quest with a specific NPC
-     * @param npc
-     * @return
-     */
-    public List<Quest> getOngoingQuestsWithNPC(NPC npc) {
-        List<Quest> questsWithNPC = new ArrayList<>();
-        for (Quest q : ongoingQuests) {
-            if (q.getAssignerNPC().equals(npc)) {
-                questsWithNPC.add(q);
-            }
-        }
-        return questsWithNPC;
-    }
 
     // METHODS TO INTERACT WITH ITEMS -------------------------------------------------------
     

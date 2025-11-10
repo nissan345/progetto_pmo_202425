@@ -26,7 +26,6 @@ public class NPCsTest {
 
     @BeforeEach
     void setup() {
-    	// I create the rooms
         house = new House();
         livingRoom = new Room("Salotto", Collections.emptyList(), new AlwaysTrueRequirement());
         kitchen = new Room("Cucina", Collections.emptyList(), new AlwaysTrueRequirement());
@@ -35,12 +34,14 @@ public class NPCsTest {
         house.addRoom(kitchen);
         house.addRoom(garden);
 
-     // I create the NPCs
         mum = new Mum(livingRoom, house);
         dad = new Dad(garden, house);
         brother = new Brother(kitchen, house);
     }
 
+    // TESTS ------------------------------------------------------------------------
+
+    // Test for the initial dialogues of each NPC
     @Test
     void testInitialDialogue() {
         assertEquals("Ciao tesoro! Come sta andando la tua giornata?", mum.getInitialDialogue());
@@ -48,6 +49,7 @@ public class NPCsTest {
         assertEquals("Non mi dare fastidio", brother.getInitialDialogue());
     }
 
+    // Test for the quest assigned dialogues of each NPC
     @Test
     void testQuestAssignedDialogue() {
         Quest dummyQuest = new Quest("Dummy", "Descrizione", mum, 10, 5, Collections.emptyList());
@@ -64,6 +66,7 @@ public class NPCsTest {
         assertTrue(brotherDialogue.contains("Descrizione"));
     }
 
+    // Test for the quest in-progress dialogues of each NPC
     @Test
     void testQuestInProgressDialogueDefault() {
         Quest dummyQuest = new Quest("UnknownQuest", "Descrizione", mum, 10, 5, Collections.emptyList());
@@ -76,6 +79,7 @@ public class NPCsTest {
                 brother.getQuestInProgressDialogue(dummyQuest));
     }
 
+    // Test for the quest completion dialogues of each NPC
     @Test
     void testQuestCompletionDialogue() {
         Quest dummyQuest = new Quest("Dummy", "Descrizione", mum, 10, 5, Collections.emptyList());

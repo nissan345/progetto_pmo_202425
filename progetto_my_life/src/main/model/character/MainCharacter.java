@@ -10,14 +10,12 @@ import java.util.Set;
 import main.model.action.ActionResult;
 import main.model.action.DropItemAction;
 import main.model.action.PickItemAction;
+import main.model.character.enums.*;
+import main.model.character.npc.NPC;
 import main.model.quest.Quest;
 import main.model.world.Room;
 import main.model.world.gameItem.GameItem;
 import main.model.world.gameItem.Inventory;
-
-/**
- * The MainCharacter class represents the playable character in the game,
- */
 
 public class MainCharacter {
 
@@ -25,15 +23,15 @@ public class MainCharacter {
     private String name;
     private Outfit outfit;
     private Hair hair;
+    private Inventory inventory;
     private Stats stats;
     private int lvl; 
     private int xp; 
     private int xpToNext; 
 	private Room currentRoom;
-	private Inventory inventory;
     private Map<Quest, Set<String>> ItemUsedForQuests;
     private List<Quest> ongoingQuests;
-    private List<String> usedItems; // Keeps track of used Items
+    // private List<GameItem> usedItems;                      // Keeps track of used Items
  
     // CONSTRUCTOR ------------------------------------------------------------------------
     public MainCharacter(String name, Outfit outfit, Hair hair) {
@@ -45,12 +43,14 @@ public class MainCharacter {
         this.lvl = 1; 
         this.xp = 0;
         this.xpToNext = computeXpToNext(1);
-        this.currentRoom = null; // There's no room in the beginning
+        this.currentRoom = null;                                            // There's no room in the beginning
         this.ongoingQuests = new ArrayList<>();
-        this.usedItems = new ArrayList<>();
+        // this.usedItems = new ArrayList<>();
+        this.inventory = new Inventory(30);
     }
     
-    // GETTERS AND SETTER -------------------------------------------------------------------
+    // GETTERS ---------------------------------------------------------------------------
+
     public String getName() {return name;}    
     public Outfit getOutfit() { return outfit; }
     public Hair getHair() { return hair;}
@@ -65,6 +65,7 @@ public class MainCharacter {
     
     /**
      * Prints the current state of the MainCharacter stats.
+     * @return
      */
     public String printState() {
         StringBuilder state = new StringBuilder();
@@ -99,37 +100,13 @@ public class MainCharacter {
         this.currentRoom = room;
         return "Sei entrato in: " + room.getRoomName();
     }
-   
-    // METODI PER LA PERSONALIZZAZIONE -------------------------------------------------------
-
-    /* METODO PER CAMBIARE VESTITI
-    public String cambiaVestiti(Vestito nuoviVestiti) {
-        this.outfit = nuoviVestiti;
-        return "Hai cambiato i outfit in: " + nuoviVestiti.getName();
-    }
-    // DA TOGLIERE
-    // METODO PER CAMBIARE CAPELLI
-    public String cambiaCapelli(Capelli nuoviCapelli) {
-        this.hair = nuoviCapelli;
-        return "Hai cambiato i hair in: " + nuoviCapelli.getName();
-    }
-    // HA SENSO MA NON SAPPIAMO SE SERVE
-    // METODO PER MAPPARE LO STATO COMPLETO
-    public Map<String, Integer> getStatoCompleto() {
-        Map<String, Integer> state = new HashMap<>();
-        state.put("satiety", satiety);
-        state.put("hydration", hydration);
-        state.put("energy", energy);
-        state.put("hygiene", hygiene);
-        return state;
-    }
- */
 
     // LEVEL SYSTEM ----------------------------------------------------------------------------------
     
     /**
      * Creates a progressive growth of xp needed to level up
      * @param level  
+     * @return
      */
     private int computeXpToNext(int level) {
         double inc = Math.pow(Math.max(0, level - 1), 1.2);
@@ -150,7 +127,7 @@ public class MainCharacter {
     }
 
     /**
-     * Levels up the MainCharacter.
+     * Levels up the MainCharacter
      */
     public void levelUp() {
         this.lvl++; 
@@ -182,22 +159,11 @@ public class MainCharacter {
     /**
      * Verifies if the MainCharacter has active quests with a specific NPC
      * @param npc
-     * @return 
+     * @return
      */
     public boolean hasActiveQuestWithNPC(NPC npc) {
         return ongoingQuests.stream()
             .anyMatch(quest -> quest.getAssignerNPC().equals(npc));
-    }
-
-    /**
-     * Shows the ongoing quests with an NPC
-     * @param npc
-     * @return
-     */
-    public Optional<Quest> getActiveQuestWithNPC(NPC npc) {
-        return ongoingQuests.stream()
-            .filter(quest -> quest.getAssignerNPC().equals(npc))
-            .findFirst();
     }
 
     /**
@@ -212,47 +178,39 @@ public class MainCharacter {
         .findFirst();
 	}
 
-    /**
-     * Automatically verifies the completion of every active quest with a specific NPC
-     * @param 
-     */
-    // TODO
-
-    // METHODS TO INTERACT WITH AN Item -------------------------------------------------------
+    // METHODS TO INTERACT WITH ITEMS -------------------------------------------------------
     
     /**
-     * registers the use of an Item
+     * Registers the use of an Item for an ongoing quest
      * @param ItemName
      */
-    public void recordItemsUsedForQuests(String ItemName) {
+    public void recordItemsUsedForQuests(GameItem item) {
         for (Quest q : ongoingQuests) {
-            ItemUsedForQuests.computeIfAbsent(q, k -> new HashSet<>()).add(ItemName);
+            ItemUsedForQuests.computeIfAbsent(q, k -> new HashSet<>()).add(item.getName());
         }
     }
     
     /**
-     * Verifies whether an Item has been used or not
-     * @param nameItem
-     * @param quest
+     * Verifies whether an Item has been used or not for any ongoing quest
+     * @param item
      * @return
      */
-    public boolean hasUsedItemForQuest(String nameItem, Quest quest) {
-        return ItemUsedForQuests.getOrDefault(quest, Set.of()).contains(nameItem);
+    public boolean hasUsedItemForQuest(GameItem item) {
+        return ongoingQuests.stream()
+            .anyMatch(quest -> 
+                ItemUsedForQuests.getOrDefault(quest, Set.of()).contains(item.getName())
+            );
     }
     
     /**
-     * Performs an action
+     * Applies the result of an action to the MainCharacter stats
      * @param result
      * @param nameItem
      * @return
      */
-    public String applyActionResult(ActionResult result, String nameItem) {
+    public String applyActionResult(ActionResult result, GameItem item) {
 
-        String controlMessage = checkActionUsefulness(result);
-        if (controlMessage != null) {
-            return controlMessage;
-        }
-        recordItemsUsedForQuests(nameItem);
+        recordItemsUsedForQuests(item);
         stats.changeEnergy(result.getDeltaEnergy());
         stats.changeHydration(result.getDeltaHydration());
         stats.changeHygiene(result.getDeltaHygiene());
@@ -260,56 +218,31 @@ public class MainCharacter {
         
         return result.getMessage();
     }
+   
+    
+    /**
+     * Applies the natural decay of stats over time
+     */
+    public void stateDecay() {
+    	stats.decay();
+    }
 
-    // Registra l'uso di un item
-    public void registerItemUse(String nameItem) {
-        if (!usedItems.contains(nameItem)) {
-            usedItems.add(nameItem);
-        }
-    }
-    
-    // Verifica se un item è state usato
-    public boolean hasUsedItem(String nameItem) {
-        return usedItems.contains(nameItem);
-    }
-    
-    
-    public String interact(GameItem item) {
-        ActionResult result = item.use(this);
-        return applyActionResult(result, item.getName());
-    }
-    
-    public ActionResult pickUp(GameItem item) {
+    /**
+     * Picks up an item and adds it to the inventory
+     * @param item
+     * @return
+     */
+        public ActionResult pickUpItemAction(GameItem item) {
         return new PickItemAction().execute(this, item);
     }
-
-    public ActionResult drop(GameItem item) {
+        
+    /**
+     * Drops an item from the inventory
+     * @param item
+     * @return
+     */    
+    public ActionResult dropItemAction(GameItem item) {
         return new DropItemAction().execute(this, item);
     }
 
-    
-    
-    @Deprecated
-    private String checkActionUsefulness(ActionResult result) {
-    	
-        if (result.getDeltaEnergy() > 0 && stats.getEnergy() >= 100) {
-            return "Sei già pieno di energy, non ha senso riposare ora!";
-        }else if (result.getDeltaSatiety() < 0 && stats.getSatiety() <= 0) {
-            return "Non hai satiety, non ha senso mangiare ora!";
-        }else if (result.getDeltaHydration() < 0 && stats.getHydration() <= 0) {
-            return "Non hai hydration, non ha senso bere ora!";
-        }else if (result.getDeltaHygiene() > 0 && stats.getHygiene() >= 100) {
-            return "Sei già pulitissimo, non serve lavarti!";
-        }else {
-        	return null;
-        }
-    }
-    
-    @Deprecated public int getSatiety() { return stats.getSatiety(); }
-    @Deprecated public int getHydration() { return stats.getHydration(); }
-    @Deprecated public int getEnergy() { return stats.getEnergy(); }
-    @Deprecated public int getHygiene() { return stats.getHygiene(); }
-    public void stateDecay(){
-        stats.decay();
-    }
 }

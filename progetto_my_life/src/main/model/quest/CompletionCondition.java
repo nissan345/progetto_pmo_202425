@@ -1,15 +1,17 @@
 package main.model.quest;
 
 import main.model.character.MainCharacter;
+import main.model.world.gameItem.GameItem;
 
 public class CompletionCondition {
 	
-	private String nameItem;
+	private GameItem item;
 	    
-	public CompletionCondition(String nameItem) {
-		this.nameItem = nameItem;
+	public CompletionCondition(GameItem item) {
+		this.item = item;
 	}
+	
 	public boolean checkCompletion(MainCharacter character) {
-		return character.hasUsedItem(nameItem);
-	} 
+		return character.hasUsedItemForQuest(item);
+	}
 }

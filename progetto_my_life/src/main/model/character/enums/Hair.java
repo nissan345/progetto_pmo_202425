@@ -1,4 +1,4 @@
-package main.model.character;
+package main.model.character.enums;
 
 
 /**

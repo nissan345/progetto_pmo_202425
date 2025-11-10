@@ -1,17 +1,21 @@
 package main.model.character.npc;
 
+import java.util.Collections;
 
-import java.util.Arrays;
-import main.model.character.NPC;
-import main.model.quest.CompletionCondition;
+
 import main.model.quest.Quest;
 import main.model.world.Room;
+import main.model.world.House;
+import main.model.world.gameItem.GameItem;
 
 public class Mum extends NPC {
 
-    public Mum(Room s) {
-        super("Mum", s);
+    // CONSTRUCTOR ---------------------------------------------------------------------
+    public Mum(Room s, House house) {
+        super("Mum", s, house);
     }
+
+    // MAIN METHODS ------------------------------------------------------------------
     
     @Override
     public String getInitialDialogue() {
@@ -21,16 +25,16 @@ public class Mum extends NPC {
     @Override
     public String getQuestAssignedDialogue(Quest quest) {
         return "Ottimo che tu voglia aiutare! " + quest.getDescription() + 
-        	   "\nSo che posso contare su di te. Torna da me quando avrai finito!";
+               "\nSo che posso contare su di te. Torna da me quando avrai finito!";
     }
     
     @Override 
     public String getQuestInProgressDialogue(Quest quest) {
-    	switch(quest.getName()) {
-    		case "L'album perduto":
-    			return "Hai trovato l'album? Guarda bene nel salotto, dovrebbe essere da qualche parte!";
-    		default:
-    			return "Come sta andando con la quest? Torna da me quando hai finito!";
+        switch(quest.getName()) {
+            case "L'album perduto":
+                return "Hai trovato l'album? Guarda bene nel salotto, dovrebbe essere da qualche parte!";
+            default:
+                return "Come sta andando con la quest? Torna da me quando hai finito!";
         } 
     }
     
@@ -42,13 +46,24 @@ public class Mum extends NPC {
 
     @Override
     protected void initializeQuests() {
-        Quest albumQuest = new Quest("L'album perduto", 
+        // Get the item from the living room
+        Room livingRoom = this.getHouse().getRoom("Salotto");
+        GameItem album = livingRoom.getItemsInRoom().stream()
+            .filter(item -> item.getName().equals("Album"))
+            .findFirst()
+            .orElse(null);
+        
+        // If the item exists, create and add the quest
+        if (album != null) {
+            Quest albumQuest = new Quest(
+                "L'album perduto", 
                 "Dovresti riportarmi il vecchio album di famiglia che ho perduto da qualche parte in casa e riportamelo",  
-                                   this,
-                                   15,
-                                   20, 
-                                   Arrays.asList(new CompletionCondition("Album"))
-                            );
-        this.addQuest(albumQuest);
+                this,
+                15,
+                20, 
+                Collections.singletonList(createCondition(album))
+            );
+            this.addQuest(albumQuest);
+        }
     }
 }

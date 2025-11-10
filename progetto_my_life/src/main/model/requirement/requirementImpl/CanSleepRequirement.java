@@ -1,9 +1,9 @@
-package main.model.requirement;
+package main.model.requirement.requirementImpl;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import main.model.character.MainCharacter;
+import main.model.requirement.Requirement;
 
 public class CanSleepRequirement implements Requirement{
 	
@@ -18,13 +18,13 @@ public class CanSleepRequirement implements Requirement{
 	public List<String> getFailureReasons(MainCharacter c) {
 		List<String> reasons = new ArrayList<>();
 
-        // Controlla se l'energia è sufficiente
-        if (c.getStats().getEnergy() <= 70) {
+        // make sure that energy is not too high
+        if (c.getStats().getEnergy() >= 70) {
             reasons.add("Non puoi dormire adesso, sei troppo energetico");
         }
 
-        // Controlla se l'igiene è sufficiente
-        if (c.getStats().getHygiene() < 30) {
+        // Check if there is enough hygiene
+        if (c.getStats().getHygiene() <= 30) {
             reasons.add("Sei troppo sporco per dormire. Le lenzuola patiranno");
         }
 

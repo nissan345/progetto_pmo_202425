@@ -8,9 +8,9 @@ public class Stats {
 	private static final int SLEEP_MAX_ENERGY = 70;
     private static final int SLEEP_MIN_HYGIENE = 30;
 
-    private static final int COOK_MIN_ENERGY = 40;
-    private static final int COOK_MIN_HYGIENE = 50;
-    private static final int COOK_MIN_SATIETY = 40; 
+    private static final int EAT_MIN_ENERGY = 40;
+    private static final int EAT_MIN_HYGIENE = 50;
+    private static final int EAT_MIN_SATIETY = 85; 
 
     private static final int DRINK_MIN_HYDRATION = 70; 
     
@@ -18,6 +18,11 @@ public class Stats {
 
     private static final int SHOWER_MIN_ENERGY = 20;
     private static final int SHOWER_MAX_HYGIENE = 70;
+
+	private static final int MAX_STAT = 100;
+	private static final int MIN_STAT = 0;
+	private static final int CONTROL_STAT = 20;	
+	private static final int STAT_DECAY = -2;
 	
 	private int satiety;
 	private int hygiene;
@@ -38,17 +43,17 @@ public class Stats {
 		return isCleanEnough && isTiredEnough;
 	}
 	
-	public boolean canCook() {
-		boolean isHungryEnough = satiety < COOK_MIN_SATIETY;
-		boolean isCleanEnough = hygiene > COOK_MIN_HYGIENE;
-		boolean isEnergeticEnough = energy > COOK_MIN_ENERGY;
+	public boolean canEat() {
+		boolean isHungryEnough = satiety < EAT_MIN_SATIETY;
+		boolean isCleanEnough = hygiene > EAT_MIN_HYGIENE;
+		boolean isEnergeticEnough = energy > EAT_MIN_ENERGY;
 		return isHungryEnough && isCleanEnough && isEnergeticEnough;
 	}
 	
 	public boolean canDrink() {
 		return this.hydration < DRINK_MIN_HYDRATION;
 	}
-	
+	 
 	public boolean canShower() {
 		boolean hasEnoughEnergy =  energy > SHOWER_MIN_ENERGY;
 		boolean isDirtyEnough =  hygiene < SHOWER_MAX_HYGIENE;
@@ -75,13 +80,13 @@ public class Stats {
         hygiene = clamp(hygiene + delta);
     }
     
-    public boolean isExhausted() { return energy < 20; }
-    public boolean isStarving()  { return satiety < 20; }
-    public boolean isDehydrated(){ return hydration < 20; }
-    public boolean isDirty()     { return hygiene < 20; }
+    public boolean isExhausted() { return energy < CONTROL_STAT; }
+    public boolean isStarving()  { return satiety < CONTROL_STAT; }
+    public boolean isDehydrated(){ return hydration < CONTROL_STAT; }
+    public boolean isDirty()     { return hygiene < CONTROL_STAT; }
 
     private int clamp(int value) {
-        return Math.max(0, Math.min(100, value));
+        return Math.max(MIN_STAT, Math.min(MAX_STAT, value));
     }
 
     public int getEnergy() { return energy; }
@@ -91,10 +96,10 @@ public class Stats {
     
     
     public void decay(){
-    	changeEnergy(-2);
-    	changeSatiety(-2);
-    	changeHydration(-2);
-    	changeHygiene(-2);
+    	changeEnergy(STAT_DECAY);
+    	changeSatiety(STAT_DECAY);
+    	changeHydration(STAT_DECAY);
+    	changeHygiene(STAT_DECAY);
     }
     
 }

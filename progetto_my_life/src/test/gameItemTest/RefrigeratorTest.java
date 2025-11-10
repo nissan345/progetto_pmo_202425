@@ -54,7 +54,7 @@ class RefrigeratorTest {
 
     @Test
     void testUseWithChoice() {
-        // Tests the use of each type of food that is in the refrigeratos
+        // Tests the use of each type of food that is in the refrigerators
         for (FoodType food : FoodType.values()) {
         	character.getStats().changeSatiety(-50);
             ActionResult result = refrigerator.useWithChoice(character, food);

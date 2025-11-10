@@ -72,7 +72,7 @@ class ItemFactoryKitchenTest {
         GameItem fornelli = kitchen.getItemsInRoom().get(0);
         MainCharacter character = new MainCharacter("Test", Outfit.CASUAL, Hair.CURLY_LONG);
         
-        // Test with different energy levels to verify dynamic behavior
+        // Test with different energy levels to verify dynamic behaviour
         character.getStats().changeEnergy(-80); // Low energy (<40), MainCharacter shouldn't be allowed to use fornelli
         ActionResult result1 = fornelli.use(character);
         character.applyActionResult(result1, fornelli);

@@ -1,11 +1,9 @@
 package characterTest;
 
 import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.ArrayList;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import java.util.ArrayList;
 
 import main.model.character.MainCharacter;
 import main.model.character.NPC;
@@ -71,7 +69,7 @@ class MainCharacterTest {
         assertEquals(0, character.getXp());
         assertEquals(100, character.getXpToNext());             // computeXpToNext(1) = 100
         assertNull(character.getCurrentRoom());
-        //assertNotNull(character.getInventory());              // se l’inventory parte null, cambiare
+
     }
 
     // TEST FOR XP AND LEVELING UP -------------------------------------------------------
@@ -99,7 +97,7 @@ class MainCharacterTest {
     @Test
     void testAddXp_MultipleLevelUps() {
         character.addXp(100 + 150 + 215 + 10);          // 475
-        assertEquals(4, character.getLvl());            // 1→2→3→4
+        assertEquals(4, character.getLvl());           
         assertEquals(10, character.getXp());            // residue XP = 10
         assertEquals(287, character.getXpToNext());     // XP to next level = 287
     }
@@ -298,7 +296,7 @@ class MainCharacterTest {
         character.dropItemAction(mug);
         assertEquals(0, character.getInventory().getItems().size());
 
-        // Add's the object back into the room
+        // Addss the object back into the room
         bedroom.addItemRoom(mug);
         assertTrue(bedroom.hasItemRoom(mug));
     }

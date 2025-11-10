@@ -120,7 +120,7 @@ class MainCharacterTest {
         int sat0 = character.getStats().getSatiety();
         character.stateDecay();
         int sat1 = character.getStats().getSatiety();
-        // checking that the satiety has decreased
+        // Checking that the satiety has decreased
         assertTrue(sat1 <= sat0);
     }
 
@@ -129,14 +129,14 @@ class MainCharacterTest {
     // Testing that the character cannot enter a room when the level requirement fails
     @Test
     void testCannotEnterRoomWhenRequirementFails() {
-        // Bagno richiede livello 2
+        // Bathroom requires level 2
         String msg1 = character.pickCurrentRoom(bathroom);
         assertNotNull(msg1);
         assertTrue(msg1.startsWith("Non puoi entrare in: Bagno"), "Messaggio inatteso: " + msg1);
         assertTrue(msg1.contains("Livello richiesto: 2"), "Motivo mancante nel messaggio: " + msg1);
         assertEquals(null, character.getCurrentRoom());
 
-        // Giardino richiede livello 4
+        // Garden requires level 4
         String msg2 = character.pickCurrentRoom(garden);
         assertNotNull(msg2);
         assertTrue(msg2.startsWith("Non puoi entrare in: Giardino"), "Messaggio inatteso: " + msg2);
@@ -234,7 +234,7 @@ class MainCharacterTest {
         bedroom.addItemRoom(computer);
         assertTrue(bedroom.hasItemRoom(computer));
 
-        // added to inventory
+        // Added to inventory
         character.pickUpItemAction(computer);
         assertEquals(20, character.getInventory().getUsedSpace());
         assertTrue(character.getInventory().hasItem("Computer"));
@@ -242,7 +242,7 @@ class MainCharacterTest {
 
         
         character.pickUpItemAction(computer);
-        assertEquals(20, character.getInventory().getUsedSpace()); // rimane lo stesso
+        assertEquals(20, character.getInventory().getUsedSpace()); // Stays the same
         assertTrue(character.getInventory().hasItem("Computer"));
         assertFalse(bedroom.hasItemRoom(computer));
     }
@@ -289,16 +289,16 @@ class MainCharacterTest {
         bedroom.addItemRoom(mug);
         assertTrue(bedroom.hasItemRoom(mug));
         
-        //adds to inventory
+        // Adds to inventory
         character.pickUpItemAction(mug);
         assertEquals(1, character.getInventory().getItems().size());
         assertFalse(bedroom.hasItemRoom(mug));
 
-        //removes from inventory
+        // Removes from inventory
         character.dropItemAction(mug);
         assertEquals(0, character.getInventory().getItems().size());
 
-        // Let's add the object back into the room
+        // Add's the object back into the room
         bedroom.addItemRoom(mug);
         assertTrue(bedroom.hasItemRoom(mug));
     }

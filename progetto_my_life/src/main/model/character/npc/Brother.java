@@ -10,10 +10,13 @@ import main.model.world.gameItem.GameItem;
 
 public class Brother extends NPC {
     
+    // CONSTRUCTOR ---------------------------------------------------------------------
     public Brother(Room s, House house) {
         super("Brother", s, house);
     }
     
+    // MAIN METHODS ------------------------------------------------------------------
+
     @Override
     public String getInitialDialogue() {
         return "Non mi dare fastidio";

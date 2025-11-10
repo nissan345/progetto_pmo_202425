@@ -10,9 +10,12 @@ import main.model.world.gameItem.GameItem;
 
 public class Dad extends NPC {
 
+    // CONSTRUCTOR ---------------------------------------------------------------------
     public Dad(Room s, House house) {
         super("Dad", s, house);
     }
+    
+    // MAIN METHODS ------------------------------------------------------------------
     
     @Override
     public String getInitialDialogue() {

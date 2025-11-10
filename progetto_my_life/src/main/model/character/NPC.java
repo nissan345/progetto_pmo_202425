@@ -14,8 +14,9 @@ public abstract class NPC {
     private int affinity;
     private List<Quest> availableQuests;
     private BiPredicate<MainCharacter, Room> triggerCondition;
-    private final House house;                                      // Reference to the house so that he can see the items in other rooms
+    private final House house;                                      // Reference to the house so that it can see the items in other rooms
 
+    // CONSTRUCTOR ---------------------------------------------------------------------
     public NPC(final String relationship, final Room s, House house) {
         this.relationship = relationship;
         this.position = s; 
@@ -38,8 +39,8 @@ public abstract class NPC {
     
     /**
      * Creates a single completion condition for an item
-     * @param item the item required for quest completion
-     * @return CompletionCondition object
+     * @param item
+     * @return
      */
     protected CompletionCondition createCondition(GameItem item) {
         return new CompletionCondition(item);

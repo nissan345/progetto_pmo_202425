@@ -1,8 +1,8 @@
 package main.model.character.npc;
 
 import java.util.Collections;
+
 import main.model.character.NPC;
-import main.model.quest.CompletionCondition;
 import main.model.quest.Quest;
 import main.model.world.Room;
 import main.model.world.House;
@@ -10,9 +10,12 @@ import main.model.world.gameItem.GameItem;
 
 public class Mum extends NPC {
 
+    // CONSTRUCTOR ---------------------------------------------------------------------
     public Mum(Room s, House house) {
         super("Mum", s, house);
     }
+
+    // MAIN METHODS ------------------------------------------------------------------
     
     @Override
     public String getInitialDialogue() {
@@ -43,14 +46,14 @@ public class Mum extends NPC {
 
     @Override
     protected void initializeQuests() {
-        // Ottieni la stanza Salotto dalla house
+        // Get the item from the living room
         Room livingRoom = this.getHouse().getRoom("Salotto");
         GameItem album = livingRoom.getItemsInRoom().stream()
             .filter(item -> item.getName().equals("Album"))
             .findFirst()
             .orElse(null);
         
-        // Se l'item è stato trovato, crea la quest
+        // If the item exists, create and add the quest
         if (album != null) {
             Quest albumQuest = new Quest(
                 "L'album perduto", 

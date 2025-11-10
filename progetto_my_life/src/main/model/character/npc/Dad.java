@@ -1,8 +1,8 @@
 package main.model.character.npc;
 
 import java.util.Collections;
+
 import main.model.character.NPC;
-import main.model.quest.CompletionCondition;
 import main.model.quest.Quest;
 import main.model.world.Room;
 import main.model.world.House;

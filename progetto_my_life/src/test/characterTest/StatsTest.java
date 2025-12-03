@@ -16,6 +16,9 @@ class StatsTest {
 		statistics = new Stats();  // Initial statistics are all 100
 	}
 
+	// TESTS ------------------------------------------------------------------------
+
+	// Test for the change of statistics and their controls
 	@Test
 	public void testChangeState() {
 		// Verifies the states are initialised well
@@ -51,6 +54,8 @@ class StatsTest {
 		assertTrue(statistics.isStarving());
 		
 	}
+	
+	// TESTS FOR ACTIONS POSSIBLE BASED ON STATISTICS ------------------------------
 	
 	@Test
 	public void testCanEat() {
@@ -137,7 +142,7 @@ class StatsTest {
 		statistics.changeSatiety(-50);
 		statistics.changeHygiene(-40);
 		assertTrue(statistics.canPlay());
-		//if energy < 20, player shouldn't be allowed to play
+		// If energy < 20, player shouldn't be allowed to play
 		statistics.changeEnergy(-85);
 		assertFalse(statistics.canPlay());
 	}

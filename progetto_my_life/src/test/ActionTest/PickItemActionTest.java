@@ -32,6 +32,9 @@ class PickItemActionTest {
         item = new GameItem.Builder("Mela", "TestRoom", 2).build();
     }
 
+    // TESTS ------------------------------------------------------------------------
+
+    // Test picking up an item successfully
     @Test
     void testPickItemSuccess() {
         room.addItemRoom(item);
@@ -43,6 +46,7 @@ class PickItemActionTest {
         assertFalse(room.hasItemRoom(item));
     }
 
+    // Test trying to pick up an item not in the room
     @Test
     void testPickItemNotInRoom() {
         ActionResult result = pickAction.execute(character, item);
@@ -51,10 +55,11 @@ class PickItemActionTest {
         assertFalse(character.getInventory().hasItem("Mela"));
     }
 
+    // Test trying to pick up an item when inventory is full
     @Test
     void testPickItemInventoryFull() {
         room.addItemRoom(item);
-        //we fill the inventory beyond capacity
+        // Filling the inventory beyond capacity
         for (int i = 0; i < 30; i++) {
             character.getInventory().addItem(new GameItem.Builder("Oggetto" + i, "TestRoom", 1).build());
         }

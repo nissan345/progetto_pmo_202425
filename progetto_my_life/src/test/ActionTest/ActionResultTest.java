@@ -22,6 +22,7 @@ class ActionResultTest {
         assertEquals(5, result.getActionDuration());            // default duration
     }
 
+    // Test 
     @Test
     void testCostruttoreCompletoSenzaDurataPersonalizzata() {
         ActionResult result = new ActionResult("Ok", 10, -5, 15, 0);

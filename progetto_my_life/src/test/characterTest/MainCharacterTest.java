@@ -195,14 +195,10 @@ class MainCharacterTest {
      */
     @Test
     void testAddActiveQuest() {
-        Quest q = new Quest(
-            "FetchStereo",
-            "Prendi lo stereo",
-            questGiver,
-            5,
-            20,
-            new ArrayList<>()
-        );
+    	Quest q = new Quest.Builder("FetchStereo", "Prendi lo stereo", questGiver)
+                .affinityPoints(5)
+                .xpReward(20)
+                .build();
 
         character.addQuest(q);
 
@@ -215,7 +211,10 @@ class MainCharacterTest {
      */
     @Test
     void testItemsForQuest() {
-        Quest q = new Quest("UsePC", "Usa il PC", questGiver, 0, 0, new ArrayList<>());
+    	Quest q = new Quest.Builder("FetchStereo", "Prendi lo stereo", questGiver)
+                .affinityPoints(5)
+                .xpReward(20)
+                .build();
         character.addQuest(q);
 
         GameItem computer = new GameItem.Builder("Computer", "Bedroom", 20)
@@ -238,7 +237,10 @@ class MainCharacterTest {
      */
     @Test
     void testItemHasBeenUsed() {
-        Quest q = new Quest("UsePC", "Usa il PC", questGiver, 0, 0, new ArrayList<>());
+    	Quest q = new Quest.Builder("FetchStereo", "Prendi lo stereo", questGiver)
+                .affinityPoints(5)
+                .xpReward(20)
+                .build();
         character.addQuest(q);
 
         GameItem computer = new GameItem.Builder("Computer", "Bedroom", 20).build();

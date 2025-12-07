@@ -1,38 +1,63 @@
 package main.model.character.npc;
 
-import java.util.Collections;
 
-
+import main.model.character.MainCharacter;
+import main.model.quest.ItemDeliveryCondition;
+import main.model.quest.ItemUsageCondition;
 import main.model.quest.Quest;
-import main.model.world.Room;
 import main.model.world.House;
+import main.model.world.Room;
 import main.model.world.gameItem.GameItem;
 
 public class Mum extends NPC {
+	
+	private boolean giftGiven;
 
     // CONSTRUCTOR ---------------------------------------------------------------------
     public Mum(Room s, House house) {
         super("Mum", s, house);
+        this.giftGiven = false;
     }
 
     // MAIN METHODS ------------------------------------------------------------------
     
     @Override
     public String getInitialDialogue() {
-        return "Ciao tesoro! Come sta andando la tua giornata?";
+        if (getAffinity() < LOW_AFFINITY) {
+            return "Mi sembri un po' distante ultimamente... è successo qualcosa?";
+        } else {
+            return "Ciao tesoro! Come sta andando la tua giornata?"; 
+        } 
     }
 
     @Override
     public String getQuestAssignedDialogue(Quest quest) {
-        return "Ottimo che tu voglia aiutare! " + quest.getDescription() + 
+    	if (!quest.getAssignerNPC().equals(this)) {
+            return "Non so nulla di questa faccenda.";
+        }
+        
+        if (getAffinity() > LOW_AFFINITY) {
+             return "Grazie tesoro! " + quest.getDescription() + 
+               "\nFai con calma, non ti stancare troppo!";
+        }
+        return "Grazie tesoro! " + quest.getDescription() + 
                "\nSo che posso contare su di te. Torna da me quando avrai finito!";
     }
     
     @Override 
     public String getQuestInProgressDialogue(Quest quest) {
+    	
+    	if (!quest.getAssignerNPC().equals(this)) {
+    		return "Non so nulla di questa faccenda.";
+    	}
+    	
         switch(quest.getName()) {
             case "L'album perduto":
                 return "Hai trovato l'album? Guarda bene nel salotto, dovrebbe essere da qualche parte!";
+            case "Visita ospiti":
+                return "Sei ancora così? Vai subito a farti una doccia e cambiati d'abito, gli ospiti arriveranno a momenti!";
+            case "La Citazione Mancante":
+                return "Hai trovato il libro? Guarda sulla libreria.";
             default:
                 return "Come sta andando con la quest? Torna da me quando hai finito!";
         } 
@@ -40,30 +65,86 @@ public class Mum extends NPC {
     
     @Override
     public String getQuestCompletionDialogue(Quest quest) {
-        return "Grazie mille! Hai fatto un ottimo lavoro." +
-               "'!\nSei sempre così affidabile, sono orgoglioso di te!"; 
+    	if (!quest.getAssignerNPC().equals(this)) {
+            return "Non so nulla di questa faccenda.";
+        }
+        if (getAffinity() < LOW_AFFINITY) {
+            return "Grazie per l'aiuto.";
+        } else {
+            return "Grazie mille! Hai fatto un ottimo lavoro!\nSei sempre così affidabile, sono orgogliosa di te!"; 
+        }
+    }
+    
+    public String checkGiftInteraction(MainCharacter character) {
+        if (getAffinity() > 70 && !giftGiven) {
+            GameItem gift = createUniqueGift();
+            if (character.pickUpItemAction(gift).getMessage().contains("Preso")) { 
+                this.giftGiven = true;
+                return "Tieni, ho trovato questo vecchio videogioco in soffitta. Pensavo ti piacesse!\n" +
+                       "(Hai ricevuto: Videogioco Retro)";
+            } else {
+                return "Ho un regalo per te, ma hai le tasche piene! Torna quando hai spazio.";
+            }
+        }
+        return "";
+    }
+    
+    private GameItem createUniqueGift() {
+    	return new GameItem.Builder("Videogioco Retro", "Salotto", 10)
+                .message("Un classico gioco degli anni 2000.") 
+                .build();
     }
 
     @Override
     protected void initializeQuests() {
-        // Get the item from the living room
-        Room livingRoom = this.getHouse().getRoom("Salotto");
-        GameItem album = livingRoom.getItemsInRoom().stream()
-            .filter(item -> item.getName().equals("Album"))
-            .findFirst()
-            .orElse(null);
         
-        // If the item exists, create and add the quest
+        GameItem album = findItem("Album", "Salotto");
+        
         if (album != null) {
-            Quest albumQuest = new Quest(
-                "L'album perduto", 
-                "Dovresti riportarmi il vecchio album di famiglia che ho perduto da qualche parte in casa e riportamelo",  
-                this,
-                15,
-                20, 
-                Collections.singletonList(createCondition(album))
-            );
+            Quest albumQuest = new Quest.Builder("L'album perduto", 
+                  "Dovresti riportarmi il vecchio album di famiglia che ho perduto da qualche parte in casa e riportamelo",  
+                               this)
+                .xpReward(20)
+                .affinityPoints(25)
+                .addCondition(new ItemDeliveryCondition(album))
+                .triggerCondition((player, room) -> room.getRoomName().equals("Salotto")) 
+                .build();
+
             this.addQuest(albumQuest);
+        }
+        
+        GameItem shower = findItem("Doccia", "Bagno");          
+        GameItem wardrobe = findItem("Armadio", "Camera da Letto"); 
+        
+        if (shower != null && wardrobe != null) {
+            Quest guestsQuest = new Quest.Builder("Visita ospiti", 
+                    "Sta sera verrano degli ospiti. Per favore, fatti una doccia e mettiti qualcosa di elegante!", 
+                    this)
+                .xpReward(35)
+                .affinityPoints(35)
+                .addCondition(new ItemUsageCondition(shower))
+                .addCondition(new ItemUsageCondition(wardrobe))
+                .triggerCondition((player, room) -> room.getRoomName().equals("Salotto") && 
+                									player.hasCompletedQuest("L'album perduto"))
+                .build();
+            
+            this.addQuest(guestsQuest);
+        }
+        
+        GameItem bookshelf = findItem("Libreria", "Salotto"); 
+        
+        if (bookshelf != null) {
+            Quest bookQuest = new Quest.Builder("La Citazione Mancante", 
+                    "Sto finendo di scrivere un articolo, ma non ricordo una citazione. Controlla nella libreria per me!", 
+                    this)
+                .xpReward(20)
+                .affinityPoints(25)
+                .addCondition(new ItemUsageCondition(bookshelf))
+                .triggerCondition((player, room) -> room.getRoomName().equals("Salotto") && 
+                									player.hasCompletedQuest("Visita ospiti"))
+                .build();
+            
+            this.addQuest(bookQuest);
         }
     }
 }

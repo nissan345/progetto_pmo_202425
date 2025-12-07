@@ -114,7 +114,12 @@ public class ItemFactory {
                             int hygieneCost = LOW_COST;
                             return new ActionResult(self.getMessage(), NO_EFFECT, NO_EFFECT, energyCost, hygieneCost, durationSec);
                         })
+                        .build(),
+                        
+                new GameItem.Builder("Chiavi macchina", "Cucina", SMALL_SIZE)
+                        .message("Sono le chiavi della macchina")
                         .build()
+                
         ));	
         return new Room("Cucina", items, new LevelRequirement(1));
     }
@@ -185,7 +190,7 @@ public class ItemFactory {
                         .build(),
         
                 new GameItem.Builder("Album", "Salotto", SMALL_SIZE)
-                        .message("Hai preso un vecchio album.")
+                        .message("Guardi il vecchio album di famiglia")
                         .energy(LOW_COST)
                         .build()
         ));

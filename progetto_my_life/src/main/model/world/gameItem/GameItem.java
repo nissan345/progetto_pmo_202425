@@ -57,14 +57,18 @@ public class GameItem{
      * @return the result of the action
      */
     public ActionResult use(MainCharacter character) {
-        if (!requirement.isSatisfiedBy(character)) {
+    	ActionResult result; // Variabile per salvare il risultato
+        if (requirement != null && !requirement.isSatisfiedBy(character)) {
             return new ActionResult(requirement.getFailureReasons(character)); 
         }
         if (dynamicUse != null) {
-            return dynamicUse.apply(character, this);
+            result = dynamicUse.apply(character, this);
+        } else {
+            result = new ActionResult(message, deltaSatiety, deltaHydration, deltaEnergy, deltaHygiene);
         }
+        character.applyActionResult(result, this);
         
-        return new ActionResult(message, deltaSatiety, deltaHydration, deltaEnergy, deltaHygiene);
+        return result;
     }
     
     /**

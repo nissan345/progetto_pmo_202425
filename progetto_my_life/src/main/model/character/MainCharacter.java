@@ -31,7 +31,7 @@ public class MainCharacter {
 	private Room currentRoom;
     private Map<Quest, Set<String>> ItemUsedForQuests;
     private List<Quest> ongoingQuests;
-    // private List<GameItem> usedItems;                      // Keeps track of used Items
+    private List<Quest> completedQuests;                     
  
     // CONSTRUCTOR ------------------------------------------------------------------------
     public MainCharacter(String name, Outfit outfit, Hair hair) {
@@ -45,7 +45,7 @@ public class MainCharacter {
         this.xpToNext = computeXpToNext(1);
         this.currentRoom = null;                                            // There's no room in the beginning
         this.ongoingQuests = new ArrayList<>();
-        // this.usedItems = new ArrayList<>();
+        this.completedQuests = new ArrayList<>();
         this.inventory = new Inventory(30);
     }
     
@@ -154,6 +154,7 @@ public class MainCharacter {
     public void removeQuest(Quest quest) {
         ongoingQuests.remove(quest);
         ItemUsedForQuests.remove(quest);
+        completedQuests.add(quest);
     }
 
     /**
@@ -177,6 +178,18 @@ public class MainCharacter {
         .filter(q -> q.checkCompletion(this))
         .findFirst();
 	}
+    
+    /**
+     * List of every completed quest 
+     */
+    public List<Quest> getCompletedQuests() {
+    	return this.completedQuests; 
+    }
+    
+    public boolean hasCompletedQuest(String questName) {
+    	return this.completedQuests.stream()
+    							    .anyMatch(q -> q.getName().equals(questName));
+    }
 
     // METHODS TO INTERACT WITH ITEMS -------------------------------------------------------
     

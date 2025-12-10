@@ -43,7 +43,7 @@ public class MainCharacter {
         this.lvl = 1; 
         this.xp = 0;
         this.xpToNext = computeXpToNext(1);
-        this.currentRoom = null;                                            // There's no room in the beginning
+        this.currentRoom = null;                                            
         this.ongoingQuests = new ArrayList<>();
         this.completedQuests = new ArrayList<>();
         this.inventory = new Inventory(30);
@@ -110,7 +110,7 @@ public class MainCharacter {
      */
     private int computeXpToNext(int level) {
         double inc = Math.pow(Math.max(0, level - 1), 1.2);
-        return 100 + (int)Math.round(50 * inc);
+        return 50 + (int)Math.round(50 * inc);
     }
 
     /**

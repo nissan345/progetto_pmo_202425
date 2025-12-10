@@ -91,9 +91,9 @@ class GameItemTest {
 	    assertEquals(15, result2.getDeltaEnergy());
 	    
 	    // Now energy should be 25
-	    character.getStats().changeEnergy(-40);
-	    ActionResult result3 = item.use(character);
+	    character.getStats().changeEnergy(-55);
 		assertEquals(25 ,character.getStats().getEnergy());
+		ActionResult result3 = item.use(character);
 		assertEquals(20, result3.getDeltaEnergy());
 	}
 

@@ -78,8 +78,8 @@ public class Brother extends NPC {
             Quest kitchenQuest = new Quest.Builder("Cibo per tutti", 
                     "Dei nostri amici vengono a casa, potresti prepare qualcosa per tutti mentre io pulisco la mia camera",  
                                 this)
-                .xpReward(50)
-                .affinityPoints(20)
+                .xpReward(QuestDifficulty.EASY.getXpReward())
+                .affinityPoints(QuestDifficulty.EASY.getAffinityReward())
                 .addCondition(new ItemUsageCondition(stove))
                 .triggerCondition((player, room) -> room.getRoomName().equals("Cucina")) 
                 .build();
@@ -94,25 +94,23 @@ public class Brother extends NPC {
             Quest washingQuest = new Quest.Builder("Lava vestiti", 
                     "Potresti mettere i miei vestiti nella lavatrice?",  
                                 this)
-                .xpReward(55)
-                .affinityPoints(25)
+                .xpReward(QuestDifficulty.EASY.getXpReward())
+                .affinityPoints(QuestDifficulty.EASY.getAffinityReward())
                 .addCondition(new ItemUsageCondition(washingMachine))
                 .triggerCondition((player, room) -> room.getRoomName().equals("Cucina") &&
-                									player.hasCompletedQuest("Cibo per turri"))
+                									player.hasCompletedQuest("Cibo per tutti"))
                 									
                 .build();
 
             addQuest(washingQuest);
         } 
         
-        GameItem videogame = findItem("Videogioco retro", "Salotto");
-        
         Quest videogameQuest = new Quest.Builder("Videogioco retro", 
                     "Potresti trovare il mio vecchio videogioco Shenmue II, devo finire la mia collezione di giochi retro",  
                                 this)
-                .xpReward(250)
-                .affinityPoints(50)
-                .addCondition(new ItemDeliveryCondition(videogame))
+                .xpReward(QuestDifficulty.HARD.getXpReward())
+                .affinityPoints(QuestDifficulty.HARD.getAffinityReward())
+                .addCondition(new ItemDeliveryCondition("Videogioco retro"))
                 .triggerCondition((player, room) -> room.getRoomName().equals("Cucina") &&
                 									player.hasCompletedQuest("Lava vestiti"))
                 									

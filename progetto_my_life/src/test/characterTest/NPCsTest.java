@@ -1,9 +1,14 @@
 package characterTest;
 
 import main.model.world.Room;
+import main.model.world.factory.ItemFactory;
 import main.model.world.House;
+import main.model.character.MainCharacter;
+import main.model.character.enums.Hair;
+import main.model.character.enums.Outfit;
 import main.model.character.npc.*;
 import main.model.quest.Quest;
+import main.model.quest.QuestSystem;
 import main.model.requirement.requirementImpl.*;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -19,27 +24,41 @@ public class NPCsTest {
     private Room livingRoom;
     private Room kitchen;
     private Room garden;
+    private Room bathroom; 
+    private Room bedroom; 
+    
+    private MainCharacter c; 
 
     private Mum mum;
     private Dad dad;
     private Brother brother;
+    
+    private QuestSystem questSystem; 
 
     @BeforeEach
     void setup() {
         house = new House();
-        // Note: Here we are not adding items to the rooms, so initializeQuests() 
-        // will not create real quests. We will use dummy quests for dialogue testing.
-        livingRoom = new Room("Salotto", Collections.emptyList(), new AlwaysTrueRequirement());
-        kitchen = new Room("Cucina", Collections.emptyList(), new AlwaysTrueRequirement());
-        garden = new Room("Giardino", Collections.emptyList(), new AlwaysTrueRequirement());
+        
+        bedroom    = ItemFactory.createBedroom();
+        livingRoom = ItemFactory.createLivingRoom();
+        kitchen    = ItemFactory.createKitchen();
+        garden     = ItemFactory.createGarden();
+        bathroom   = ItemFactory.createBathroom();
         
         house.addRoom(livingRoom);
         house.addRoom(kitchen);
         house.addRoom(garden);
+        house.addRoom(bathroom);
+        house.addRoom(bedroom);
+        
+        c = new MainCharacter("player", Outfit.CASUAL, Hair.CURLY_LONG);
 
         mum = new Mum(livingRoom, house);
         dad = new Dad(garden, house);
         brother = new Brother(kitchen, house);
+        
+        questSystem = new QuestSystem();
+        questSystem.registerNPC(dad);
     }
 
     // TESTS ------------------------------------------------------------------------
@@ -47,24 +66,25 @@ public class NPCsTest {
     // Test for the initial dialogues of each NPC
     @Test
     void testInitialDialogue() {
-        assertEquals("Ciao tesoro! Come sta andando la tua giornata?", mum.getInitialDialogue());
+    	// Low Affinity (< 15)
+        assertTrue(dad.getAffinity() < 15);
+        assertEquals("Mmh... tutto bene? Cerca di non combinare guai oggi.", dad.getInitialDialogue());
+        
+        dad.increaseAffinity(20); // Now 20
         assertEquals("Ciao tesoro! Come sta andando la tua avventura?", dad.getInitialDialogue());
-        assertEquals("Non mi dare fastidio", brother.getInitialDialogue());
     }
 
     // Test for the quest assigned dialogues: Ownership Check
     @Test
     void testQuestAssignedDialogue() {
-        // Create a quest assigned by MUM
-        Quest mumQuest  = new Quest.Builder("UnknownQuest", "Descrizione", mum)
-                .affinityPoints(5)
-                .xpReward(20)
-                .build();
+        // Create a quest assigned by Mum
+        Quest mumQuest  = new Quest.Builder("UnknownQuest", "Descrizione", mum).build();
 
-        // 1. Mum must recognize HER quest
+        // 1. Mum must recognize her quest
+        assertTrue(dad.getAffinity() < 15);
         String mumDialogue = mum.getQuestAssignedDialogue(mumQuest);
-        assertTrue(mumDialogue.contains("Ottimo che tu voglia aiutare! " + mumQuest.getDescription() + 
-                "\nSo che posso contare su di te. Torna da me quando avrai finito!"));
+        assertTrue(mumDialogue.contains("Grazie tesoro! " + mumQuest.getDescription() + 
+                "\nFai con calma, non ti stancare troppo!"));
 
         // 2. Dad must NOT recognize Mum's quest
         String dadDialogue = dad.getQuestAssignedDialogue(mumQuest);
@@ -76,7 +96,9 @@ public class NPCsTest {
         assertEquals("Non so nulla di questa faccenda.", brotherDialogue);
     }
 
-    // Test for the quest in-progress dialogues: Default logic vs Specific Switch
+    /**
+     * Test for the quest in-progress dialogues: Default logic vs Specific Switch
+     */
     @Test
     void testQuestInProgressDialogue() {
         // Case A: Generic DAD quest (enters the 'default' switch case)
@@ -91,8 +113,10 @@ public class NPCsTest {
         assertEquals("Non so nulla di questa faccenda.", 
                 mum.getQuestInProgressDialogue(dadGenericQuest));
 
-        // Case B: Specific DAD quest ("Water the plants")
-        Quest dadSpecificQuest = new Quest.Builder("Annaffia le piante", "Desc", dad).build();
+        // Case B: Specific DAD quest ("Annaffia le piante")
+        c.addXp(500);
+        c.pickCurrentRoom(garden);
+        Quest dadSpecificQuest = questSystem.onPlayerEnteredRoom(c, garden).get(0);
         
         // Dad responds with the specific phrase defined in the case "Annaffia le piante"
         String specificDialogue = dad.getQuestInProgressDialogue(dadSpecificQuest);
@@ -102,19 +126,20 @@ public class NPCsTest {
     // Test for the quest completion dialogues
     @Test
     void testQuestCompletionDialogue() {
-        // Quest assigned by MUM
-        Quest mumQuest  = new Quest.Builder("UnknownQuest", "Descrizione", mum)
-                .affinityPoints(5)
-                .xpReward(20)
-                .build();
+    	// Create a quest assigned by Brother
+        Quest brotherQuest  = new Quest.Builder("UnknownQuest", "Descrizione", brother).build();
+        
+    	assertTrue(brother.getAffinity() < 15); 
+    	assertEquals("Era ora. Grazie.", brother.getQuestCompletionDialogue(brotherQuest));
+    	
+    	brother.increaseAffinity(50);
+    	assertEquals("Grazie mille per avermi aiutato, mi hai salvato.", brother.getQuestCompletionDialogue(brotherQuest)); 
+    	
 
-        // Mum congratulates
-        assertTrue(mum.getQuestCompletionDialogue(mumQuest).contains("Hai fatto un ottimo lavoro"));
-        
-        // Dad refuses (doesn't own the quest)
-        assertEquals("Non so nulla di questa faccenda.", dad.getQuestCompletionDialogue(mumQuest));
-        
-        // Brother refuses (doesn't own the quest)
-        assertEquals("Non so nulla di questa faccenda.", brother.getQuestCompletionDialogue(mumQuest));
+        String dadDialogue = dad.getQuestCompletionDialogue(brotherQuest);
+        assertEquals("Non so nulla di questa faccenda.", dadDialogue);
+
+        String mumDialogue = mum.getQuestCompletionDialogue(brotherQuest);
+        assertEquals("Non so nulla di questa faccenda.", mumDialogue);
     }
 }

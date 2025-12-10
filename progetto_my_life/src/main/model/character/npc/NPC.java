@@ -9,6 +9,23 @@ import main.model.world.gameItem.GameItem;
 
 public abstract class NPC {
 	
+	protected enum QuestDifficulty {
+        EASY(55, 20),      
+        MEDIUM(80, 35),     
+        HARD(150, 50);      
+
+        private final int xpReward;
+        private final int affinityReward;
+
+        QuestDifficulty(int xpReward, int affinityReward) {
+            this.xpReward = xpReward;
+            this.affinityReward = affinityReward;
+        }
+
+        public int getXpReward() { return xpReward; }
+        public int getAffinityReward() { return affinityReward; }
+    }
+	
 	protected final int LOW_AFFINITY = 15;
 	
     private final String relationship;

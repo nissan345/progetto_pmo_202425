@@ -82,7 +82,7 @@ public class ItemFactory {
                     .hygiene(HIGH_GAIN)
                     .build()
         ));
-        return new Room("Camera Da Letto", items, new LevelRequirement(1));
+        return new Room("Camera da Letto", items, new LevelRequirement(1));
     }
     
     /**

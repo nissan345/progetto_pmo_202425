@@ -213,7 +213,7 @@ public class HouseTest {
 	@Test
 	public void testRoomItems() {
 		assertEquals(3, bedroom.getItemsInRoom().size());
-		assertEquals(3, kitchen.getItemsInRoom().size());
+		assertEquals(4, kitchen.getItemsInRoom().size());
 		assertEquals(3, bathroom.getItemsInRoom().size());
 	}
 

@@ -11,6 +11,8 @@ import main.model.world.gameItem.GameItem;
 
 public class Mum extends NPC {
 	
+	private final int HIGH_AFFINITY = 70;
+	
 	private boolean giftGiven;
 
     // CONSTRUCTOR ---------------------------------------------------------------------
@@ -24,7 +26,7 @@ public class Mum extends NPC {
     @Override
     public String getInitialDialogue() {
         if (getAffinity() < LOW_AFFINITY) {
-            return "Mi sembri un po' distante ultimamente... è successo qualcosa?";
+            return "Ciao tesoro! Mi raccomando ricordati le faccende di casa da svolgere";
         } else {
             return "Ciao tesoro! Come sta andando la tua giornata?"; 
         } 
@@ -36,12 +38,14 @@ public class Mum extends NPC {
             return "Non so nulla di questa faccenda.";
         }
         
-        if (getAffinity() > LOW_AFFINITY) {
+        if (getAffinity() < LOW_AFFINITY) {
              return "Grazie tesoro! " + quest.getDescription() + 
                "\nFai con calma, non ti stancare troppo!";
+        } else {
+        	return "Grazie tesoro! " + quest.getDescription() + 
+                    "\nSo che posso contare su di te. Torna da me quando avrai finito!";
         }
-        return "Grazie tesoro! " + quest.getDescription() + 
-               "\nSo che posso contare su di te. Torna da me quando avrai finito!";
+        
     }
     
     @Override 
@@ -76,13 +80,19 @@ public class Mum extends NPC {
     }
     
     public String checkGiftInteraction(MainCharacter character) {
-        if (getAffinity() > 70 && !giftGiven) {
+        if (getAffinity() >= HIGH_AFFINITY && !giftGiven) {
             GameItem gift = createUniqueGift();
-            if (character.pickUpItemAction(gift).getMessage().contains("Preso")) { 
+
+            character.getCurrentRoom().addItemRoom(gift);
+            
+            character.pickUpItemAction(gift);
+            
+            if (character.getInventory().hasItem(gift.getName())) { 
                 this.giftGiven = true;
                 return "Tieni, ho trovato questo vecchio videogioco in soffitta. Pensavo ti piacesse!\n" +
-                       "(Hai ricevuto: Videogioco Retro)";
+                       "(Hai ricevuto: Videogioco retro)";
             } else {
+                character.getCurrentRoom().removeItemRoom(gift);
                 return "Ho un regalo per te, ma hai le tasche piene! Torna quando hai spazio.";
             }
         }
@@ -90,7 +100,7 @@ public class Mum extends NPC {
     }
     
     private GameItem createUniqueGift() {
-    	return new GameItem.Builder("Videogioco Retro", "Salotto", 10)
+    	return new GameItem.Builder("Videogioco retro", "Salotto", 10)
                 .message("Un classico gioco degli anni 2000.") 
                 .build();
     }
@@ -104,8 +114,8 @@ public class Mum extends NPC {
             Quest albumQuest = new Quest.Builder("L'album perduto", 
                   "Dovresti riportarmi il vecchio album di famiglia che ho perduto da qualche parte in casa e riportamelo",  
                                this)
-                .xpReward(20)
-                .affinityPoints(25)
+                .xpReward(QuestDifficulty.MEDIUM.getXpReward())
+                .affinityPoints(QuestDifficulty.MEDIUM.getAffinityReward())
                 .addCondition(new ItemDeliveryCondition(album))
                 .triggerCondition((player, room) -> room.getRoomName().equals("Salotto")) 
                 .build();
@@ -120,8 +130,8 @@ public class Mum extends NPC {
             Quest guestsQuest = new Quest.Builder("Visita ospiti", 
                     "Sta sera verrano degli ospiti. Per favore, fatti una doccia e mettiti qualcosa di elegante!", 
                     this)
-                .xpReward(35)
-                .affinityPoints(35)
+                .xpReward(QuestDifficulty.MEDIUM.getXpReward())
+                .affinityPoints(QuestDifficulty.MEDIUM.getAffinityReward())
                 .addCondition(new ItemUsageCondition(shower))
                 .addCondition(new ItemUsageCondition(wardrobe))
                 .triggerCondition((player, room) -> room.getRoomName().equals("Salotto") && 
@@ -137,8 +147,8 @@ public class Mum extends NPC {
             Quest bookQuest = new Quest.Builder("La Citazione Mancante", 
                     "Sto finendo di scrivere un articolo, ma non ricordo una citazione. Controlla nella libreria per me!", 
                     this)
-                .xpReward(20)
-                .affinityPoints(25)
+                .xpReward(QuestDifficulty.EASY.getXpReward())
+                .affinityPoints(QuestDifficulty.EASY.getAffinityReward())
                 .addCondition(new ItemUsageCondition(bookshelf))
                 .triggerCondition((player, room) -> room.getRoomName().equals("Salotto") && 
                 									player.hasCompletedQuest("Visita ospiti"))

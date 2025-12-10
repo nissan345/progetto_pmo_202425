@@ -245,7 +245,7 @@ class MainCharacterTest {
 
         GameItem computer = new GameItem.Builder("Computer", "Bedroom", 20).build();
 
-        CompletionCondition cond = new CompletionCondition(computer);
+        CompletionCondition cond = new ItemUsageCondition(computer);
 
         assertFalse(cond.checkCompletion(character));
 

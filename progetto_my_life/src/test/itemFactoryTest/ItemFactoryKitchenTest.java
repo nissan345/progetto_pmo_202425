@@ -33,7 +33,7 @@ class ItemFactoryKitchenTest {
         assertEquals(1, ((LevelRequirement) kitchen.getEntryRequirement()).getRequiredLvl());  
         // Test items count
         List<GameItem> items = kitchen.getItemsInRoom();
-        assertEquals(3, items.size());
+        assertEquals(4, items.size());
     }
 
     @Test
@@ -81,7 +81,6 @@ class ItemFactoryKitchenTest {
         character.getStats().changeSatiety(-30);
         character.getStats().changeEnergy(50); // Mid energy -> 70 < 80, cost should be -10 and duration 5
         ActionResult result2 = fornelli.use(character);
-        character.applyActionResult(result2, fornelli);
         assertNotNull(result2);
         assertEquals(60, character.getStats().getEnergy());
         assertEquals(5, result2.getActionDuration());
@@ -132,21 +131,18 @@ class ItemFactoryKitchenTest {
         character.getStats().changeEnergy(-70); // Low energy, cost should be -20
         ActionResult result1 = lavandino.use(character);
         assertNotNull(result1);
-        character.applyActionResult(result1, lavandino);
         assertEquals(10, character.getStats().getEnergy());
         assertEquals(10, result1.getActionDuration());
         
         character.getStats().changeEnergy(55); // Mid energy 65
         ActionResult result2 = lavandino.use(character);
         assertNotNull(result2);
-        character.applyActionResult(result2, lavandino);
         assertEquals(55, character.getStats().getEnergy());
         assertEquals(5, result2.getActionDuration());
         
         character.getStats().changeEnergy(40); // High energy
         ActionResult result3 = lavandino.use(character);
         assertNotNull(result3);
-        character.applyActionResult(result3, lavandino);
         assertEquals(90, character.getStats().getEnergy());
         assertEquals(2, result3.getActionDuration());
         

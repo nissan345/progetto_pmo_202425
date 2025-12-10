@@ -1,5 +1,7 @@
 package main.model.character.npc;
 
+import main.model.character.npc.NPC.QuestDifficulty;
+import main.model.quest.ItemDeliveryCondition;
 import main.model.quest.ItemUsageCondition;
 import main.model.quest.Quest;
 import main.model.world.House;
@@ -76,8 +78,8 @@ public class Dad extends NPC {
         // If the item exists, create and add the quest
         if (annaffiatoio != null) {
             Quest plantsQuest = new Quest.Builder("Annaffia le piante", "Dovresti innaffiare le piante", this)
-                .xpReward(50)
-                .affinityPoints(20)
+                .xpReward(QuestDifficulty.EASY.getXpReward())
+                .affinityPoints(QuestDifficulty.EASY.getAffinityReward())
                 .addCondition(new ItemUsageCondition(annaffiatoio))
                 .triggerCondition((player, room) -> room.getRoomName().equals("Giardino")) 
                 .build();
@@ -93,8 +95,8 @@ public class Dad extends NPC {
         if (aspirapolvere != null && fornelli != null && stereo != null) {
             
             Quest partyQuest = new Quest.Builder("Festa a sorpresa", "Prepara la festa per la mamma!", this)
-                .xpReward(80)
-                .affinityPoints(50)
+                .xpReward(QuestDifficulty.HARD.getXpReward())
+                .affinityPoints(QuestDifficulty.HARD.getAffinityReward())
                 .addCondition(new ItemUsageCondition(aspirapolvere))
                 .addCondition(new ItemUsageCondition(fornelli))
                 .addCondition(new ItemUsageCondition(stereo))
@@ -110,9 +112,9 @@ public class Dad extends NPC {
         // If the item exists, create and add the quest
         if (keys != null) {
             Quest plantsQuest = new Quest.Builder("Riporta le chiavi", "Potresti portarmi le chiavi della macchina", this)
-                .xpReward(50)
-                .affinityPoints(30)
-                .addCondition(new ItemUsageCondition(annaffiatoio))
+                .xpReward(QuestDifficulty.MEDIUM.getXpReward())
+                .affinityPoints(QuestDifficulty.MEDIUM.getAffinityReward())
+                .addCondition(new ItemDeliveryCondition (keys))
                 .triggerCondition((player, room) -> room.getRoomName().equals("Giardino") &&
 													player.hasCompletedQuest("Festa a sorpresa")) 
                 .build();

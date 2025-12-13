@@ -35,6 +35,18 @@ public class GameItem{
         this.dynamicUse = builder.dynamicUse;
         this.requirement = builder.requirement;
     }
+    
+    // Getters
+    public String getName() { return name; }
+    public String getDescription() { return description; }
+    public int getSize() { return size; }
+    public String getRoom() { return room; }
+    public String getMessage() {return message;}
+    public int getDeltaSatiety() {return deltaSatiety;}
+	public int getDeltaHydration() {return deltaHydration;}
+	public int getDeltaEnergy() { return deltaEnergy;}
+	public int getDeltaHygiene() { return deltaHygiene; }
+	public Requirement getRequirement() {return requirement;}
       
     /**
      * Executes the default action associated with this item. 

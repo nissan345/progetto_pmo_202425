@@ -103,7 +103,7 @@ public class MainCharacter {
         state.append("Sete: ").append(stats.getHydration()).append("/100\n");
         state.append("Energia: ").append(stats.getEnergy()).append("/100\n");
         state.append("Igiene: ").append(stats.getHygiene()).append("/100\n");
-         state.append("Livello: ").append(this.lvl).append("/").append("\n"); 
+        state.append("Livello: ").append(this.lvl).append("/").append("\n"); 
         state.append("XP: ").append(this.xp).append("/").append(this.xpToNext).append("\n"); 
         state.append("Posizione: ").append(getCurrentRoom()).append("\n");
         

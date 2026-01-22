@@ -1,6 +1,5 @@
 package characterTest;
 
-<<<<<<< HEAD
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
@@ -9,13 +8,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import main.model.character.MainCharacter;
-import main.model.character.NPC;
-import main.model.character.Outfit;
-import main.model.character.npc.Mum;
+import main.model.character.npc.*;
+import main.model.world.House;
 import main.model.world.Room;
 import main.model.world.factory.ItemFactory;
 import main.model.world.gameItem.GameItem;
-import main.model.character.Hair;
+import main.model.character.enums.*;
 import main.model.quest.*;
 
 class MainCharacterTest {
@@ -25,27 +23,48 @@ class MainCharacterTest {
     private Room kitchen;
     private Room bathroom;
     private Room garden;
+    private Room livingroom;
     private NPC questGiver;
+    private House h;
 
+    /**
+     * Initializes test environment before each test method execution.
+     * Creates a main character with default attributes and sets up house rooms.
+     * Verifies initial character state including level, room location, and inventory capacity.
+     */
     @BeforeEach
     void setUp() {
         character = new MainCharacter("Ahri", Outfit.CASUAL, Hair.CURLY_LONG);
-        assertEquals(1, character.getLvl());    // Initial level = 1
-        assertNull(character.getCurrentRoom()); // nessuna stanza all’inizio
+        assertEquals(1, character.getLvl());                                                
+        assertNull(character.getCurrentRoom());                                       
         assertNotNull(character.getInventory());
-        assertEquals(0, character.getInventory().getCapacity());
+        assertEquals(30, character.getInventory().getCapacity());
 
+
+        h = new House(); 
         bedroom    = ItemFactory.createBedroom();
         kitchen    = ItemFactory.createKitchen();
         bathroom   = ItemFactory.createBathroom();
         garden     = ItemFactory.createGarden();
-        questGiver = new Mum(kitchen);
+        livingroom = ItemFactory.createLivingRoom();
+
+        
+        h.addRoom(bedroom);
+        h.addRoom(kitchen);
+        h.addRoom(bathroom);
+        h.addRoom(garden);
+        h.addRoom(livingroom);
+        
+        questGiver = new Mum(kitchen, h);
     }
 
 
     // TESTS -------------------------------------------------------------------------------
 
-    // Test for constructor and getters
+    /**
+     * Tests MainCharacter constructor and getter methods.
+     * Verifies correct initialization of name, outfit, hair style, stats, and default progression values.
+     */
     @Test
     void testConstructorAndGetters() {
         assertEquals("Ahri", character.getName());
@@ -56,14 +75,16 @@ class MainCharacterTest {
         // Default progression state
         assertEquals(1, character.getLvl());
         assertEquals(0, character.getXp());
-        assertEquals(100, character.getXpToNext()); // computeXpToNext(1) = 100
+        assertEquals(100, character.getXpToNext());             // computeXpToNext(1) = 100
         assertNull(character.getCurrentRoom());
-        assertNotNull(character.getInventory());    // se l’inventory parte null, cambiare
     }
 
     // TEST FOR XP AND LEVELING UP -------------------------------------------------------
 
-    // Test for adding XP without leveling up
+    /**
+     * Tests experience point accumulation without triggering level up.
+     * Verifies XP increases but level remains unchanged when XP threshold is not reached.
+     */
     @Test
     void testAddXp_NoLevelUp() {
         character.addXp(30);
@@ -72,7 +93,10 @@ class MainCharacterTest {
         assertEquals(100, character.getXpToNext());
     }
 
-    // Test for adding XP that causes exactly one level up
+    /**
+     * Tests experience point accumulation triggering exactly one level up.
+     * Verifies level increases, XP resets, and new XP threshold is set correctly.
+     */
     @Test
     void testAddXp_ExactlyLevelUp() {
         character.addXp(100);
@@ -82,16 +106,22 @@ class MainCharacterTest {
         assertEquals(150, character.getXpToNext());
     }
 
-    // Test for adding XP that causes multiple level ups
+    /**
+     * Tests experience point accumulation triggering multiple level ups.
+     * Verifies correct level progression, residual XP calculation, and updated XP threshold.
+     */
     @Test
     void testAddXp_MultipleLevelUps() {
-        character.addXp(100 + 150 + 215 + 10); // 475
-        assertEquals(4, character.getLvl());    // 1→2→3→4
-        assertEquals(10, character.getXp());    // residue XP = 10
-        assertEquals(287, character.getXpToNext()); // XP to next level = 287
+        character.addXp(100 + 150 + 215 + 10);          // 475
+        assertEquals(4, character.getLvl());            
+        assertEquals(10, character.getXp());            // residue XP = 10
+        assertEquals(287, character.getXpToNext());     // XP to next level = 287
     }
 
-    // Test for direct level up call
+    /**
+     * Tests direct level up method call.
+     * Verifies level increment and XP threshold update without XP accumulation.
+     */
     @Test
     void testLevelUpDirectCall() {
         // Both the level and the threshold should update
@@ -102,141 +132,166 @@ class MainCharacterTest {
 
     // TEST FOR STATE DECAY -----------------------------------------------------
 
+    /**
+     * Tests character state decay functionality.
+     * Verifies that state decay process executes without errors and decreases character's satiety.
+     */
     @Test
     void testStateDecayDoesNotCrash() {
         int sat0 = character.getStats().getSatiety();
         character.stateDecay();
         int sat1 = character.getStats().getSatiety();
-        // checking that the satiety has decreased
+        // Checking that the satiety has decreased
         assertTrue(sat1 <= sat0);
     }
 
     // TEST FOR ROOM ENTRY ----------------------------------------------------------------------
     
-    // Testing that the character cannot enter a room when the level requirement fails
+    /**
+     * Tests room entry restrictions based on level requirements.
+     * Verifies that character cannot enter rooms with level requirements higher than current level.
+     * Checks appropriate error messages and maintains null current room after failed entry attempts.
+     */
     @Test
     void testCannotEnterRoomWhenRequirementFails() {
-        String m1 = character.pickCurrentRoom(bathroom);
-        assertNotNull(m1);
-        assertTrue(m1.startsWith("Non puoi entrare in: Bathroom"), "Messaggio inatteso: " + m1);
-        assertTrue(m1.contains("Serve livello 2"), "Motivo mancante. Messaggio: " + m1);
-        assertNull(character.getCurrentRoom());
+        // Bathroom requires level 2
+        String msg1 = character.pickCurrentRoom(bathroom);
+        assertNotNull(msg1);
+        assertTrue(msg1.startsWith("Non puoi entrare in: Bagno"), "Messaggio inatteso: " + msg1);
+        assertTrue(msg1.contains("Livello richiesto: 2"), "Motivo mancante nel messaggio: " + msg1);
+        assertEquals(null, character.getCurrentRoom());
 
-        String m2 = character.pickCurrentRoom(garden);
-        assertNotNull(m2);
-        assertTrue(m2.startsWith("Non puoi entrare in: Garden"), "Messaggio inatteso: " + m2);
-        assertTrue(m2.contains("Serve livello 3"), "Motivo mancante. Messaggio: " + m2);
-        assertNull(character.getCurrentRoom());
+        // Garden requires level 4
+        String msg2 = character.pickCurrentRoom(garden);
+        assertNotNull(msg2);
+        assertTrue(msg2.startsWith("Non puoi entrare in: Giardino"), "Messaggio inatteso: " + msg2);
+        assertTrue(msg2.contains("Livello richiesto: 4"), "Motivo mancante nel messaggio: " + msg2);
+        assertEquals(null, character.getCurrentRoom());
     }
 
-    // Testing that the character can enter a room when the level requirement passes
+    /**
+     * Tests successful room entry when level requirements are met.
+     * Verifies entry messages and updates to character's current room.
+     */
     @Test
     void testEnterRoomWhenRequirementPasses() {
         String msg1 = character.pickCurrentRoom(bedroom);
         assertNotNull(msg1);
-        assertTrue(msg1.startsWith("Sei entrato in: Bedroom"), "Messaggio inatteso: " + msg1);
-        assertNotNull(character.getCurrentRoom());
-        assertEquals("Bedroom", character.getCurrentRoom().getRoomName());
+        assertTrue(msg1.startsWith("Sei entrato in: Camera Da Letto"), "Messaggio inatteso: " + msg1);
+        assertEquals("Camera Da Letto", character.getCurrentRoom().getRoomName());
 
         String msg2 = character.pickCurrentRoom(kitchen);
         assertNotNull(msg2);
-        assertTrue(msg2.startsWith("Sei entrato in: Kitchen"), "Messaggio inatteso: " + msg2);
-        assertNotNull(character.getCurrentRoom());
-        assertEquals("Kitchen", character.getCurrentRoom().getRoomName());
+        assertTrue(msg2.startsWith("Sei entrato in: Cucina"), "Messaggio inatteso: " + msg2);
+        assertEquals("Cucina", character.getCurrentRoom().getRoomName());
     }
 
     // TEST FOR QUESTS ---------------------------------------------------------------------
 
-    // Test for adding a quest and checking active quest with NPC
+    /**
+     * Tests quest assignment and retrieval functionality.
+     * Verifies that quests can be added to character and retrieved by associated NPC.
+     */
     @Test
     void testAddActiveQuest() {
-        Quest q = new Quest(
-            "FetchStereo",
-            "Prendi lo stereo",
-            questGiver,
-            5,
-            20,
-            new ArrayList<>()
-        );
+        Quest q = new Quest.Builder("FetchStereo", "Prendi lo stereo", questGiver)
+                .affinityPoints(5)
+                .xpReward(20)
+                .build();
 
         character.addQuest(q);
 
         assertTrue(character.hasActiveQuestWithNPC(questGiver));
-        assertTrue(character.getActiveQuestWithNPC(questGiver).isPresent());
-        assertEquals("FetchStereo", character.getActiveQuestWithNPC(questGiver).get().getName());
     }
 
-    // Test for recording used items for quests and checking them
+    /**
+     * Tests quest item usage tracking.
+     * Verifies that items used for quests are properly recorded and recognized.
+     */
     @Test
     void testItemsForQuest() {
-        Quest q = new Quest("UsePC", "Usa il PC", questGiver, 0, 0, new ArrayList<>());
+        Quest q = new Quest.Builder("FetchStereo", "Prendi lo stereo", questGiver)
+                .affinityPoints(5)
+                .xpReward(20)
+                .build();
         character.addQuest(q);
 
         GameItem computer = new GameItem.Builder("Computer", "Bedroom", 20)
                 .message("Usi il PC.")
                 .build();
 
-        assertFalse(character.hasUsedItemForQuest(computer, q));
+        assertFalse(character.hasUsedItemForQuest(computer));
 
         character.recordItemsUsedForQuests(computer);
 
-        assertTrue(character.hasUsedItemForQuest(computer, q));
+        assertTrue(character.hasUsedItemForQuest(computer));
 
         GameItem pentola = new GameItem.Builder("Pentola", "Kitchen", 10).build();
-        assertFalse(character.hasUsedItemForQuest(pentola, q));
+        assertFalse(character.hasUsedItemForQuest(pentola));
     }
 
-    // Test for CompletionCondition with GameItem
+    /**
+     * Tests quest completion condition checking with game items.
+     * Verifies completion condition correctly identifies when required items have been used.
+     */
     @Test
     void testItemHasBeenUsed() {
-        Quest q = new Quest("UsePC", "Usa il PC", questGiver, 0, 0, new ArrayList<>());
+        Quest q = new Quest.Builder("FetchStereo", "Prendi lo stereo", questGiver)
+                .affinityPoints(5)
+                .xpReward(20)
+                .build();
         character.addQuest(q);
 
         GameItem computer = new GameItem.Builder("Computer", "Bedroom", 20).build();
 
-        CompletionCondition cond = new CompletionCondition(computer, q);
+        CompletionCondition cond = new ItemUsageCondition(computer);
 
-        // Before -> false
         assertFalse(cond.checkCompletion(character));
 
-        // Register the use
         character.recordItemsUsedForQuests(computer);
 
-        // After -> true
         assertTrue(cond.checkCompletion(character));
     }
 
     // TEST FOR ITEMS ---------------------------------------------------------------------
     
-    // Testing that items can only get picked up once
+    /**
+     * Tests item pickup restriction to prevent duplicate acquisitions.
+     * Verifies items can only be picked up once and inventory remains unchanged on duplicate attempts.
+     */
     @Test
     void testPickUpOnce() {
-        GameItem computer = new GameItem.Builder("Computer", "Bedroom", 20)
+        character.pickCurrentRoom(bedroom);
+
+        GameItem comb = new GameItem.Builder("Spazzola", "Bedroom", 20)
                 .message("Usi il PC.")
                 .build();
 
-        // The room contains only one computer
-        bedroom.addItemRoom(computer);
-        assertTrue(bedroom.hasItemRoom(computer));
+        bedroom.addItemRoom(comb);
+        assertTrue(bedroom.hasItemRoom(comb));
 
-        // First pickup -> Ends up in the inventory
-        character.pickUp(computer);
-        assertEquals(1, character.getInventory().getUsedSpace());
-        assertTrue(character.getInventory().hasItem("Computer"));
+        // Added to inventory
+        character.pickUpItemAction(comb);
+        assertEquals(20, character.getInventory().getUsedSpace());
+        assertTrue(character.getInventory().hasItem("Spazzola"));
+        assertFalse(bedroom.hasItemRoom(comb)); 
 
-        // The item is removed from the room
-        bedroom.removeItemRoom(computer);
-        assertFalse(bedroom.hasItemRoom(computer));
-
-        // Second pickup -> Should be impossible
-        character.pickUp(computer);
-        assertEquals(1, character.getInventory().getUsedSpace());
-        assertTrue(character.getInventory().hasItem("Computer"));
+        
+        character.pickUpItemAction(comb);
+        assertEquals(20, character.getInventory().getUsedSpace()); // Stays the same
+        assertTrue(character.getInventory().hasItem("Spazzola"));
+        assertFalse(bedroom.hasItemRoom(comb));
     }
 
-    // Test for picking up multiple items
+    /**
+     * Tests pickup of multiple distinct items.
+     * Verifies all items are correctly added to inventory and removed from room.
+     */
     @Test
     void TestPickUpTwoDifferentItems() {
+        
+        character.pickCurrentRoom(bedroom);
+        
         GameItem phone = new GameItem.Builder("Telefono", "Bedroom", 5)
                 .message("Controlli i messaggi.")
                 .build();
@@ -247,326 +302,44 @@ class MainCharacterTest {
         assertTrue(bedroom.hasItemRoom(phone));
         assertTrue(bedroom.hasItemRoom(book));
 
-        character.pickUp(phone);
-        bedroom.removeItemRoom(phone);
+        character.pickUpItemAction(phone);
+        character.pickUpItemAction(book);
 
-        character.pickUp(book);
-        bedroom.removeItemRoom(book);
-
-        assertEquals(2, character.getInventory().getUsedSpace());
-        assertTrue(character.getInventory().hasItem("Phone"));
-        assertTrue(character.getInventory().hasItem("Book"));
+        assertEquals(2, character.getInventory().getItems().size());
+        assertTrue(character.getInventory().hasItem("Telefono"));
+        assertTrue(character.getInventory().hasItem("Libro"));
 
         assertFalse(bedroom.hasItemRoom(phone));
         assertFalse(bedroom.hasItemRoom(book));
     }
 
-    // Testing dropping an item which gets it removed from the inventory
+    /**
+     * Tests item dropping functionality.
+     * Verifies items are removed from inventory and returned to the current room.
+     */
     @Test
     void testDropItem() {
+        character.pickCurrentRoom(bedroom);
+
         GameItem mug = new GameItem.Builder("Tazza", "Bedroom", 0)
                 .message("Sorbisci un caffè.")
                 .build();
 
         bedroom.addItemRoom(mug);
         assertTrue(bedroom.hasItemRoom(mug));
+        
+        // Adds to inventory
+        character.pickUpItemAction(mug);
+        assertEquals(1, character.getInventory().getItems().size());
+        assertFalse(bedroom.hasItemRoom(mug));
 
-        character.pickUp(mug);
-        bedroom.removeItemRoom(mug);
+        // Removes from inventory
+        character.dropItemAction(mug);
+        assertEquals(0, character.getInventory().getItems().size());
 
-        assertEquals(1, character.getInventory().getUsedSpace());
-
-        // Drop -> The item is removed from the inventory
-        character.drop(mug);
-        assertEquals(0, character.getInventory().getUsedSpace());
-
-        // Adding the item back into the room
+        // Add's the object back into the room
         bedroom.addItemRoom(mug);
         assertTrue(bedroom.hasItemRoom(mug));
     }
-}
-=======
-
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Test;
-
-
-import main.model.character.MainCharacter;
-import main.model.world.Room;
-import main.model.world.*;
-
-import java.util.ArrayList;
-import java.util.Map;
-
-public class MainCharacterTest {
-
-    private MainCharacter character;
-    private MainCharacter characterVegano;
-
-    // Inizializzazione dei soggetti di test ---------------------------------------------------------------------------------
-    @Before
-    public void setUp() {
-
-
-        //Room roomIniziale = new IRoom("Salotto", new ArrayList<>(FabbricaOggetti.creaOggettiRoom("Salotto").values()));
-
-    
-        //character = new MainCharacter("Giocatore", Vestito.INFORMALE, Dieta.ONNIVORO, Capelli.CORTI_MOSSI);
-        //characterVegano = new MainCharacter("Vegano", Vestito.SPORTIVO, Dieta.VEGANO, Capelli.LUNGHI_LISCI);
-        
-        //Room stanzaIniziale = new StanzaImpl("Salotto", new ArrayList<>(FabbricaOggetti.creaOggettiStanza("Salotto").values()));
-    
-        //character = new Character("Giocatore", Vestito.INFORMALE, Dieta.ONNIVORO, Capelli.CORTI_MOSSI);
-        //characterVegano = new Character("Vegano", Vestito.SPORTIVO, Dieta.VEGANO, Capelli.LUNGHI_LISCI);
-
-       // character.pickCurrentRoom(roomIniziale);
-        //character.setPreferenza(Gusto.DOLCE, Reazione.PIACE);
-        //character.setPreferenza(Gusto.SALATO, Reazione.NON_PIACE);
-        //characterVegano.setPreferenza(Gusto.SALATO, Reazione.PIACE);
-
-    }
-
-    // TEST PER CREAZIONE PERSONAGGIO -------------------------------------------------------------------------------------
-    @Test
-
-    public void testCreazioneMainCharacter() {
-
-        assertEquals("Giocatore", character.getName());
-        //assertEquals(Dieta.ONNIVORO, character.getDieta());
-        assertEquals(100, character.getSatiety());
-        assertEquals(100, character.getSatiety());
-        assertEquals(100, character.getEnergy());
-        assertEquals(100, character.getHygiene());
-
-    public void testCreazionePersonaggio() {
-        assertEquals("Giocatore", character.getNome());
-        //assertEquals(Dieta.ONNIVORO, character.getDieta());
-        assertEquals(100, character.getFame());
-        assertEquals(100, character.getSete());
-        assertEquals(100, character.getEnergia());
-        assertEquals(100, character.getIgiene());
-
-    }
-
-    // TEST PER MANGIARE ---------------------------------------------------------------------------------------------
-    @Test
-    public void testMangiare() {
-
-
-        int satietyIniziale = character.getSatiety();
-        //String risultato = character.mangia(TipoCibo.BISTECCA);
-        //assertTrue(risultato.contains("Hai mangiato Bistecca"));
-        //assertTrue(risultato.contains("Satiety: +"));
-        assertTrue(character.getSatiety() > satietyIniziale);
-
-        //character.setFame(50);
-        int fameIniziale = character.getFame();
-        //String risultato = character.mangia(TipoCibo.BISTECCA);
-        //assertTrue(risultato.contains("Hai mangiato Bistecca"));
-        //assertTrue(risultato.contains("Fame: +"));
-        assertTrue(character.getFame() > fameIniziale);
-
-    }
-
-    @Test
-    public void testMangiareCiboIncompatibile() {
-
-       // String risultato = characterVegano.mangia(TipoCibo.BISTECCA);
-       // assertTrue(risultato.contains("Non puoi mangiare Bistecca con la tua dieta"));
-        assertEquals(100, characterVegano.getSatiety());
-    }
-
-    @Test
-    public void testMangiareConPreferenzaGusto() {
-
-        //character.setFame(50);
-        //character.setPreferenza(Gusto.SALATO, Reazione.PIACE);
-        //character.setSatiety(50);
-        //character.setPreferenza(Gusto.SALATO, Reazione.PIACE);
-        int satietyIniziale = character.getSatiety();
-       // String risultato = character.mangia(TipoCibo.BISTECCA);
-       // assertTrue(risultato.contains("Ti è piaciuto!"));
-        // Verifica che la satiety sia aumentata più del valore base grazie al bonus
-        assertTrue(character.getSatiety() > satietyIniziale + 40);
-
-        //character.setFame(50);
-        //character.setPreferenza(Gusto.SALATO, Reazione.PIACE);
-        int fameIniziale = character.getFame();
-       // String risultato = character.mangia(TipoCibo.BISTECCA);
-       // assertTrue(risultato.contains("Ti è piaciuto!"));
-        // Verifica che la fame sia aumentata più del valore base grazie al bonus
-        assertTrue(character.getFame() > fameIniziale + 40);
-
-    }
-
-    @Test
-    public void testMangiareConGustoNonGradito() {
-
-        //character.setFame(50);
-        //character.setPreferenza(Gusto.SALATO, Reazione.NON_PIACE);
-        int fameIniziale = character.getFame();
-        //String risultato = character.mangia(TipoCibo.BISTECCA);
-        //assertTrue(risultato.contains("Non ti è piaciuto"));
-        // Verifica che la fame sia aumentata meno del valore base a causa del malus
-        assertTrue(character.getFame() < fameIniziale + 40);
-        //character.setSatiety(50);
-        //character.setPreferenza(Gusto.SALATO, Reazione.NON_PIACE);
-        int satietyIniziale = character.getSatiety();
-        //String risultato = character.mangia(TipoCibo.BISTECCA);
-        //assertTrue(risultato.contains("Non ti è piaciuto"));
-        // Verifica che la satiety sia aumentata meno del valore base a causa del malus
-        assertTrue(character.getSatiety() < satietyIniziale + 40);
-        //character.setFame(50);
-        //character.setPreferenza(Gusto.SALATO, Reazione.NON_PIACE);
-        int fameIniziale = character.getFame();
-        //String risultato = character.mangia(TipoCibo.BISTECCA);
-        //assertTrue(risultato.contains("Non ti è piaciuto"));
-        // Verifica che la fame sia aumentata meno del valore base a causa del malus
-        assertTrue(character.getFame() < fameIniziale + 40);
-
-    }
-
-    // TEST PER BERE -------------------------------------------------------------------------------------------------
-    @Test
-    public void testBere() {
-
-        //character.setSete(50);
-       // String risultato = character.bevi(Bevanda.ACQUA);
-        //assertTrue(risultato.contains("Hai bevuto Acqua"));
-        //assertTrue(risultato.contains("Sete: +"));
-        //character.setSatiety(50);
-       // String risultato = character.bevi(Bevanda.ACQUA);
-        //assertTrue(risultato.contains("Hai bevuto Acqua"));
-        //assertTrue(risultato.contains("Satiety: +"));
-        assertEquals(90, character.getSatiety()); // 50 + 40 = 90
-        //character.setSete(50);
-       // String risultato = character.bevi(Bevanda.ACQUA);
-        //assertTrue(risultato.contains("Hai bevuto Acqua"));
-        //assertTrue(risultato.contains("Sete: +"));
-        assertEquals(90, character.getSete()); // 50 + 40 = 90
-
-    }
-
-    @Test
-    public void testBereBevandaEnergizzante() {
-
-        character.setEnergia(50);
-        String risultato = character.bevi(Bevanda.CAFFE);
-        assertTrue(risultato.contains("Energia: +"));
-        assertEquals(80, character.getEnergia()); // 50 + 30 = 80
-
-        //character.setEnergy(50);
-        //String risultato = character.bevi(Bevanda.CAFFE);
-        //assertTrue(risultato.contains("Energy: +"));
-        //assertEquals(80, character.getEnergy()); // 50 + 30 = 80
-
-
-        //character.setEnergia(50);
-        //String risultato = character.bevi(Bevanda.CAFFE);
-        //assertTrue(risultato.contains("Energia: +"));
-        //assertEquals(80, character.getEnergia()); // 50 + 30 = 80
-
-    }
-
-    // TEST PER DORMIRE ----------------------------------------------------------------------------------------------
-    @Test
-    public void testDormireLetto() {
-
-        character.setEnergia(20);
-        String risultato = character.dormi();
-        assertTrue(risultato.contains("Hai dormito e recuperato "));
-        assertTrue(risultato.contains("70"));
-        assertEquals(90, character.getEnergia()); // 20 + 70 = 90
-        //character.setEnergy(20);
-        //String risultato = character.dormi();
-        //assertTrue(risultato.contains("Hai dormito e recuperato "));
-        //assertTrue(risultato.contains("70"));
-        assertEquals(90, character.getEnergy()); // 20 + 70 = 90
-
-    }
-
-    @Test
-    public void testFarePisolino() {
-
-        //character.setEnergy(50);
-        //String risultato = character.faiPisolino();
-        //assertTrue(risultato.contains("Hai fatto un pisolino e recuperato "));
-        //assertTrue(risultato.contains("40"));
-        assertEquals(90, character.getEnergy()); // 50 + 40 = 90
-
-    }
-
-    // TEST PER IGIENE ------------------------------------------------------------------------------------------------
-    @Test
-    public void testFareDoccia() {
-
-        //character.setHygiene(30);
-        //String risultato = character.faiDoccia();
-        //assertTrue(risultato.contains("Hai fatto la doccia e recuperato "));
-        //assertTrue(risultato.contains("40"));
-        assertEquals(70, character.getHygiene()); // 30 + 40 = 70
-    }
-
-    // TEST PER CAMBIARE ASPETTO -------------------------------------------------------------------------------------
-    @Test
-    public void testCambiareVestiti() {
-
-        String risultato = character.cambiaVestiti(Vestito.FORMALE);
-        assertTrue(risultato.contains("Hai cambiato i vestiti in: "));
-        assertTrue(risultato.contains(Vestito.FORMALE.getNome()));
-        assertEquals(Vestito.FORMALE, character.getVestiti());
-
-        //String risultato = character.cambiaVestiti(Vestito.FORMALE);
-        //assertTrue(risultato.contains("Hai cambiato i outfit in: "));
-        //assertTrue(risultato.contains(Vestito.FORMALE.getName()));
-        //assertEquals(Vestito.FORMALE, character.getVestiti());
-    }
-
-    @Test
-    public void testCambiareCapelli() {
-        String risultato = character.cambiaCapelli(Capelli.LUNGHI_LISCI);
-        assertTrue(risultato.contains("Hai cambiato i capelli in:"));
-        assertTrue(risultato.contains(Capelli.LUNGHI_LISCI.getNome()));
-        assertEquals(Capelli.LUNGHI_LISCI, character.getCapelli());
-    }
-
-    // TEST PER STAMPA STATO -----------------------------------------------------------------------------------------------
-    @Test
-    public void testStampaStato() {
-        String stato = character.stampaStato();
-        assertTrue(stato.contains("STATO DI GIOCATORE"));
-        assertTrue(stato.contains("Livello: 1"));
-        assertTrue(stato.contains("Dieta: Onnivoro"));
-        assertTrue(stato.contains("Fame: 100/100"));
-        assertTrue(stato.contains("Sete: 100/100"));
-        assertTrue(stato.contains("Energia: 100/100"));
-        assertTrue(stato.contains("Igiene: 100/100"));
-        assertTrue(stato.contains("Preferenze di gusto:"));
-    }
-
-    @Test
-    public void testGetStatoCompleto() {
-
-        Map<String, Integer> stato = character.getStatoCompleto();
-
-        assertEquals(4, stato.size());
-        assertEquals(Integer.valueOf(100), stato.get("fame"));
-        assertEquals(Integer.valueOf(100), stato.get("sete"));
-        assertEquals(Integer.valueOf(100), stato.get("energia"));
-        assertEquals(Integer.valueOf(100), stato.get("igiene"));
-
-    
-
-
-        Map<String, Integer> state = character.getStatoCompleto();
-        assertEquals(4, state.size());
-        assertEquals(Integer.valueOf(100), state.get("satiety"));
-        assertEquals(Integer.valueOf(100), state.get("hydration"));
-        assertEquals(Integer.valueOf(100), state.get("energy"));
-        assertEquals(Integer.valueOf(100), state.get("hygiene"));
 
 }
-
-
->>>>>>> main

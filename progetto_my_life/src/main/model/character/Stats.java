@@ -9,9 +9,9 @@ public class Stats {
 	private static final int SLEEP_MAX_ENERGY = 70;
     private static final int SLEEP_MIN_HYGIENE = 30;
 
-    private static final int COOK_MIN_ENERGY = 40;
-    private static final int COOK_MIN_HYGIENE = 50;
-    private static final int COOK_MIN_SATIETY = 40; 
+    private static final int EAT_MIN_ENERGY = 40;
+    private static final int EAT_MIN_HYGIENE = 50;
+    private static final int EAT_MIN_SATIETY = 85; 
 
     private static final int DRINK_MIN_HYDRATION = 70; 
     
@@ -51,10 +51,6 @@ public class Stats {
 		return isCleanEnough && isTiredEnough;
 	}
 	
-	/**
-	 * Checks if the character can eat based on current stats.
-	 * @return true if the character is hungry, clean, and energetic enough to eat, false otherwise.
-	 */
 	public boolean canEat() {
 		boolean isHungryEnough = satiety < EAT_MIN_SATIETY;
 		boolean isCleanEnough = hygiene > EAT_MIN_HYGIENE;
@@ -69,11 +65,7 @@ public class Stats {
 	public boolean canDrink() {
 		return this.hydration < DRINK_MIN_HYDRATION;
 	}
-	
-	/**
-	 * Checks if the character can take a shower based on current energy and hygiene.
-	 * @return true if the character is energetic and dirty enough to shower, false otherwise.
-	 */
+	 
 	public boolean canShower() {
 		boolean hasEnoughEnergy =  energy > SHOWER_MIN_ENERGY;
 		boolean isDirtyEnough =  hygiene < SHOWER_MAX_HYGIENE;

@@ -1,4 +1,4 @@
-package main.model.character;
+package main.model.character.enums;
 
 /**
  * The Outfit enum represents different clothing styles for the main character.

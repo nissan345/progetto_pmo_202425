@@ -22,3 +22,4 @@ public class PickItemAction {
         return new ActionResult("Hai raccolto " + item.getName() + "!");
     }
 }
+

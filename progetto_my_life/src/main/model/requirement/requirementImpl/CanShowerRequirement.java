@@ -1,9 +1,9 @@
-package main.model.requirement;
+package main.model.requirement.requirementImpl;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import main.model.character.MainCharacter;
+import main.model.requirement.Requirement;
 
 public class CanShowerRequirement implements Requirement{
 
@@ -16,13 +16,13 @@ public class CanShowerRequirement implements Requirement{
 	public List<String> getFailureReasons(MainCharacter c){
 		List<String> reasons = new ArrayList<>();
 
-        // Controlla se l'energia è sufficiente
-        if (c.getStats().getEnergy() > 20) {
+        // Check if there is enough energy
+        if (c.getStats().getEnergy() <= 20) {
             reasons.add("Non hai abbastanza energia per lavarti, ");
         }
 
-        // Controlla se l'igiene è sufficiente
-        if (c.getStats().getHygiene() < 70) {
+        // make sure hygiene is not too high
+        if (c.getStats().getHygiene() >= 70) {
             reasons.add("Non c'è bisogno di lavarsi ora! Divertiti!");
         }
 

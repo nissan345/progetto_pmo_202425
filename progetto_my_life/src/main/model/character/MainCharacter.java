@@ -7,16 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-<<<<<<< HEAD:progetto_my_life/src/model/character/MainCharacter.java
 
-import model.action.ActionResult;
-import model.quest.Quest;
-import model.world.Room;
-import model.world.gameItem.GameObject;
-=======
 import main.model.action.ActionResult;
 import main.model.action.DropItemAction;
 import main.model.action.PickItemAction;
+import main.model.character.enums.*;
+import main.model.character.npc.NPC;
 import main.model.quest.Quest;
 import main.model.world.Room;
 import main.model.world.gameItem.GameItem;
@@ -25,39 +21,22 @@ import main.model.world.gameItem.Inventory;
 /**
  * The MainCharacter class represents the playable character in the game,
  */
->>>>>>> main:progetto_my_life/src/main/model/character/MainCharacter.java
-
-/**
- * The MainCharacter class represents the playable character in the game,
- */
-
 public class MainCharacter {
 
     // ATTRIBUTES ------------------------------------------------------------------------
     private String name;
     private Outfit outfit;
     private Hair hair;
+    private Inventory inventory;
     private Stats stats;
     private int lvl; 
     private int xp; 
     private int xpToNext; 
-	private Room currentRoom;
-	private Inventory inventory;
+    private Room currentRoom;
     private Map<Quest, Set<String>> ItemUsedForQuests;
     private List<Quest> ongoingQuests;
-<<<<<<< HEAD:progetto_my_life/src/model/character/MainCharacter.java
-<<<<<<< Updated upstream:progetto_my_life/src/model/character/MainCharacter.java
-<<<<<<< Updated upstream:progetto_my_life/src/model/character/MainCharacter.java
-    private List<String> usedObjects; // Keeps track of used objects
-=======
-    private List<GameItem> usedItems; // Keeps track of used Items
->>>>>>> Stashed changes:progetto_my_life/src/main/model/character/MainCharacter.java
-=======
-    private List<GameItem> usedItems; // Keeps track of used Items
->>>>>>> Stashed changes:progetto_my_life/src/main/model/character/MainCharacter.java
-=======
     private List<String> usedItems; // Keeps track of used Items
->>>>>>> main:progetto_my_life/src/main/model/character/MainCharacter.java
+    private List<Quest> completedQuests;                      
  
     // CONSTRUCTOR ------------------------------------------------------------------------
     public MainCharacter(String name, Outfit outfit, Hair hair) {
@@ -69,12 +48,14 @@ public class MainCharacter {
         this.lvl = 1; 
         this.xp = 0;
         this.xpToNext = computeXpToNext(1);
-        this.currentRoom = null; // There's no room in the beginning
+        this.currentRoom = null;                                        
         this.ongoingQuests = new ArrayList<>();
-        this.usedItems = new ArrayList<>();
+        this.completedQuests = new ArrayList<>();
+        this.inventory = new Inventory(30);
     }
     
     // GETTERS ---------------------------------------------------------------------------
+
     public String getName() {return name;}    
     public Outfit getOutfit() { return outfit; }
     public Hair getHair() { return hair;}
@@ -89,10 +70,7 @@ public class MainCharacter {
     
     /**
      * Prints the current state of the MainCharacter stats.
-<<<<<<< HEAD:progetto_my_life/src/model/character/MainCharacter.java
-=======
      * @return
->>>>>>> main:progetto_my_life/src/main/model/character/MainCharacter.java
      */
     public String printState() {
         StringBuilder state = new StringBuilder();
@@ -127,31 +105,6 @@ public class MainCharacter {
         this.currentRoom = room;
         return "Sei entrato in: " + room.getRoomName();
     }
-   
-    // METODI PER LA PERSONALIZZAZIONE -------------------------------------------------------
-
-    /* METODO PER CAMBIARE VESTITI
-    public String cambiaVestiti(Vestito nuoviVestiti) {
-        this.outfit = nuoviVestiti;
-        return "Hai cambiato i outfit in: " + nuoviVestiti.getName();
-    }
-    // DA TOGLIERE
-    // METODO PER CAMBIARE CAPELLI
-    public String cambiaCapelli(Capelli nuoviCapelli) {
-        this.hair = nuoviCapelli;
-        return "Hai cambiato i hair in: " + nuoviCapelli.getName();
-    }
-    // HA SENSO MA NON SAPPIAMO SE SERVE
-    // METODO PER MAPPARE LO STATO COMPLETO
-    public Map<String, Integer> getStatoCompleto() {
-        Map<String, Integer> state = new HashMap<>();
-        state.put("satiety", satiety);
-        state.put("hydration", hydration);
-        state.put("energy", energy);
-        state.put("hygiene", hygiene);
-        return state;
-    }
- */
 
     // LEVEL SYSTEM ----------------------------------------------------------------------------------
     
@@ -162,7 +115,7 @@ public class MainCharacter {
      */
     private int computeXpToNext(int level) {
         double inc = Math.pow(Math.max(0, level - 1), 1.2);
-        return 100 + (int)Math.round(50 * inc);
+        return 50 + (int)Math.round(50 * inc);
     }
 
     /**
@@ -179,7 +132,7 @@ public class MainCharacter {
     }
 
     /**
-     * Levels up the MainCharacter.
+     * Levels up the MainCharacter
      */
     public void levelUp() {
         this.lvl++; 
@@ -206,6 +159,7 @@ public class MainCharacter {
     public void removeQuest(Quest quest) {
         ongoingQuests.remove(quest);
         ItemUsedForQuests.remove(quest);
+        completedQuests.add(quest);
     }
 
     /**
@@ -219,54 +173,30 @@ public class MainCharacter {
     }
 
     /**
-     * Shows the ongoing quests with an NPC
-     * @param npc
-     * @return
-     */
-    public Optional<Quest> getActiveQuestWithNPC(NPC npc) {
-        return ongoingQuests.stream()
-            .filter(quest -> quest.getAssignerNPC().equals(npc))
-            .findFirst();
-    }
-
-    /**
      * Automatically verifies the completion of every active quest with a specific NPC
      * @param npc
      * @return
      */
     public Optional<Quest> getCompletedQuestWithNPC(NPC npc) {
-	    return ongoingQuests.stream()
+        return ongoingQuests.stream()
         .filter(q -> q.getAssignerNPC().equals(npc))
         .filter(q -> q.checkCompletion(this))
         .findFirst();
-	}
-
+    }
+    
     /**
-     * Automatically verifies the completion of every active quest with a specific NPC
-<<<<<<< HEAD:progetto_my_life/src/model/character/MainCharacter.java
-     * @param 
-<<<<<<< Updated upstream:progetto_my_life/src/model/character/MainCharacter.java
+     * List of every completed quest 
      */
-    // TODO
-
-<<<<<<< Updated upstream:progetto_my_life/src/model/character/MainCharacter.java
-    // METHODS TO INTERACT WITH AN OBJECT -------------------------------------------------------
-=======
-     * @param npc
-     * @return
-     */
-    public List<Quest> getOngoingQuestsWithNPC(NPC npc) {
-        List<Quest> questsWithNPC = new ArrayList<>();
-        for (Quest q : ongoingQuests) {
-            if (q.getAssignerNPC().equals(npc)) {
-                questsWithNPC.add(q);
-            }
-        }
-        return questsWithNPC;
+    public List<Quest> getCompletedQuests() {
+        return this.completedQuests; 
+    }
+    
+    public boolean hasCompletedQuest(String questName) {
+        return this.completedQuests.stream()
+                                .anyMatch(q -> q.getName().equals(questName));
     }
 
     // METHODS TO INTERACT WITH ITEMS -------------------------------------------------------
->>>>>>> main:progetto_my_life/src/main/model/character/MainCharacter.java
     
     /**
      * Registers the use of an Item for an ongoing quest
@@ -274,74 +204,11 @@ public class MainCharacter {
      */
     public void recordItemsUsedForQuests(String ItemName) {
         for (Quest q : ongoingQuests) {
-<<<<<<< HEAD:progetto_my_life/src/model/character/MainCharacter.java
-            objectUsedForQuests.computeIfAbsent(q, k -> new HashSet<>()).add(objectName);
-=======
-    // METHODS TO INTERACT WITH AN ITEM -------------------------------------------------------
-    
-    /**
-     * registers the use of an Item
-     * @param item
-     */
-    public void recordItemsUsedForQuests(GameItem item) {
-        for (Quest q : ongoingQuests) {
-            ItemUsedForQuests.computeIfAbsent(q, k -> new HashSet<>()).add(item.getName());
->>>>>>> Stashed changes:progetto_my_life/src/main/model/character/MainCharacter.java
-=======
             ItemUsedForQuests.computeIfAbsent(q, k -> new HashSet<>()).add(ItemName);
->>>>>>> main:progetto_my_life/src/main/model/character/MainCharacter.java
         }
     }
     
     /**
-<<<<<<< HEAD:progetto_my_life/src/model/character/MainCharacter.java
-<<<<<<< Updated upstream:progetto_my_life/src/model/character/MainCharacter.java
-     * Verifies whether an object has been used or not
-     * @param nameObject
-     * @param quest
-     * @return
-     */
-    public boolean hasUsedObjectForQuest(String nameObject, Quest quest) {
-        return objectUsedForQuests.getOrDefault(quest, Set.of()).contains(nameObject);
-=======
-=======
-     */
-    public List<Quest> getOngoingQuestsWithNPC(NPC npc) {
-        List<Quest> questsWithNPC = new ArrayList<>();
-        for (Quest q : ongoingQuests) {
-            if (q.getAssignerNPC().equals(npc)) {
-                questsWithNPC.add(q);
-            }
-        }
-        return questsWithNPC;
-    }
-
-    // METHODS TO INTERACT WITH AN ITEM -------------------------------------------------------
-    
-    /**
-     * registers the use of an Item
-     * @param item
-     */
-    public void recordItemsUsedForQuests(GameItem item) {
-        for (Quest q : ongoingQuests) {
-            ItemUsedForQuests.computeIfAbsent(q, k -> new HashSet<>()).add(item.getName());
-        }
-    }
-    
-    /**
->>>>>>> Stashed changes:progetto_my_life/src/main/model/character/MainCharacter.java
-     * Verifies whether an Item has been used or not
-     * @param nameItem
-     * @param quest
-     * @return
-     */
-    public boolean hasUsedItemForQuest(GameItem item, Quest quest) {
-        return ItemUsedForQuests.getOrDefault(quest, Set.of()).contains(item.getName());
-<<<<<<< Updated upstream:progetto_my_life/src/model/character/MainCharacter.java
->>>>>>> Stashed changes:progetto_my_life/src/main/model/character/MainCharacter.java
-=======
->>>>>>> Stashed changes:progetto_my_life/src/main/model/character/MainCharacter.java
-=======
      * Verifies whether an Item has been used or not for a specific quest
      * @param nameItem
      * @param quest
@@ -349,7 +216,18 @@ public class MainCharacter {
      */
     public boolean hasUsedItemForQuest(String nameItem, Quest quest) {
         return ItemUsedForQuests.getOrDefault(quest, Set.of()).contains(nameItem);
->>>>>>> main:progetto_my_life/src/main/model/character/MainCharacter.java
+    }
+
+    /**
+     * Verifies whether an Item has been used or not for any ongoing quest
+     * @param item
+     * @return
+     */
+    public boolean hasUsedItemForQuest(GameItem item) {
+        return ongoingQuests.stream()
+            .anyMatch(quest -> 
+                ItemUsedForQuests.getOrDefault(quest, Set.of()).contains(item.getName())
+            );
     }
     
     /**
@@ -358,30 +236,8 @@ public class MainCharacter {
      * @param nameItem
      * @return
      */
-<<<<<<< HEAD:progetto_my_life/src/model/character/MainCharacter.java
-<<<<<<< Updated upstream:progetto_my_life/src/model/character/MainCharacter.java
-<<<<<<< Updated upstream:progetto_my_life/src/model/character/MainCharacter.java
-    public String applyActionResult(ActionResult result, String nameObject) {
-
-        String controlMessage = checkActionUsefulness(result);
-        if (controlMessage != null) {
-            return controlMessage;
-        }
-        recordObjectsUsedForQuests(nameObject);
-=======
-    public String applyActionResult(ActionResult result, GameItem item) {
-
-        recordItemsUsedForQuests(item);
->>>>>>> Stashed changes:progetto_my_life/src/main/model/character/MainCharacter.java
-=======
-    public String applyActionResult(ActionResult result, GameItem item) {
-
-        recordItemsUsedForQuests(item);
->>>>>>> Stashed changes:progetto_my_life/src/main/model/character/MainCharacter.java
-=======
     public String applyActionResult(ActionResult result, String nameItem) {
         recordItemsUsedForQuests(nameItem);
->>>>>>> main:progetto_my_life/src/main/model/character/MainCharacter.java
         stats.changeEnergy(result.getDeltaEnergy());
         stats.changeHydration(result.getDeltaHydration());
         stats.changeHygiene(result.getDeltaHygiene());
@@ -389,78 +245,30 @@ public class MainCharacter {
         
         return result.getMessage();
     }
-<<<<<<< HEAD:progetto_my_life/src/model/character/MainCharacter.java
-<<<<<<< Updated upstream:progetto_my_life/src/model/character/MainCharacter.java
-<<<<<<< Updated upstream:progetto_my_life/src/model/character/MainCharacter.java
-
-    // Registra l'uso di un oggetto
-    public void registerObjectUse(String nameObject) {
-        if (!usedObjects.contains(nameObject)) {
-            usedObjects.add(nameObject);
-        }
-=======
-=======
->>>>>>> Stashed changes:progetto_my_life/src/main/model/character/MainCharacter.java
     
-    /**
-     * Interacts with a GameItem
-     * @param item
-     * @return
-     */
-    public boolean hasUsedItem(GameItem item) {
-        return usedItems.contains(item);
-<<<<<<< Updated upstream:progetto_my_life/src/model/character/MainCharacter.java
->>>>>>> Stashed changes:progetto_my_life/src/main/model/character/MainCharacter.java
-=======
->>>>>>> Stashed changes:progetto_my_life/src/main/model/character/MainCharacter.java
-=======
-   
-    /**
-     * Interacts with a GameItem
-     * @param item
-     * @return
-     */
-    public String interact(GameItem item) {
-        ActionResult result = item.use(this);
-        return applyActionResult(result, item.getName());
-    }
-    
-    /**
-     * Picks up a GameItem and puts in the inventory
-     * @param item
-     * @return
-     */
-    public ActionResult pickUp(GameItem item) {
-        return new PickItemAction().execute(this, item);
-    }
-
-    /**
-     * Removes a GameItem from the inventory
-     * @param item
-     * @return
-     */
-    public ActionResult drop(GameItem item) {
-        return new DropItemAction().execute(this, item);
->>>>>>> main:progetto_my_life/src/main/model/character/MainCharacter.java
-    }
-   
     /**
      * Applies the natural decay of stats over time
      */
-    public void stateDecay(){
+    public void stateDecay() {
         stats.decay();
     }
-<<<<<<< Updated upstream:progetto_my_life/src/model/character/MainCharacter.java
-<<<<<<< Updated upstream:progetto_my_life/src/model/character/MainCharacter.java
-}
-<<<<<<< HEAD:progetto_my_life/src/model/character/MainCharacter.java
 
-    
-=======
+    /**
+     * Picks up an item and adds it to the inventory
+     * @param item
+     * @return
+     */
+    public ActionResult pickUpItemAction(GameItem item) {
+        return new PickItemAction().execute(this, item);
+    }
+        
+    /**
+     * Drops an item from the inventory
+     * @param item
+     * @return
+     */    
+    public ActionResult dropItemAction(GameItem item) {
+        return new DropItemAction().execute(this, item);
+    }
+
 }
->>>>>>> Stashed changes:progetto_my_life/src/main/model/character/MainCharacter.java
-=======
-}
->>>>>>> Stashed changes:progetto_my_life/src/main/model/character/MainCharacter.java
-=======
->>>>>>> main:progetto_my_life/src/main/model/character/MainCharacter.java

@@ -6,7 +6,6 @@ import main.model.action.ActionResult;
 import main.model.character.MainCharacter;
 import main.model.requirement.requirementImpl.*;
 import main.model.requirement.Requirement;
-import main.model.character.enums.FoodType; // Nota: Ho aggiunto questo import perché serve per 'useWithChoice' più in basso
 
 /**
  * Base class for all items present in the house.

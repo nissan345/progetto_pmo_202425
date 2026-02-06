@@ -20,7 +20,7 @@ public class View extends JFrame {
     // GUI COMPONENTS ------------------------------------------------------------
     private JProgressBar barEnergy, barSatiety, barHydration, barHygiene;
     private JTextArea gameLog;
-    private JPanel roomItemsPanel;      // Central panel for items and NPCs
+    private JPanel roomItemsPanel;      // Central panel for items and NPCs interactions
     private JPanel inventoryPanel;      // Side panel for the inventory
     private JLabel roomTitleLabel;      // Label for the current room name
 
@@ -71,7 +71,7 @@ public class View extends JFrame {
         // 3. EAST: Inventory Panel
         inventoryPanel = new JPanel();
         inventoryPanel.setLayout(new BoxLayout(inventoryPanel, BoxLayout.Y_AXIS));
-        inventoryPanel.setBorder(BorderFactory.createTitledBorder("Backpack (L: Use / R: Drop)"));
+        inventoryPanel.setBorder(BorderFactory.createTitledBorder("Backpack (Left: Use / Right: Drop)"));
         
         JScrollPane invScroll = new JScrollPane(inventoryPanel);
         invScroll.setPreferredSize(new Dimension(250, 0));
@@ -184,8 +184,8 @@ public class View extends JFrame {
         Optional<NPC> npcOpt = currentRoom.getNpcInRoom();
         if (npcOpt.isPresent()) {
             NPC npc = npcOpt.get();
-            // Using getRelationship() as display text
-            String npcName = npc.getRelationship();
+            // Using getRelationship() because your NPC class uses that as a name
+            String npcName = npc.getRelationship(); 
             
             JButton npcBtn = new JButton("TALK TO: " + npcName);
             npcBtn.setBackground(new Color(255, 200, 200)); // Light red to highlight NPC
@@ -193,7 +193,10 @@ public class View extends JFrame {
             
             // Link to Controller's NPC interaction handler
             npcBtn.addActionListener(e -> {
-                if (controller != null) controller.handleNpcInteraction(npc);
+                if (controller != null) {
+                    // This call will show an ERROR until you add the method to the Controller
+                    controller.handleNpcInteraction(npc);
+                }
             });
             
             roomItemsPanel.add(npcBtn);
@@ -262,7 +265,7 @@ public class View extends JFrame {
     public void disableControls() {
         roomItemsPanel.setEnabled(false);
         inventoryPanel.setEnabled(false);
-        // Recursively disable components inside panels
+        // Recursively disable components inside panels if necessary
         for (Component c : roomItemsPanel.getComponents()) c.setEnabled(false);
         for (Component c : inventoryPanel.getComponents()) c.setEnabled(false);
     }

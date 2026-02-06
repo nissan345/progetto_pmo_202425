@@ -1,16 +1,16 @@
-package main.controller;
+package main.controller; 
 
 import javax.swing.SwingUtilities;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import main.model.character.MainCharacter;
-import main.model.character.Stats;
 import main.model.world.gameItem.FoodType;
+import main.model.world.House;
 import main.model.world.Room;
 import main.model.world.gameItem.GameItem;
+import main.model.world.factory.ItemFactory;
 import main.model.action.ActionResult;
 import main.view.View;
 
@@ -20,6 +20,7 @@ import main.view.View;
 public class Controller {
     // ATTRIBUTES ------------------------------------------------------------------------
     private MainCharacter mainCharacter;
+    private House house;
     private View view;
     private ScheduledExecutorService gameTimer;
     private boolean isGameOver;
@@ -27,8 +28,12 @@ public class Controller {
     // CONSTRUCTOR ------------------------------------------------------------------------
     public Controller(MainCharacter mainCharacter, View view) {
         this.mainCharacter = mainCharacter;
+        this.house = new House();
         this.view = view;
         this.isGameOver = false;
+
+        // Initialization of the world
+        initializeWorld();
 
         // Initial view update
         updateView();
@@ -39,6 +44,48 @@ public class Controller {
 
     // METHODS ---------------------------------------------------------------------------
     
+    // WORLD CREATION -------------------------------------------------------------
+
+    /**
+     * Initializes the game world by creating rooms and setting up their connections.
+     */
+    private void initializeWorld() {
+        // Rooms creation
+        Room bedroom = ItemFactory.createBedroom();
+        Room kitchen = ItemFactory.createKitchen();
+        Room bathroom = ItemFactory.createBathroom();
+        Room livingRoom = ItemFactory.createLivingRoom();
+        Room storageRoom = ItemFactory.createStorageRoom();
+        Room garden = ItemFactory.createGarden();
+
+        // Setting up room connections
+        house.addRoom(bedroom);
+        house.addRoom(kitchen);
+        house.addRoom(bathroom);
+        house.addRoom(livingRoom);
+        house.addRoom(storageRoom);
+        house.addRoom(garden);
+
+        // Setting initial position of the main character
+        String startRoomName = "Camera da Letto";
+        Room startRoom = house.getRoom(startRoomName);
+
+        if(startRoom != null) {
+            house.enterRoom(startRoomName);
+            mainCharacter.pickCurrentRoom(startRoom);
+        } else {
+            System.err.println("Errore! Stanza " + startRoomName + "non trovata! Controlla la sintassi nella Item factory.");
+        }
+    }
+
+    /**
+     * Gets the house instance in case the view needs to access it.
+     * @return
+     */
+    public House getHouse() {
+        return house;
+    }
+
     // TIME MANAGEMENT --------------------------------------------------------------
 
     /**
@@ -78,7 +125,7 @@ public class Controller {
 
     /**
      * Handles the use of a game item by the main character.
-     * @param item the GameItem to be used
+     * @param item
      */
     public void handleUseItem(GameItem item) {
         // If the game is over, do nothing
@@ -101,8 +148,8 @@ public class Controller {
 
     /** 
      * Handles the use of a game item that requires a choice.
-     * @param item the GameItem to be used
-     * @param choice the choice made by the user
+     * @param item
+     * @param choice
      */
     public void handleItemChoice(GameItem item, FoodType choice) {
         // If the game is over, do nothing
@@ -116,8 +163,8 @@ public class Controller {
     }
 
     /**
-     * Processes the result of an action and updates the view accordingly.
-     * @param item the GameItem to be picked up
+     * Handles the pick up of a game item by the main character.
+     * @param item
      */
     public void handlePickUp(GameItem item) {
         // If the game is over, do nothing
@@ -129,7 +176,7 @@ public class Controller {
 
     /**
      * Handles the dropping of a game item by the main character.
-     * @param item the GameItem to be dropped
+     * @param item
      */
     public void handleDrop(GameItem item) {
         // If the game is over, do nothing
@@ -141,6 +188,7 @@ public class Controller {
 
     /**
      * Handles the movement of the main character to a new room.
+     * @param nextRoom
      */
     public void handleMove(Room nextRoom) {
         // If the game is over, do nothing
@@ -176,7 +224,7 @@ public class Controller {
 
     /**
      * Checks if the game over conditions are met.
-     * @return true if the game is over, false otherwise
+     * @return
      */
     private boolean checkGameOverConditions() {
         return mainCharacter.getStats().isAnyStatZero();
@@ -212,4 +260,3 @@ public class Controller {
         }
     }
 }
-

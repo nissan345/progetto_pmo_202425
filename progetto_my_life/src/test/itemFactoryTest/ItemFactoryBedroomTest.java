@@ -12,7 +12,7 @@ import main.model.world.Room;
 import main.model.world.factory.ItemFactory;
 import main.model.world.gameItem.GameItem;
 
-class ItemFactoryBedRoomTest {
+class ItemFactoryBedroomTest {
 
 	private MainCharacter character;
     private Room bedroom;

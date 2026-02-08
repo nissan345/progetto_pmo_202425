@@ -1,6 +1,8 @@
 package main.model.world;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import main.model.character.MainCharacter;
 import main.model.character.npc.NPC;
@@ -101,6 +103,16 @@ public class Room {
      */
     public List<String> getEntryFailureReasons(MainCharacter character) {
         return this.entryRequirement.getFailureReasons(character); 
+    }
+    
+    private Map<String, Room> exits = new HashMap<>();
+
+    public Map<String, Room> getExits() {
+        return this.exits;
+    }
+
+    public void addExit(String direction, Room neighbor) {
+        this.exits.put(direction, neighbor);
     }
     
     

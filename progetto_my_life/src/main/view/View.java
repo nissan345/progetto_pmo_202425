@@ -74,7 +74,7 @@ public class View extends JFrame {
         inventoryPanel.setBorder(BorderFactory.createTitledBorder("Backpack (Left: Use / Right: Drop)"));
         
         JScrollPane invScroll = new JScrollPane(inventoryPanel);
-        invScroll.setPreferredSize(new Dimension(250, 0));
+        invScroll.setPreferredSize(new Dimension(250, 500));
         add(invScroll, BorderLayout.EAST);
 
         // 4. SOUTH: Game Log (Console)
@@ -138,7 +138,10 @@ public class View extends JFrame {
      * @param inventory The character's current inventory.
      */
     public void updateInventoryList(Inventory inventory) {
-        inventoryPanel.removeAll();
+    	System.out.println("VIEW - Sto aggiornando l'inventario ID: " + System.identityHashCode(inventory));
+        System.out.println("VIEW - Oggetti che vedo: " + inventory.getItems().size());
+    	System.out.println("DEBUG View: Aggiornamento inventario. Numero oggetti: " + inventory.getItems().size());
+    	inventoryPanel.removeAll();
 
         for (GameItem item : inventory.getItems()) {
             JButton itemBtn = new JButton(item.getName());
@@ -195,7 +198,7 @@ public class View extends JFrame {
             npcBtn.addActionListener(e -> {
                 if (controller != null) {
                     // This call will show an ERROR until you add the method to the Controller
-                    controller.handleNpcInteraction(npc);
+                 //   controller.handleNpcInteraction(npc);
                 }
             });
             
@@ -209,13 +212,44 @@ public class View extends JFrame {
             roomItemsPanel.add(new JLabel("The room is empty."));
         } else {
             for (GameItem item : itemsInRoom) {
+            	JPanel itemContainer = new JPanel(new FlowLayout());
+            	
+            	JButton useBtn = new JButton("Use: " + item.getName());
+                useBtn.addActionListener(e -> {
+                    if (controller != null) controller.handleUseItem(item);
+                });
+                itemContainer.add(useBtn);
+                
+                
+                if (item.getSize() < 20) {
                 JButton pickupBtn = new JButton("Pick Up: " + item.getName());
                 // Link to Controller's PickUp handler
                 pickupBtn.addActionListener(e -> {
                     if (controller != null) controller.handlePickUp(item);
                 });
-                roomItemsPanel.add(pickupBtn);
+                itemContainer.add(pickupBtn);
+                }
+                roomItemsPanel.add(itemContainer);
             }
+        }
+        
+        roomItemsPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
+        JLabel moveLabel = new JLabel("Move to:");
+        moveLabel.setFont(new Font("Arial", Font.ITALIC, 12));
+        roomItemsPanel.add(moveLabel);
+        
+        for (String direction : currentRoom.getExits().keySet()) {
+            Room nextRoom = currentRoom.getExits().get(direction);
+            
+            JButton moveBtn = new JButton("GO TO: " + direction);
+            moveBtn.setBackground(new Color(200, 255, 200)); // Colore verdino per le porte
+            
+            moveBtn.addActionListener(e -> {
+                if (controller != null) {
+                    controller.handleMove(nextRoom);
+                }
+            });
+            roomItemsPanel.add(moveBtn);
         }
         
         // 5. Refresh UI

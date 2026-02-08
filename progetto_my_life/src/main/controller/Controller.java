@@ -1,6 +1,8 @@
 package main.controller; 
 
 import javax.swing.SwingUtilities;
+
+import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -30,6 +32,7 @@ public class Controller {
         this.mainCharacter = mainCharacter;
         this.house = new House();
         this.view = view;
+        this.view.setController(this);
         this.isGameOver = false;
 
         // Initialization of the world
@@ -58,6 +61,26 @@ public class Controller {
         Room storageRoom = ItemFactory.createStorageRoom();
         Room garden = ItemFactory.createGarden();
 
+        //COLLEGAMENTI
+        bedroom.addExit("Cucina", kitchen);
+        bedroom.addExit("Bagno", bathroom);
+
+        
+        kitchen.addExit("Camera da Letto", bedroom);
+        kitchen.addExit("Salotto", livingRoom);
+        kitchen.addExit("Giardino", garden);
+
+        
+        livingRoom.addExit("Cucina", kitchen);
+        livingRoom.addExit("Ripostiglio", storageRoom);
+        
+        
+        storageRoom.addExit("Salotto", livingRoom);
+        bathroom.addExit("Camera da Letto", bedroom);
+        garden.addExit("Cucina", kitchen);
+
+        
+        
         // Setting up room connections
         house.addRoom(bedroom);
         house.addRoom(kitchen);
@@ -157,7 +180,7 @@ public class Controller {
 
         ActionResult result = item.useWithChoice(mainCharacter, choice);
 
-        mainCharacter.applyActionResult(result, item);
+        mainCharacter.applyActionResult(result, item.getName());
         processActionResult(result);
 
     }
@@ -168,10 +191,12 @@ public class Controller {
      */
     public void handlePickUp(GameItem item) {
         // If the game is over, do nothing
-        if(isGameOver) return;
+    	
+    	if(isGameOver) return;
 
         ActionResult result = mainCharacter.pickUpItemAction(item);
         processActionResult(result);
+        updateView();
     }
 
     /**
@@ -192,11 +217,22 @@ public class Controller {
      */
     public void handleMove(Room nextRoom) {
         // If the game is over, do nothing
-        if(isGameOver) return;
+    	if(isGameOver) return;
 
+    	Optional<Room> entered = house.enterRoom(nextRoom.getRoomName());
+        
+    	if (entered.isPresent()) {
+    		mainCharacter.pickCurrentRoom(entered.get());
+    		view.appendLog("Ti sei spostato in: " + entered.get().getRoomName());
+    		updateView();
+    	}else {
+            view.appendLog("Errore: Non puoi andare lì!");
+        }
+    	
+    	
         String msg = mainCharacter.pickCurrentRoom(nextRoom);
         view.appendLog(msg);
-        updateView();
+        
     }
 
     // HELPER METHODS -------------------------------------------------------------

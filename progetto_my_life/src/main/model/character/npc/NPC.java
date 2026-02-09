@@ -87,6 +87,10 @@ public abstract class NPC {
     }
 
     // GETTERS ---------------------------------------------------------------------
+    public String getName() {
+    	return this.getName(); 
+    }
+    
     public String getRelationship() { 
         return this.relationship; 
     }

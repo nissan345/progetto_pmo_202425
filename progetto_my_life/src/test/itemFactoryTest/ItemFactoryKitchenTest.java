@@ -73,7 +73,7 @@ class ItemFactoryKitchenTest {
         // Test with different energy levels to verify dynamic behaviour
         character.getStats().changeEnergy(-80); // Low energy (<40), MainCharacter shouldn't be allowed to use fornelli
         ActionResult result1 = fornelli.use(character);
-        character.applyActionResult(result1, fornelli);
+        character.applyActionResult(result1, fornelli.getName());
         assertNotNull(result1);
         assertTrue(!result1.getMessages().isEmpty());
         assertEquals(20, character.getStats().getEnergy());
@@ -111,7 +111,7 @@ class ItemFactoryKitchenTest {
         assertEquals(FoodType.SALAD.getSatiety(),   foodResult.getDeltaSatiety());
         assertEquals(FoodType.SALAD.getHydration(), foodResult.getDeltaHydration());
         assertEquals(FoodType.SALAD.getEnergy(),    foodResult.getDeltaEnergy());
-        character.applyActionResult(foodResult, refrigerator);
+        character.applyActionResult(foodResult, refrigerator.getName());
         
         FoodType pick = FoodType.SALAD;
         

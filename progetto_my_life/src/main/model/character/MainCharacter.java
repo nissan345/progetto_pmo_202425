@@ -63,8 +63,9 @@ public class MainCharacter {
     public int getLvl() { return lvl; }
     public int getXp() { return xp; }
     public int getXpToNext() { return xpToNext; }
-    public Room getCurrentRoom() {return currentRoom;}
+    public Room getCurrentRoom() { return currentRoom;}
     public Inventory getInventory() { return inventory; }
+    public List<Quest> getOngoingQuests() { return this.ongoingQuests; }
     
     // MAIN METHODS ----------------------------------------------------------------
     
@@ -191,6 +192,11 @@ public class MainCharacter {
         return this.completedQuests; 
     }
     
+    /**
+     * Checks if the main character has completed a specific quest
+     * @param questName
+     * @return
+     */
     public boolean hasCompletedQuest(String questName) {
         return this.completedQuests.stream()
                                 .anyMatch(q -> q.getName().equals(questName));

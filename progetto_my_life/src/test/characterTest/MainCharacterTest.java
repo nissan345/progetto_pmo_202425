@@ -222,7 +222,7 @@ class MainCharacterTest {
 
         assertFalse(character.hasUsedItemForQuest(computer));
 
-        character.recordItemsUsedForQuests(computer);
+        character.recordItemsUsedForQuests(computer.getName());
 
         assertTrue(character.hasUsedItemForQuest(computer));
 
@@ -248,7 +248,7 @@ class MainCharacterTest {
 
         assertFalse(cond.checkCompletion(character));
 
-        character.recordItemsUsedForQuests(computer);
+        character.recordItemsUsedForQuests(computer.getName());
 
         assertTrue(cond.checkCompletion(character));
     }

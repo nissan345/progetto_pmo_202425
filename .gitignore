@@ -1,40 +1,20 @@
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-/.metadata/
-=======
-=======
->>>>>>> main
-# Eclipse
-bin/
-.settings/
-.metadata/
-*.tmp
-
 # File specifici di Eclipse
-.classpath
-.project
-
-# VSCode (se vuoi mantenere)
-.vscode/
-.yscode/
-
-<<<<<<< HEAD
-*.class*.class
-=======
-*.class
->>>>>>> main
+.metadata/
 bin/
-target/
-build/
-target/
-<<<<<<< HEAD
-build/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders/
 
-# Per l'UML
-docs/uml/out/
-*.png
-*.svg
->>>>>>> Stashed changes
-=======
-build/
->>>>>>> main
+# File di progetto 
+.project
+.classpath
+
+# File di sistema
+Thumbs.db
+.DS_Store

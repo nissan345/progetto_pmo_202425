@@ -2,12 +2,22 @@ package main.controller;
 
 import javax.swing.SwingUtilities;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import main.model.character.MainCharacter;
+import main.model.character.enums.Hair;
+import main.model.character.enums.Outfit;
+import main.model.character.npc.Brother;
+import main.model.character.npc.Dad;
+import main.model.character.npc.Mum;
+import main.model.character.npc.NPC;
+import main.model.quest.Quest;
+import main.model.quest.QuestSystem;
 import main.model.world.gameItem.FoodType;
 import main.model.world.House;
 import main.model.world.Room;
@@ -22,8 +32,17 @@ import main.view.View;
 public class Controller {
     // ATTRIBUTES ------------------------------------------------------------------------
     private MainCharacter mainCharacter;
+    
     private House house;
+    
+    private Mum mum;
+	private Dad dad;
+	private Brother brother;
+	
+	private QuestSystem questSystem; 
+	
     private View view;
+    
     private ScheduledExecutorService gameTimer;
     private boolean isGameOver;
 
@@ -88,6 +107,21 @@ public class Controller {
         house.addRoom(livingRoom);
         house.addRoom(storageRoom);
         house.addRoom(garden);
+        
+        // Setting NPCs
+        mum = new Mum(livingRoom, house);
+        dad = new Dad(garden, house);
+        brother = new Brother(kitchen, house);
+
+        livingRoom.setNpc(mum);
+        garden.setNpc(dad);
+        kitchen.setNpc(brother);
+        
+        // Setting quest system
+        questSystem = new QuestSystem();
+        questSystem.registerNPC(mum);
+        questSystem.registerNPC(dad);
+        questSystem.registerNPC(brother);
 
         // Setting initial position of the main character
         String startRoomName = "Camera da Letto";
@@ -104,10 +138,88 @@ public class Controller {
     /**
      * Gets the house instance in case the view needs to access it.
      * @return
-     */
+     
     public House getHouse() {
         return house;
+    } */
+    
+    // ROOM VISUALIZATION --------------------------------------------------------------
+    
+    /**
+     * Switches the current room of the MainCharacter to the chosen one
+     * @param roomName
+     */
+    public void changeRoom(String roomName) {
+    	Optional<Room> room = house.enterRoom(roomName); 
+    	
+    	if (room.isPresent()) {
+            Room currentRoom = room.get();
+            // Tries to enter the room of choice
+            String roomMessage = this.mainCharacter.pickCurrentRoom(currentRoom); 
+            
+            // If the MC got access to the room, they enter
+            if(this.mainCharacter.getCurrentRoom().equals(currentRoom)) {
+            	view.updateCurrentRoom(currentRoom.getRoomName());
+            	view.showAccess(roomMessage);
+                
+                this.itemsInRoom(); 
+                
+                Optional<NPC> npc = currentRoom.getNpcInRoom();
+                if (npc != null) {
+                    this.handleQuest(currentRoom, npc.get()); 
+                    this.handleNpcInteractions(npc.get());
+                }
+            // Otherwise, the access gets denied
+            } else {
+            	view.showAccess(roomMessage);
+            }
+        }
     }
+    
+    public void itemsInRoom() {
+    	 Room room = this.mainCharacter.getCurrentRoom();
+         List<GameItem> currentRoomItems = room.getItemsInRoom();
+
+         List<String> labels = currentRoomItems.stream()
+             .map(o -> o.getName() + " - " + o.getDescription())
+             .toList();
+
+         view.showItemsInRoom(labels, idx -> {
+             if (idx >= 0 && idx < currentRoomItems.size()) {
+            	 handleItemInteraction(currentRoomItems.get(idx));
+             }
+         });
+    }
+    
+    
+    
+    // CHARACTER CREATION --------------------------------------------------------------
+    
+    /**
+     *  MainCharacter starting personalization
+     */
+    private void mainCharacterCreation() {
+        String name = view.askName();
+        Outfit outfit = chooseOption(Outfit.values());
+        Hair hair = chooseOption(Hair.values());
+        this.mainCharacter = new MainCharacter(name, outfit, hair);
+    }
+    
+    /**
+     * Helper method to choose a personalization option 
+     * @param <T>
+     * @param message
+     * @param availableOptions
+     * @return
+     */
+    private <T> T chooseOption(T[] availableOptions){
+        List<String> options = Arrays.stream(availableOptions)
+            .map(Object::toString)
+            .toList();
+        int choice  = view.showPersonalizationOptions(options);
+        return availableOptions[choice];
+    }
+    
 
     // TIME MANAGEMENT --------------------------------------------------------------
 
@@ -146,6 +258,30 @@ public class Controller {
 
     // USER ACTIONS MANAGEMENT -----------------------------------------------------
 
+    
+    /**
+     * Handles the main character's choice when interacting with an item 
+     * @param item 
+     */
+    private void handleItemInteraction(GameItem item) {
+        String[] options = {"Usa", "Raccogli", "Annulla"};
+        
+        int choice = view.showOptionItem(Arrays.asList(options));
+
+        switch (choice) {
+            case 0:
+                handleUseItem(item);
+                break;
+            case 1: 
+                handlePickUp(item);
+                itemsInRoom(); 
+                break;
+            case 2: 
+            default:
+                break;
+        }
+    }
+    
     /**
      * Handles the use of a game item by the main character.
      * @param item
@@ -211,30 +347,6 @@ public class Controller {
         processActionResult(result);
     }
 
-    /**
-     * Handles the movement of the main character to a new room.
-     * @param nextRoom
-     */
-    public void handleMove(Room nextRoom) {
-        // If the game is over, do nothing
-    	if(isGameOver) return;
-
-    	Optional<Room> entered = house.enterRoom(nextRoom.getRoomName());
-        
-    	if (entered.isPresent()) {
-    		mainCharacter.pickCurrentRoom(entered.get());
-    		view.appendLog("Ti sei spostato in: " + entered.get().getRoomName());
-    		updateView();
-    	}else {
-            view.appendLog("Errore: Non puoi andare lì!");
-        }
-    	
-    	
-        String msg = mainCharacter.pickCurrentRoom(nextRoom);
-        view.appendLog(msg);
-        
-    }
-
     // HELPER METHODS -------------------------------------------------------------
 
     /**
@@ -288,11 +400,91 @@ public class Controller {
             mainCharacter.getStats().getHydration(),
             mainCharacter.getStats().getHygiene()
         );
+        
+        view.updateLevelDisplay(
+        	mainCharacter.getLvl(),
+        	mainCharacter.getXp(), 
+        	mainCharacter.getXpToNext()
+        );
 
         view.updateInventoryList(mainCharacter.getInventory());
+        
+        view.updateAffinitiesDisplay(
+                mum.getAffinity(), 
+                dad.getAffinity(), 
+                brother.getAffinity()
+            );
 
         if (mainCharacter.getCurrentRoom() != null) {
             view.updateCurrentRoom(mainCharacter.getCurrentRoom());
+        }
+    }
+    
+    // NPCS INTERACTIONS MANAGEMENT --------------------------------------------------------------
+    
+    /**
+     * Helper method for handling all different kinds of Npcs interactions
+     * @param npc
+     */
+    private void handleNpcInteractions(NPC npc) {
+    	
+    	// Checking for mum's gift availability
+    	if (npc instanceof Mum) {
+            String giftMessage = ((Mum) npc).checkGiftInteraction(mainCharacter);
+            if (!giftMessage.isEmpty()) {
+                view.showNpcMessage(giftMessage);
+                updateView(); 
+            }
+        }
+    	
+    	String dialogue = ""; 
+    	Optional<Quest> ongoing = this.mainCharacter.getOngoingQuests().stream()
+    																.filter(q -> q.getAssignerNPC().equals(npc))
+    																.findFirst();
+    	
+        if(!this.mainCharacter.hasActiveQuestWithNPC(npc)) {
+        	dialogue = npc.getInitialDialogue(); 
+        	view.showNpcMessage(dialogue); 
+        	
+        } else if(ongoing.isPresent()) {
+        	dialogue = npc.getQuestInProgressDialogue(ongoing.get());
+        	view.showQuestDialogue(npc.getName(), ongoing.get().getName());
+        }
+    }
+    
+    // NPCS QUEST MANAGEMENT --------------------------------------------------------------
+    
+    /**
+     * Helper method to handle the quest according to the quest system 
+     * @param room
+     * @param npc
+     */
+    private void handleQuest(Room room, NPC npc) {
+    	
+    	// Assignment of a new quest
+    	List<Quest> newQuests = questSystem.onPlayerEnteredRoom(mainCharacter, room);
+    	
+    	if (!newQuests.isEmpty()) {
+            for (Quest quest : newQuests) {
+                view.showQuestMessage(quest.getName());
+            
+                String npcQuestAssignedDialogue = npc.getQuestAssignedDialogue(quest);
+                view.showQuestDialogue(npc.getName(), npcQuestAssignedDialogue);
+            }
+        }
+    	
+    	// Handling the completion of the quest
+		Optional<Quest> completedQuest = this.mainCharacter.getCompletedQuestWithNPC(npc); 
+
+        if (completedQuest.isPresent()) {
+        	view.showQuestMessage(completedQuest.get().getName());
+            
+        	String npcQuestCompletionDialogue = npc.getQuestCompletionDialogue(completedQuest.get()); 
+            view.showQuestDialogue(npc.getName(), npcQuestCompletionDialogue);
+            
+            questSystem.tryTurnIn(mainCharacter, npc);
+            
+            updateView();
         }
     }
 }

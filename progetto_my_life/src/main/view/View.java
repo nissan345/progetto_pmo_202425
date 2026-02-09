@@ -6,10 +6,12 @@ import java.util.List;
 import java.util.Optional;
 
 import main.controller.Controller;
-import main.model.character.npc.NPC;
+
+ /* TOGLIERE 
+import main.model.character.npc.NPC; 
 import main.model.world.Room;
 import main.model.world.gameItem.GameItem;
-import main.model.world.gameItem.Inventory;
+import main.model.world.gameItem.Inventory;*/
 
 /**
  * View class responsible for the user interface.
@@ -43,15 +45,15 @@ public class View extends JFrame {
 
         // 1. NORTH: Stats Panel (Energy, Satiety, etc.)
         JPanel statsPanel = new JPanel(new GridLayout(1, 4));
-        barEnergy = createStyledBar("Energy", Color.ORANGE);
-        barSatiety = createStyledBar("Satiety", Color.GREEN);
-        barHydration = createStyledBar("Hydration", Color.BLUE);
-        barHygiene = createStyledBar("Hygiene", Color.CYAN);
+        barEnergy = createStyledBar("Energia", Color.ORANGE);
+        barSatiety = createStyledBar("Sazietà", Color.GREEN);
+        barHydration = createStyledBar("Idratazione", Color.BLUE);
+        barHygiene = createStyledBar("Igiene", Color.CYAN);
 
-        statsPanel.add(createStatContainer("Energy", barEnergy));
-        statsPanel.add(createStatContainer("Satiety", barSatiety));
-        statsPanel.add(createStatContainer("Hydration", barHydration));
-        statsPanel.add(createStatContainer("Hygiene", barHygiene));
+        statsPanel.add(createStatContainer("Energia", barEnergy));
+        statsPanel.add(createStatContainer("Sazietà", barSatiety));
+        statsPanel.add(createStatContainer("Idratazione", barHydration));
+        statsPanel.add(createStatContainer("Igiene", barHygiene));
         add(statsPanel, BorderLayout.NORTH);
 
         // 2. CENTER: Room Info & Interaction Area
@@ -63,7 +65,7 @@ public class View extends JFrame {
 
         // Interactive area (NPCs and Items on the floor)
         roomItemsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 15));
-        roomItemsPanel.setBorder(BorderFactory.createTitledBorder("In the Room (Interact)"));
+        roomItemsPanel.setBorder(BorderFactory.createTitledBorder("Interagisci:"));
         centerPanel.add(new JScrollPane(roomItemsPanel), BorderLayout.CENTER);
         
         add(centerPanel, BorderLayout.CENTER);
@@ -71,7 +73,7 @@ public class View extends JFrame {
         // 3. EAST: Inventory Panel
         inventoryPanel = new JPanel();
         inventoryPanel.setLayout(new BoxLayout(inventoryPanel, BoxLayout.Y_AXIS));
-        inventoryPanel.setBorder(BorderFactory.createTitledBorder("Backpack (Left: Use / Right: Drop)"));
+        inventoryPanel.setBorder(BorderFactory.createTitledBorder("Inventario (Tasto sinistro: Usa / Tasto destro: Lascia)"));
         
         JScrollPane invScroll = new JScrollPane(inventoryPanel);
         invScroll.setPreferredSize(new Dimension(250, 500));
@@ -82,7 +84,7 @@ public class View extends JFrame {
         gameLog.setEditable(false);
         gameLog.setLineWrap(true);
         JScrollPane logScroll = new JScrollPane(gameLog);
-        logScroll.setBorder(BorderFactory.createTitledBorder("Game Log"));
+        logScroll.setBorder(BorderFactory.createTitledBorder("Aggiornamenti"));
         add(logScroll, BorderLayout.SOUTH);
 
         setLocationRelativeTo(null); // Center window on screen
@@ -147,7 +149,7 @@ public class View extends JFrame {
             JButton itemBtn = new JButton(item.getName());
             itemBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
             itemBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
-            itemBtn.setToolTipText("Left Click: Use | Right Click: Drop");
+            itemBtn.setToolTipText("Tasto sinistro: Usa | Tasto destro: Lascia");
 
             // Mouse Listener to distinguish between Use (Left) and Drop (Right)
             itemBtn.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -176,9 +178,9 @@ public class View extends JFrame {
      * and creates buttons for items lying on the floor.
      * @param currentRoom The room the character is currently in.
      */
-    public void updateCurrentRoom(Room currentRoom) {
+    public void updateCurrentRoom(String currentRoom) {
         // 1. Update Title
-        roomTitleLabel.setText("Current Location: " + currentRoom.getRoomName());
+        roomTitleLabel.setText("Posizione attuale: " + currentRoom);
 
         // 2. Clear the central panel
         roomItemsPanel.removeAll();
@@ -190,7 +192,7 @@ public class View extends JFrame {
             // Using getRelationship() because your NPC class uses that as a name
             String npcName = npc.getRelationship(); 
             
-            JButton npcBtn = new JButton("TALK TO: " + npcName);
+            JButton npcBtn = new JButton("Parla con: " + npcName);
             npcBtn.setBackground(new Color(255, 200, 200)); // Light red to highlight NPC
             npcBtn.setFont(new Font("Arial", Font.BOLD, 14));
             
@@ -209,12 +211,12 @@ public class View extends JFrame {
         List<GameItem> itemsInRoom = currentRoom.getItemsInRoom();
         
         if (itemsInRoom.isEmpty() && npcOpt.isEmpty()) {
-            roomItemsPanel.add(new JLabel("The room is empty."));
+            roomItemsPanel.add(new JLabel("La stanza è vuota"));
         } else {
             for (GameItem item : itemsInRoom) {
             	JPanel itemContainer = new JPanel(new FlowLayout());
             	
-            	JButton useBtn = new JButton("Use: " + item.getName());
+            	JButton useBtn = new JButton("Usa: " + item.getName());
                 useBtn.addActionListener(e -> {
                     if (controller != null) controller.handleUseItem(item);
                 });
@@ -222,7 +224,7 @@ public class View extends JFrame {
                 
                 
                 if (item.getSize() < 20) {
-                JButton pickupBtn = new JButton("Pick Up: " + item.getName());
+                JButton pickupBtn = new JButton("Prendi: " + item.getName());
                 // Link to Controller's PickUp handler
                 pickupBtn.addActionListener(e -> {
                     if (controller != null) controller.handlePickUp(item);
@@ -234,14 +236,14 @@ public class View extends JFrame {
         }
         
         roomItemsPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
-        JLabel moveLabel = new JLabel("Move to:");
+        JLabel moveLabel = new JLabel("Spostati:");
         moveLabel.setFont(new Font("Arial", Font.ITALIC, 12));
         roomItemsPanel.add(moveLabel);
         
         for (String direction : currentRoom.getExits().keySet()) {
             Room nextRoom = currentRoom.getExits().get(direction);
             
-            JButton moveBtn = new JButton("GO TO: " + direction);
+            JButton moveBtn = new JButton("Spostati: " + direction);
             moveBtn.setBackground(new Color(200, 255, 200)); // Colore verdino per le porte
             
             moveBtn.addActionListener(e -> {
@@ -280,7 +282,7 @@ public class View extends JFrame {
 
         Object[] choices = availableOptions.toArray();
         return JOptionPane.showInputDialog(
-            this, message, "Make a Choice", JOptionPane.QUESTION_MESSAGE,
+            this, message, "Scegli", JOptionPane.QUESTION_MESSAGE,
             null, choices, choices[0]
         );
     }
@@ -303,4 +305,29 @@ public class View extends JFrame {
         for (Component c : roomItemsPanel.getComponents()) c.setEnabled(false);
         for (Component c : inventoryPanel.getComponents()) c.setEnabled(false);
     }
+
+	public String askName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public int showPersonalizationOptions(List<String> options) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public int showOptionItem(List<String> asList) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public void updateLevelDisplay(int lvl, int xp) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void updateAffinitiesDisplay(int affinity, int affinity2, int affinity3) {
+		// TODO Auto-generated method stub
+		
+	}
 }

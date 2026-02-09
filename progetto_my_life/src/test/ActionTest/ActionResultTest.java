@@ -1,4 +1,4 @@
-package ActionTest;
+package actionTest;
 
 
 import main.model.action.ActionResult;

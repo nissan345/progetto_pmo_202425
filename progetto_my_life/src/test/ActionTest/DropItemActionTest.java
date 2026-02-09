@@ -1,4 +1,4 @@
-package ActionTest;
+package actionTest;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;

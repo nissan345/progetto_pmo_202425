@@ -19,4 +19,8 @@ public class ItemUsageCondition implements CompletionCondition {
     @Override
     public void onQuestCompleted(MainCharacter character) {
     }
+
+	public boolean isAutoCompletable() {
+		return true;
+	}
 }

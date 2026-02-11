@@ -12,7 +12,7 @@ public class Dad extends NPC {
 
     // CONSTRUCTOR ---------------------------------------------------------------------
     public Dad(Room s, House house) {
-        super("Dad", s, house);
+        super("Babbo", s, house);
     }
     
     // MAIN METHODS ------------------------------------------------------------------

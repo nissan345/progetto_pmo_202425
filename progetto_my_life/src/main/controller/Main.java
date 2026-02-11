@@ -7,10 +7,15 @@ import main.model.character.MainCharacter;
 public class Main {
 	
 	public static void main(String[] args) {
-		MainCharacter character = new MainCharacter("ll", null, null); 
-		View view = new View(); 
-		Controller controller = new Controller(character, view);
-		
+
+            // View creation
+            View view = new View();
+
+            // Controller creation
+            Controller controller = new Controller(view);
+            
+            // Starting game session
+            controller.startSession();
 	}
 
 }

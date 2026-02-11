@@ -9,11 +9,11 @@ public enum Outfit {
     // ALTERNATIVES FOR CLOTHES ----------------------------------------------------------
 
     CASUAL("Informale", "Abbigliamento casual per tutti i giorni"),
-    FORMAL("Formale", "Abbigliamento elegante per occasioni speciali"),
+    FORMAL("Formale", "Abbigliamento elegante"),
     SPORTY("Sportivo", "Abbigliamento comodo per attività fisica"),
     PAJAMA("Pigiama", "Abbigliamento per dormire"),
-    SUMMERLY("Estivo", "Abbigliamento leggero per il caldo"),
-    WINTERLY("Invernale", "Abbigliamento caldo per il freddo"); 
+    SUMMERLY("Estivo", "Abbigliamento leggero"),
+    WINTERLY("Invernale", "Abbigliamento caldo"); 
 
 
     // ATTRIBUTES -----------------------------------------------------------------------

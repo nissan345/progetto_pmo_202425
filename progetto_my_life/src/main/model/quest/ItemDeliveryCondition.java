@@ -24,4 +24,10 @@ public class ItemDeliveryCondition implements CompletionCondition {
     public void onQuestCompleted(MainCharacter character) {
         character.getInventory().removeItem(itemName);
     }
+
+	public boolean isAutoCompletable() {
+		return false;
+	}
+    
+    
 }

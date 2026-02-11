@@ -11,7 +11,7 @@ public class Brother extends NPC {
 	
     // CONSTRUCTOR ---------------------------------------------------------------------
     public Brother(Room s, House house) {
-        super("Brother", s, house);
+        super("Fratello", s, house);
     }
     
     // MAIN METHODS ------------------------------------------------------------------

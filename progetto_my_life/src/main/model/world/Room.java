@@ -18,6 +18,7 @@ public class Room {
     private Optional<NPC> npcInRoom;             
     private final List<GameItem> itemsInRoom;     
     private Requirement entryRequirement; 
+    private Map<String, Room> exits;
     
     // CONSTRUCTOR
     public Room(String name, List<GameItem> items, Requirement requirement){
@@ -25,6 +26,7 @@ public class Room {
         this.itemsInRoom = items;
         this.npcInRoom = Optional.empty();
         this.entryRequirement = requirement; 
+        this.exits = new HashMap<>(); 
     }
     
     // GETTERS 
@@ -32,6 +34,7 @@ public class Room {
     public List<GameItem> getItemsInRoom() {return itemsInRoom;}
     public Optional<NPC> getNpcInRoom() {return npcInRoom;}
     public Requirement getEntryRequirement() {return this.entryRequirement;}
+    public Map<String, Room> getExits() {return this.exits;}
     
     
     /**
@@ -41,7 +44,7 @@ public class Room {
      */
     public boolean hasNpc(NPC n){
     	if(this.npcInRoom.isPresent()) {
-    		return this.npcInRoom.get().getRelationship().equals(n.getRelationship());
+    		return this.npcInRoom.get().getName().equals(n.getName());
     	}
         return false;
     }
@@ -64,7 +67,7 @@ public class Room {
     public void setNpc(NPC n) {
         if (n.getPosition() != null && n.getPosition() != this) {
             throw new IllegalStateException(
-                "NPC " + n.getRelationship() + "  is already in another room " + 
+                "NPC " + n.getName() + "  is already in another room " + 
                 n.getPosition().getRoomName() + ". Cannot be duplicated into: " + this.roomName
             );
         }
@@ -105,16 +108,14 @@ public class Room {
         return this.entryRequirement.getFailureReasons(character); 
     }
     
-    private Map<String, Room> exits = new HashMap<>();
-
-    public Map<String, Room> getExits() {
-        return this.exits;
+    /**
+     * Adds an exit to a specific room 
+     * @param direction
+     * @param neighbour
+     */
+    public void addExit(String direction, Room neighbour) {
+        this.exits.put(direction, neighbour);
     }
-
-    public void addExit(String direction, Room neighbor) {
-        this.exits.put(direction, neighbor);
-    }
-    
     
     @Override
     public String toString(){
@@ -122,7 +123,7 @@ public class Room {
     	if(this.npcInRoom.isEmpty()) {
     		roomInfo = "\nItems presenti: " + this.itemsInRoom;
     	}else {
-    		roomInfo = this.roomName + "\nNPC presenti: " + this.npcInRoom.get().getRelationship() + "\nItems presenti: " + this.itemsInRoom;
+    		roomInfo = this.roomName + "\nNPC presenti: " + this.npcInRoom.get().getName() + "\nItems presenti: " + this.itemsInRoom;
     	}
         return roomInfo;
     }

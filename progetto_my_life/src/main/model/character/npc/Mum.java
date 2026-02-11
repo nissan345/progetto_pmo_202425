@@ -17,7 +17,7 @@ public class Mum extends NPC {
 
     // CONSTRUCTOR ---------------------------------------------------------------------
     public Mum(Room s, House house) {
-        super("Mum", s, house);
+        super("Mamma", s, house);
         this.giftGiven = false;
     }
 

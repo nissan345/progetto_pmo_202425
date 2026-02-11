@@ -1,399 +1,294 @@
 package main.controller; 
 
-import javax.swing.SwingUtilities;
-
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import main.model.character.MainCharacter;
 import main.model.character.enums.Hair;
 import main.model.character.enums.Outfit;
-import main.model.character.npc.Brother;
-import main.model.character.npc.Dad;
-import main.model.character.npc.Mum;
 import main.model.character.npc.NPC;
-import main.model.quest.Quest;
 import main.model.quest.QuestSystem;
-import main.model.world.gameItem.FoodType;
 import main.model.world.House;
 import main.model.world.Room;
 import main.model.world.gameItem.GameItem;
-import main.model.world.factory.ItemFactory;
-import main.model.action.ActionResult;
 import main.view.View;
 
 /**
- * Controller class that manages the game logic and interactions between the model and the view.
+ * Controller class that manages the game logic and mediates interactions 
+ * between the Model (data) and the View (interface).
  */
 public class Controller {
+    
     // ATTRIBUTES ------------------------------------------------------------------------
     private MainCharacter mainCharacter;
-    
     private House house;
+    private Map<String, NPC> family;
     
-    private Mum mum;
-	private Dad dad;
-	private Brother brother;
-	
-	private QuestSystem questSystem; 
-	
+    private GameLoopManager gameLoopManager;
+    
+    private ItemInteractionHandler itemHandler;
+    private NpcInteractionHandler NpcHandler; 
+    
+    private QuestSystem questSystem; 
+    
     private View view;
     
-    private ScheduledExecutorService gameTimer;
     private boolean isGameOver;
 
-    // CONSTRUCTOR ------------------------------------------------------------------------
-    public Controller(MainCharacter mainCharacter, View view) {
-        this.mainCharacter = mainCharacter;
-        this.house = new House();
+    // CONSTRUCTOR -----------------------------------------------------------------------
+
+    /**
+     * Constructs a new Controller with the specified View.
+     * Initializes the game over state to false.
+     * * @param view The graphical user interface of the game.
+     */
+    public Controller(View view) {
         this.view = view;
         this.view.setController(this);
         this.isGameOver = false;
-
-        // Initialization of the world
-        initializeWorld();
-
-        // Initial view update
-        updateView();
-
-        // Start the game loop
-        startGameLoop();
     }
 
-    // METHODS ---------------------------------------------------------------------------
+    // GAME LIFECYCLE METHODS ------------------------------------------------------------
     
-    // WORLD CREATION -------------------------------------------------------------
-
     /**
-     * Initializes the game world by creating rooms and setting up their connections.
+     * Starts the game session.
+     * Displays the menu, handles character creation, initializes the world, 
+     * NPCs, handlers, systems, and starts the main game loop.
      */
-    private void initializeWorld() {
-        // Rooms creation
-        Room bedroom = ItemFactory.createBedroom();
-        Room kitchen = ItemFactory.createKitchen();
-        Room bathroom = ItemFactory.createBathroom();
-        Room livingRoom = ItemFactory.createLivingRoom();
-        Room storageRoom = ItemFactory.createStorageRoom();
-        Room garden = ItemFactory.createGarden();
+    public void startSession() {
+        view.showMenu();
+        
+        this.mainCharacterCreation();
+        
+        // Initialization Quest System
+        this.questSystem = new QuestSystem();
+        
+        // Initialization of the world
+        WorldInitializer initializer = new WorldInitializer(); 
+        this.house = initializer.initHouse(); 
+        initializer.startingRoom(mainCharacter);
+        this.family = initializer.initNPCs(house, questSystem);
+        
+        // Intialization item handler
+        this.itemHandler = new ItemInteractionHandler(this, mainCharacter, view);
+        
+        // Intialization NPC interactions handler
+        this.NpcHandler = new NpcInteractionHandler(this, mainCharacter, view, questSystem);
+        
+        // Initial view update
+        this.updateView();
+        
+        // Start the game loop
+        this.gameLoopManager = new GameLoopManager(this, mainCharacter);
+        this.gameLoopManager.startGameLoop();
+    }
+    
+    /**
+     * Checks if the game is currently over.
+     * * @return true if the game is over, false otherwise.
+     */
+    public boolean isGameOver() { return this.isGameOver; }
 
-        //COLLEGAMENTI
-        bedroom.addExit("Cucina", kitchen);
-        bedroom.addExit("Bagno", bathroom);
+    /**
+     * Handles the game over state.
+     * Displays the reason for the game over, stops the game loop, and disables UI controls.
+     */
+    public void handleGameOver() {
+        isGameOver = true;
+        String reason = mainCharacter.getStats().getDeathCause();
 
-        
-        kitchen.addExit("Camera da Letto", bedroom);
-        kitchen.addExit("Salotto", livingRoom);
-        kitchen.addExit("Giardino", garden);
-
-        
-        livingRoom.addExit("Cucina", kitchen);
-        livingRoom.addExit("Ripostiglio", storageRoom);
-        
-        
-        storageRoom.addExit("Salotto", livingRoom);
-        bathroom.addExit("Camera da Letto", bedroom);
-        garden.addExit("Cucina", kitchen);
-
-        
-        
-        // Setting up room connections
-        house.addRoom(bedroom);
-        house.addRoom(kitchen);
-        house.addRoom(bathroom);
-        house.addRoom(livingRoom);
-        house.addRoom(storageRoom);
-        house.addRoom(garden);
-        
-        // Setting NPCs
-        mum = new Mum(livingRoom, house);
-        dad = new Dad(garden, house);
-        brother = new Brother(kitchen, house);
-
-        livingRoom.setNpc(mum);
-        garden.setNpc(dad);
-        kitchen.setNpc(brother);
-        
-        // Setting quest system
-        questSystem = new QuestSystem();
-        questSystem.registerNPC(mum);
-        questSystem.registerNPC(dad);
-        questSystem.registerNPC(brother);
-
-        // Setting initial position of the main character
-        String startRoomName = "Camera da Letto";
-        Room startRoom = house.getRoom(startRoomName);
-
-        if(startRoom != null) {
-            house.enterRoom(startRoomName);
-            mainCharacter.pickCurrentRoom(startRoom);
-        } else {
-            System.err.println("Errore! Stanza " + startRoomName + "non trovata! Controlla la sintassi nella Item factory.");
-        }
+        view.showGameOverDialog("GAME OVER: " + reason);
+        this.gameLoopManager.stopGameLoop();;
+        view.disableControls();
     }
 
-    /**
-     * Gets the house instance in case the view needs to access it.
-     * @return
-     
-    public House getHouse() {
-        return house;
-    } */
-    
-    // ROOM VISUALIZATION --------------------------------------------------------------
+    // CHARACTER CREATION --------------------------------------------------------------
     
     /**
-     * Switches the current room of the MainCharacter to the chosen one
-     * @param roomName
+     * Handles the initial personalization of the MainCharacter.
+     * Asks the user for name, outfit, and hair via the View.
+     */
+    private void mainCharacterCreation() {
+        String name = view.askName();
+        Outfit outfit = chooseOption("Scegli outfit", Outfit.values());
+        Hair hair = chooseOption("Scegli i capelli", Hair.values());
+        this.mainCharacter = new MainCharacter(name, outfit, hair);
+    }
+    
+    /**
+     * Helper method to present a list of options to the user and return the selected choice.
+     * * @param <T> The type of the options.
+     * @param message The message to display to the user.
+     * @param availableOptions An array of available options.
+     * @return The option selected by the user.
+     */
+    private <T> T chooseOption(String message, T[] availableOptions){
+        List<String> options = Arrays.stream(availableOptions)
+                                     .map(Object::toString)
+                                     .toList();
+        int choice  = view.showPersonalizationOptions(message, options);
+        return availableOptions[choice];
+    }
+    
+    // NAVIGATION & EXPLORATION --------------------------------------------------------
+    
+    /**
+     * Attempts to move the MainCharacter to the specified room.
+     * Updates the view and triggers room-entry interactions if successful.
+     * * @param roomName The name of the room to enter.
      */
     public void changeRoom(String roomName) {
-    	Optional<Room> room = house.enterRoom(roomName); 
-    	
-    	if (room.isPresent()) {
+        Optional<Room> room = house.enterRoom(roomName); 
+        
+        if (room.isPresent()) {
             Room currentRoom = room.get();
             // Tries to enter the room of choice
             String roomMessage = this.mainCharacter.pickCurrentRoom(currentRoom); 
             
             // If the MC got access to the room, they enter
             if(this.mainCharacter.getCurrentRoom().equals(currentRoom)) {
-            	view.updateCurrentRoom(currentRoom.getRoomName());
-            	view.showAccess(roomMessage);
-                
-                this.itemsInRoom(); 
+                view.showAccess(roomMessage);
+                this.updateView();
                 
                 Optional<NPC> npc = currentRoom.getNpcInRoom();
                 if (npc != null) {
-                    this.handleQuest(currentRoom, npc.get()); 
-                    this.handleNpcInteractions(npc.get());
+                    this.NpcHandler.handleRoomEntryInteraction();;
                 }
             // Otherwise, the access gets denied
             } else {
-            	view.showAccess(roomMessage);
+                view.showAccess(roomMessage);
             }
         }
     }
     
-    public void itemsInRoom() {
-    	 Room room = this.mainCharacter.getCurrentRoom();
-         List<GameItem> currentRoomItems = room.getItemsInRoom();
-
-         List<String> labels = currentRoomItems.stream()
-             .map(o -> o.getName() + " - " + o.getDescription())
-             .toList();
-
-         view.showItemsInRoom(labels, idx -> {
-             if (idx >= 0 && idx < currentRoomItems.size()) {
-            	 handleItemInteraction(currentRoomItems.get(idx));
-             }
-         });
-    }
-    
-    
-    
-    // CHARACTER CREATION --------------------------------------------------------------
-    
-    /**
-     *  MainCharacter starting personalization
-     */
-    private void mainCharacterCreation() {
-        String name = view.askName();
-        Outfit outfit = chooseOption(Outfit.values());
-        Hair hair = chooseOption(Hair.values());
-        this.mainCharacter = new MainCharacter(name, outfit, hair);
-    }
-    
-    /**
-     * Helper method to choose a personalization option 
-     * @param <T>
-     * @param message
-     * @param availableOptions
-     * @return
-     */
-    private <T> T chooseOption(T[] availableOptions){
-        List<String> options = Arrays.stream(availableOptions)
-            .map(Object::toString)
-            .toList();
-        int choice  = view.showPersonalizationOptions(options);
-        return availableOptions[choice];
-    }
-    
-
-    // TIME MANAGEMENT --------------------------------------------------------------
+    // INTERACTION MANAGEMENT ----------------------------------------------------------
 
     /**
-     * Starts the game loop that updates the game state at fixed intervals.
+     * Handles the player's interaction with an item present in the current room.
+     * Presents options like "Use" or "Pick Up" based on the item's properties.
+     * * @param itemIndex The index of the item in the room's item list.
      */
-    private void startGameLoop() {
-        gameTimer = Executors.newSingleThreadScheduledExecutor();
+    public void handleItemInteraction(int itemIndex) {
+        List<GameItem> items = mainCharacter.getCurrentRoom().getItemsInRoom();
+        int midSize = 40; 
         
-        gameTimer.scheduleAtFixedRate(() -> {
-            if (!isGameOver) {
-                // Game state updates
-                mainCharacter.stateDecay();
-                boolean dead = checkGameOverConditions();
+        if (itemIndex >= 0 && itemIndex < items.size()) {
+            GameItem item = items.get(itemIndex);
 
-                // View update
-                SwingUtilities.invokeLater(() -> {
-                    if(dead) {
-                        handleGameOver();
-                    }else{
-                        updateView();
-                    }
-                });
+            List<String> options = new ArrayList<>();
+            options.add("Usa"); 
+
+            if (item.getSize() <= midSize) { 
+                options.add("Raccogli");
             }
-        }, 0, 5, TimeUnit.SECONDS); // Update every 5 seconds
-    }
 
-    /**
-     * Checks if any of the main character's stats have reached zero.
-     */
-    public void stopGameLoop() {
-        if (gameTimer != null && !gameTimer.isShutdown()) {
-            gameTimer.shutdown();
+            options.add("Annulla");
+
+            int choiceIndex = view.showOptionItem(options);
+
+            if (choiceIndex == -1) return;
+
+            String action = options.get(choiceIndex);
+
+            switch (action) {
+                case "Usa":
+                    this.itemHandler.handleUseRoomItem(item);
+                    break;
+                case "Raccogli":
+                    this.itemHandler.handlePickUp(item);
+                    break;
+                case "Annulla":
+                default:
+                    break;
+            }
         }
     }
-
-    // USER ACTIONS MANAGEMENT -----------------------------------------------------
-
     
     /**
-     * Handles the main character's choice when interacting with an item 
-     * @param item 
+     * Handles the player's interaction with an item currently in their inventory.
+     * Presents options like "Use" or "Drop".
+     * * @param itemIndex The index of the item in the inventory list.
      */
-    private void handleItemInteraction(GameItem item) {
-        String[] options = {"Usa", "Raccogli", "Annulla"};
+    public void handleInventoryInteraction(int itemIndex) {
+        List<GameItem> items = mainCharacter.getInventory().getItems();
         
-        int choice = view.showOptionItem(Arrays.asList(options));
+        if (itemIndex >= 0 && itemIndex < items.size()) {
+            GameItem item = items.get(itemIndex);
+            
+            List<String> options = Arrays.asList("Usa", "Lascia", "Annulla");
+            
+            int choiceIndex = view.showOptionItem(options);
+            
+            if (choiceIndex == -1) return; 
 
-        switch (choice) {
-            case 0:
-                handleUseItem(item);
-                break;
-            case 1: 
-                handlePickUp(item);
-                itemsInRoom(); 
-                break;
-            case 2: 
-            default:
-                break;
+            String action = options.get(choiceIndex);
+
+            switch (action) {
+                case "Usa": 
+                    this.itemHandler.handleUseInventoryItem(item);
+                    break;
+                case "Lascia":
+                    this.itemHandler.handleDrop(item);
+                    break;
+                case "Annulla":
+                default:
+                    break;
+            }
         }
     }
     
     /**
-     * Handles the use of a game item by the main character.
-     * @param item
+     * Delegates manual NPC interactions (user click) to the NpcInteractionHandler.
      */
-    public void handleUseItem(GameItem item) {
-        // If the game is over, do nothing
-        if(isGameOver) return;
-
-        // If the item requires a choice, ask the user
-        if(item.requiresChoice()) {
-            Object choice = view.askUserChoice(item.getMessage(), item.availableOptions());
-
-            if (choice instanceof FoodType) {
-                handleItemChoice(item,(FoodType) choice);
-            }
-            return;     // To exit the method after handling the choice
+    public void handleNpcInteractions() {
+        if (this.NpcHandler != null) {
+            this.NpcHandler.handleUserClickInteraction();
         }
-
-        // Items that don't require choice
-        ActionResult result = item.use(mainCharacter);
-        processActionResult(result);
     }
-
-    /** 
-     * Handles the use of a game item that requires a choice.
-     * @param item
-     * @param choice
-     */
-    public void handleItemChoice(GameItem item, FoodType choice) {
-        // If the game is over, do nothing
-        if(isGameOver) return;
-
-        ActionResult result = item.useWithChoice(mainCharacter, choice);
-
-        mainCharacter.applyActionResult(result, item.getName());
-        processActionResult(result);
-
-    }
-
+    
     /**
-     * Handles the pick up of a game item by the main character.
-     * @param item
+     * Callback method invoked after a player action is completed.
+     * Checks for potential quest updates related to room entry conditions and refreshes the view.
      */
-    public void handlePickUp(GameItem item) {
-        // If the game is over, do nothing
-    	
-    	if(isGameOver) return;
-
-        ActionResult result = mainCharacter.pickUpItemAction(item);
-        processActionResult(result);
-        updateView();
-    }
-
-    /**
-     * Handles the dropping of a game item by the main character.
-     * @param item
-     */
-    public void handleDrop(GameItem item) {
-        // If the game is over, do nothing
-        if(isGameOver) return;
-
-        ActionResult result = mainCharacter.dropItemAction(item);
-        processActionResult(result);
-    }
-
-    // HELPER METHODS -------------------------------------------------------------
-
-    /**
-     * Processes the result of an action and updates the view accordingly.
-     * @param result
-     */
-    private void processActionResult(ActionResult result) {
-        // Append a message to the log
-        if (result.getMessage() != null && !result.getMessage().isEmpty()) {
-            view.appendLog(result.getMessage());
+    public void onActionCompleted() {
+        if (this.NpcHandler != null) {
+            this.NpcHandler.handleRoomEntryInteraction();
         }
-
-        // Append multiple messages
-        if(result.getMessages() != null) {
-            for(String msg : result.getMessages()) {
-                view.appendLog(msg);
-            }
+        this.updateView();
+    }
+    
+    // VIEW UPDATE ---------------------------------------------------------------------
+    
+    /**
+     * Updates the View with the latest data from the Model.
+     * Refreshes stats, level, inventory, affinities, and room information.
+     */
+    protected void updateView() {
+        Room room = mainCharacter.getCurrentRoom();
+        
+        int mumAff = this.family.get("Mum").getAffinity();
+        int dadAff = this.family.get("Dad").getAffinity();
+        int broAff = this.family.get("Brother").getAffinity();
+        
+        String npcName = ""; 
+        
+        if (room.getNpcInRoom().isPresent()) {
+            npcName = room.getNpcInRoom().get().getName();
         }
-
-        // Update the view
-        updateView();
-    }
-
-    /**
-     * Checks if the game over conditions are met.
-     * @return
-     */
-    private boolean checkGameOverConditions() {
-        return mainCharacter.getStats().isAnyStatZero();
-    }
-
-    /**
-     * Handles the game over state.
-     */
-    private void handleGameOver() {
-        isGameOver = true;
-        String reason = mainCharacter.getStats().getDeathCause();
-
-        view.showGameOverDialog("GAME OVER: " + reason);
-        stopGameLoop();
-        view.disableControls();
-    }
-
-    /**
-     * Updates the view with the current stats and inventory of the main character.
-     */
-    private void updateView() {
+        
+        List<String> itemNames = room.getItemsInRoom().stream()
+                                                      .map(GameItem::getName)
+                                                      .toList();
+        
+        List<Integer> itemSizes = room.getItemsInRoom().stream()
+                                                       .map(GameItem::getSize)
+                                                       .toList();
+        
+        List<String> exitDirections = room.getExits().keySet().stream().toList();
+        
         view.updateStatsDisplay(
             mainCharacter.getStats().getEnergy(),
             mainCharacter.getStats().getSatiety(),
@@ -402,89 +297,17 @@ public class Controller {
         );
         
         view.updateLevelDisplay(
-        	mainCharacter.getLvl(),
-        	mainCharacter.getXp(), 
-        	mainCharacter.getXpToNext()
+            mainCharacter.getLvl(),
+            mainCharacter.getXp(), 
+            mainCharacter.getXpToNext()
         );
 
-        view.updateInventoryList(mainCharacter.getInventory());
+        view.updateInventoryList(mainCharacter.getInventory().getItems().stream()
+                                                                        .map(GameItem::getName)
+                                                                        .toList());
         
-        view.updateAffinitiesDisplay(
-                mum.getAffinity(), 
-                dad.getAffinity(), 
-                brother.getAffinity()
-            );
-
-        if (mainCharacter.getCurrentRoom() != null) {
-            view.updateCurrentRoom(mainCharacter.getCurrentRoom());
-        }
-    }
-    
-    // NPCS INTERACTIONS MANAGEMENT --------------------------------------------------------------
-    
-    /**
-     * Helper method for handling all different kinds of Npcs interactions
-     * @param npc
-     */
-    private void handleNpcInteractions(NPC npc) {
-    	
-    	// Checking for mum's gift availability
-    	if (npc instanceof Mum) {
-            String giftMessage = ((Mum) npc).checkGiftInteraction(mainCharacter);
-            if (!giftMessage.isEmpty()) {
-                view.showNpcMessage(giftMessage);
-                updateView(); 
-            }
-        }
-    	
-    	String dialogue = ""; 
-    	Optional<Quest> ongoing = this.mainCharacter.getOngoingQuests().stream()
-    																.filter(q -> q.getAssignerNPC().equals(npc))
-    																.findFirst();
-    	
-        if(!this.mainCharacter.hasActiveQuestWithNPC(npc)) {
-        	dialogue = npc.getInitialDialogue(); 
-        	view.showNpcMessage(dialogue); 
-        	
-        } else if(ongoing.isPresent()) {
-        	dialogue = npc.getQuestInProgressDialogue(ongoing.get());
-        	view.showQuestDialogue(npc.getName(), ongoing.get().getName());
-        }
-    }
-    
-    // NPCS QUEST MANAGEMENT --------------------------------------------------------------
-    
-    /**
-     * Helper method to handle the quest according to the quest system 
-     * @param room
-     * @param npc
-     */
-    private void handleQuest(Room room, NPC npc) {
-    	
-    	// Assignment of a new quest
-    	List<Quest> newQuests = questSystem.onPlayerEnteredRoom(mainCharacter, room);
-    	
-    	if (!newQuests.isEmpty()) {
-            for (Quest quest : newQuests) {
-                view.showQuestMessage(quest.getName());
+        view.updateAffinitiesDisplay(mumAff, dadAff, broAff);
             
-                String npcQuestAssignedDialogue = npc.getQuestAssignedDialogue(quest);
-                view.showQuestDialogue(npc.getName(), npcQuestAssignedDialogue);
-            }
-        }
-    	
-    	// Handling the completion of the quest
-		Optional<Quest> completedQuest = this.mainCharacter.getCompletedQuestWithNPC(npc); 
-
-        if (completedQuest.isPresent()) {
-        	view.showQuestMessage(completedQuest.get().getName());
-            
-        	String npcQuestCompletionDialogue = npc.getQuestCompletionDialogue(completedQuest.get()); 
-            view.showQuestDialogue(npc.getName(), npcQuestCompletionDialogue);
-            
-            questSystem.tryTurnIn(mainCharacter, npc);
-            
-            updateView();
-        }
+        view.updateCurrentRoom(room.getRoomName(), npcName, itemNames, itemSizes, exitDirections);
     }
 }

@@ -28,15 +28,15 @@ public abstract class NPC {
 	
 	protected final int LOW_AFFINITY = 15;
 	
-    private final String relationship;
+    private final String name;
     private final Room position; 
     private int affinity;
     private List<Quest> availableQuests;
     private final House house;                                      // Reference to the house so that it can see the items in other rooms
 
     // CONSTRUCTOR ---------------------------------------------------------------------
-    public NPC(final String relationship, final Room s, House house) {
-        this.relationship = relationship;
+    public NPC(final String name, final Room s, House house) {
+        this.name = name;
         this.position = s; 
         this.affinity = 0;
         this.availableQuests = new ArrayList<>();
@@ -88,11 +88,7 @@ public abstract class NPC {
 
     // GETTERS ---------------------------------------------------------------------
     public String getName() {
-    	return this.getName(); 
-    }
-    
-    public String getRelationship() { 
-        return this.relationship; 
+    	return this.name; 
     }
     
     public int getAffinity() { 

@@ -6,4 +6,6 @@ public interface CompletionCondition {
     boolean checkCompletion(MainCharacter character);
     
     void onQuestCompleted(MainCharacter character);
+    
+    boolean isAutoCompletable();
 }

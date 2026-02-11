@@ -3,15 +3,8 @@ package main.view;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
-import java.util.Optional;
 
 import main.controller.Controller;
-
- /* TOGLIERE 
-import main.model.character.npc.NPC; 
-import main.model.world.Room;
-import main.model.world.gameItem.GameItem;
-import main.model.world.gameItem.Inventory;*/
 
 /**
  * View class responsible for the user interface.
@@ -25,6 +18,13 @@ public class View extends JFrame {
     private JPanel roomItemsPanel;      // Central panel for items and NPCs interactions
     private JPanel inventoryPanel;      // Side panel for the inventory
     private JLabel roomTitleLabel;      // Label for the current room name
+    
+    // NEW COMPONENTS
+    private JLabel levelLabel;          // Shows current level
+    private JProgressBar xpBar;         // Experience bar
+    private JProgressBar affMumBar, affDadBar, affBroBar; // Affinities bars
+    
+    private JFrame frame; 
 
     // CONTROLLER REFERENCE ------------------------------------------------------
     private Controller controller;
@@ -32,6 +32,7 @@ public class View extends JFrame {
     // CONSTRUCTOR ---------------------------------------------------------------
     public View() {
         super("My Life Simulator");
+        this.frame = this; // Assign current frame
         initUI();
     }
 
@@ -40,7 +41,7 @@ public class View extends JFrame {
      */
     private void initUI() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1000, 700);
+        setSize(1100, 750); // Increased size slightly to fit new panels
         setLayout(new BorderLayout());
 
         // 1. NORTH: Stats Panel (Energy, Satiety, etc.)
@@ -70,14 +71,53 @@ public class View extends JFrame {
         
         add(centerPanel, BorderLayout.CENTER);
 
-        // 3. EAST: Inventory Panel
+        // 3. EAST: Side Panel (Level, Inventory, Affinities)
+        JPanel sidePanel = new JPanel(new BorderLayout());
+        sidePanel.setPreferredSize(new Dimension(280, 0));
+
+        // 3A. Level Panel (Top of Side Panel)
+        JPanel levelPanel = new JPanel(new GridLayout(2, 1));
+        levelPanel.setBorder(BorderFactory.createTitledBorder("Progresso Giocatore"));
+        
+        levelLabel = new JLabel("Livello: 1", SwingConstants.CENTER);
+        levelLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        
+        xpBar = new JProgressBar(0, 100);
+        xpBar.setStringPainted(true);
+        xpBar.setForeground(new Color(138, 43, 226)); // Purple color for XP
+        xpBar.setString("XP");
+        
+        levelPanel.add(levelLabel);
+        levelPanel.add(xpBar);
+        sidePanel.add(levelPanel, BorderLayout.NORTH);
+
+        // 3B. Inventory Panel (Center of Side Panel)
         inventoryPanel = new JPanel();
         inventoryPanel.setLayout(new BoxLayout(inventoryPanel, BoxLayout.Y_AXIS));
-        inventoryPanel.setBorder(BorderFactory.createTitledBorder("Inventario (Tasto sinistro: Usa / Tasto destro: Lascia)"));
+        // The border is now on the scroll pane
         
         JScrollPane invScroll = new JScrollPane(inventoryPanel);
-        invScroll.setPreferredSize(new Dimension(250, 500));
-        add(invScroll, BorderLayout.EAST);
+        invScroll.setBorder(BorderFactory.createTitledBorder("Inventario"));
+        // Remove preferred size to let it fill available space
+        sidePanel.add(invScroll, BorderLayout.CENTER);
+
+        // 3C. Affinity Panel (Bottom of Side Panel)
+        JPanel affinityPanel = new JPanel(new GridLayout(3, 1, 0, 5));
+        affinityPanel.setBorder(BorderFactory.createTitledBorder("Relazioni"));
+        affinityPanel.setPreferredSize(new Dimension(0, 180)); // Fixed height for affinities
+
+        affMumBar = createStyledBar("", Color.PINK);
+        affDadBar = createStyledBar("", new Color(100, 149, 237)); // Cornflower Blue
+        affBroBar = createStyledBar("", new Color(50, 205, 50));   // Lime Green
+
+        affinityPanel.add(createStatContainer("Mamma", affMumBar));
+        affinityPanel.add(createStatContainer("Papà", affDadBar));
+        affinityPanel.add(createStatContainer("Fratello", affBroBar));
+        
+        sidePanel.add(affinityPanel, BorderLayout.SOUTH);
+
+        // Add the complete side panel to the frame
+        add(sidePanel, BorderLayout.EAST);
 
         // 4. SOUTH: Game Log (Console)
         gameLog = new JTextArea(8, 50);
@@ -90,13 +130,117 @@ public class View extends JFrame {
         setLocationRelativeTo(null); // Center window on screen
         setVisible(true);
     }
+    
+    // CONTROLLER CONNECTION -----------------------------------------------------
+
+    /**
+     * Sets the controller reference to allow callbacks from UI events.
+     * @param controller The main game controller.
+     */
+    public void setController(Controller controller) {
+        this.controller = controller;
+    }
+    
+    // STARTING MENU ----------------------------------------------------------------
+    /**
+     * Shows the starting menu of the game 
+     */
+    public void showMenu() {
+        
+        JDialog menuDialog = new JDialog(frame, "Menu Iniziale", true);
+        menuDialog.setSize(10, 10);
+        menuDialog.setLayout(new BorderLayout());
+
+        JLabel titolo = new JLabel("Benvenuto in My Life!", SwingConstants.CENTER);
+        titolo.setFont(new Font("Arial", Font.BOLD, 20));
+        menuDialog.add(titolo, BorderLayout.NORTH);
+
+        JPanel center = new JPanel(new GridLayout(3,1,10,10));
+        JButton startBtn = new JButton("Inizia Gioco");
+        JButton infoBtn = new JButton("Crediti");
+        JButton exitBtn = new JButton("Esci");
+
+        center.add(startBtn);
+        center.add(infoBtn);
+        center.add(exitBtn); 
+
+        startBtn.addActionListener(e -> menuDialog.dispose());
+        infoBtn.addActionListener(e -> JOptionPane.showMessageDialog(menuDialog, "Progetto realizzato per PMO dalle studentesse del gruppo.", "Crediti", JOptionPane.INFORMATION_MESSAGE));
+        exitBtn.addActionListener(e -> System.exit(0));
+
+        menuDialog.add(center, BorderLayout.CENTER);
+        menuDialog.pack();
+        menuDialog.setResizable(false);
+        menuDialog.setLocationRelativeTo(frame);
+        menuDialog.setVisible(true);
+        
+    }
+    
+    // MAINCHARACTER PERSONALIZATION ----------------------------------------------------------------
+    
+    /**
+     * Asks to input the Main Character's name
+     * @return
+     */
+    public String askName() {
+        JPanel panel = new JPanel();
+        final JLabel label = new JLabel("Inserisci il tuo nome:");
+        JTextField textField = new JTextField(20);
+        panel.add(label);
+        panel.add(textField);
+        
+        int result = JOptionPane.showConfirmDialog(
+                frame, 
+                panel, 
+                "Name MainCharacter", 
+                JOptionPane.OK_CANCEL_OPTION, 
+                JOptionPane.QUESTION_MESSAGE
+            );
+           return textField.getText().trim();
+    }
+
+    /**
+     * Displays the different personalization options
+     * @param message
+     * @param options
+     * @return
+     */
+    public int showPersonalizationOptions(String message, List<String> options) {
+        if (options == null || options.isEmpty()) {
+            return -1;
+        }
+        
+        String[] arrayOptions = options.toArray(new String[0]);
+        
+        Object choice = JOptionPane.showInputDialog(
+            frame,
+            message,
+            "Personalizzazione MainCharacter",
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            arrayOptions,
+            arrayOptions[0] 
+        );
+        
+        if (choice == null) {
+            return -1;
+        }
+        
+        for (int i = 0; i < arrayOptions.length; i++) {
+            if (arrayOptions[i].equals(choice)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    
 
     /**
      * Helper method to create a styled progress bar.
      */
     private JProgressBar createStyledBar(String title, Color c) {
         JProgressBar bar = new JProgressBar(0, 100);
-        bar.setValue(100);
+        bar.setValue(0); // Default to 0
         bar.setStringPainted(true);
         bar.setForeground(c);
         return bar;
@@ -112,15 +256,7 @@ public class View extends JFrame {
         return p;
     }
 
-    // CONTROLLER CONNECTION -----------------------------------------------------
 
-    /**
-     * Sets the controller reference to allow callbacks from UI events.
-     * @param controller The main game controller.
-     */
-    public void setController(Controller controller) {
-        this.controller = controller;
-    }
 
     // DATA UPDATES --------------------------------------------------------------
 
@@ -133,34 +269,55 @@ public class View extends JFrame {
         barHydration.setValue(hydration);
         barHygiene.setValue(hygiene);
     }
+    
+    /**
+     * Updates the display of level and XP.
+     * @param lvl Current level.
+     * @param xp Current XP amount.
+     * @param xpToNext XP needed for the next level (sets the max value of the bar).
+     */
+    public void updateLevelDisplay(int lvl, int xp, int xpToNext) {
+        levelLabel.setText("Livello: " + lvl);
+        xpBar.setMaximum(xpToNext);
+        xpBar.setValue(xp);
+        xpBar.setString(xp + " / " + xpToNext + " XP");
+    }
 
     /**
-     * Re-renders the inventory list in the side panel.
-     * Generates buttons with MouseListeners for Left Click (Use) and Right Click (Drop).
+     * Updates the affinity bars for the NPCs.
+     * @param affinityMum Affinity value for Mum.
+     * @param affinityDad Affinity value for Dad.
+     * @param affinityBro Affinity value for Brother.
+     */
+    public void updateAffinitiesDisplay(int affinityMum, int affinityDad, int affinityBro) {
+        affMumBar.setValue(affinityMum);
+        affDadBar.setValue(affinityDad);
+        affBroBar.setValue(affinityBro);
+    }
+
+    /**
+     * Updates the display of the inventory list in the side panel.
+     * Generates buttons that trigger the controller interaction.
      * @param inventory The character's current inventory.
      */
-    public void updateInventoryList(Inventory inventory) {
-    	System.out.println("VIEW - Sto aggiornando l'inventario ID: " + System.identityHashCode(inventory));
-        System.out.println("VIEW - Oggetti che vedo: " + inventory.getItems().size());
-    	System.out.println("DEBUG View: Aggiornamento inventario. Numero oggetti: " + inventory.getItems().size());
-    	inventoryPanel.removeAll();
+    public void updateInventoryList(List<String> inventory) {
+        System.out.println("DEBUG View: Aggiornamento inventario. Numero oggetti: " + inventory.size());
+        
+        inventoryPanel.removeAll();
 
-        for (GameItem item : inventory.getItems()) {
-            JButton itemBtn = new JButton(item.getName());
+        for (int i = 0; i < inventory.size(); i++) {
+            String name = inventory.get(i);
+            final int index = i; 
+            
+            JButton itemBtn = new JButton(name);
             itemBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
             itemBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
-            itemBtn.setToolTipText("Tasto sinistro: Usa | Tasto destro: Lascia");
+            itemBtn.setToolTipText("Clicca per interagire"); 
 
-            // Mouse Listener to distinguish between Use (Left) and Drop (Right)
-            itemBtn.addMouseListener(new java.awt.event.MouseAdapter() {
-                public void mouseClicked(java.awt.event.MouseEvent evt) {
-                    if (controller == null) return;
-                    
-                    if (SwingUtilities.isRightMouseButton(evt)) {
-                        controller.handleDrop(item); // Action: Drop item
-                    } else {
-                        controller.handleUseItem(item); // Action: Use item
-                    }
+            
+            itemBtn.addActionListener(e -> {
+                if (controller != null) {
+                    controller.handleInventoryInteraction(index);
                 }
             });
 
@@ -171,6 +328,8 @@ public class View extends JFrame {
         inventoryPanel.revalidate();
         inventoryPanel.repaint();
     }
+    
+    // ROOM DISPLAY ----------------------------------------------------------------------------------------------------------------------
 
     /**
      * Updates the current room view.
@@ -178,86 +337,137 @@ public class View extends JFrame {
      * and creates buttons for items lying on the floor.
      * @param currentRoom The room the character is currently in.
      */
-    public void updateCurrentRoom(String currentRoom) {
-        // 1. Update Title
-        roomTitleLabel.setText("Posizione attuale: " + currentRoom);
-
-        // 2. Clear the central panel
+    public void updateCurrentRoom(String currentRoom, String npcName, List<String> items, List<Integer> itemSizes, List<String> exits) {
+        
+        // Clear the central panel
         roomItemsPanel.removeAll();
+        
+        // Update Title
+        roomTitleLabel.setText("Posizione attuale: " + currentRoom);
+        
+        // Adding item buttons
+        this.addRoomItemsButtons(items, itemSizes);
+        
+        if (!items.isEmpty()) roomItemsPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
+        
+        // NPC button
+        if (npcName != null && !npcName.isEmpty()) {
+            this.addNpcButton(npcName);
+            roomItemsPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
+        }
+        
+        // Exits buttons
+        this.addExitButtons(exits);
+        
+        roomItemsPanel.revalidate();
+        roomItemsPanel.repaint();
+    }
+    
+    /**
+     * Helper method to create item buttons 
+     * @param items Lista dei nomi degli oggetti
+     * @param itemSizes Lista delle dimensioni degli oggetti (per il tooltip)
+     */
+    private void addRoomItemsButtons(List<String> items, List<Integer> itemSizes) {
+        if (items.isEmpty()) {
+            JLabel emptyLabel = new JLabel("Nessun oggetto nella stanza.");
+            emptyLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            roomItemsPanel.add(emptyLabel);
+            return;
+        }
 
-        // 3. NPC MANAGEMENT (Check if an NPC is present)
-        Optional<NPC> npcOpt = currentRoom.getNpcInRoom();
-        if (npcOpt.isPresent()) {
-            NPC npc = npcOpt.get();
-            // Using getRelationship() because your NPC class uses that as a name
-            String npcName = npc.getRelationship(); 
+        JLabel itemsLabel = new JLabel("Oggetti a terra:");
+        itemsLabel.setFont(new Font("Arial", Font.ITALIC, 12));
+        itemsLabel.setAlignmentX(Component.CENTER_ALIGNMENT); 
+        roomItemsPanel.add(itemsLabel);
+        roomItemsPanel.add(Box.createVerticalStrut(5)); 
+
+        for (int i = 0; i < items.size(); i++) {
+            String itemName = items.get(i);
+
+            int size = (itemSizes != null && i < itemSizes.size()) ? itemSizes.get(i) : 0;
             
-            JButton npcBtn = new JButton("Parla con: " + npcName);
-            npcBtn.setBackground(new Color(255, 200, 200)); // Light red to highlight NPC
-            npcBtn.setFont(new Font("Arial", Font.BOLD, 14));
+            final int index = i; 
+
+            JButton itemBtn = new JButton(itemName);
+            itemBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+            itemBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30)); 
             
-            // Link to Controller's NPC interaction handler
-            npcBtn.addActionListener(e -> {
+            itemBtn.setToolTipText("Dimensione oggetto: " + size);
+         
+            itemBtn.addActionListener(e -> {
                 if (controller != null) {
-                    // This call will show an ERROR until you add the method to the Controller
-                 //   controller.handleNpcInteraction(npc);
+                    controller.handleItemInteraction(index);
                 }
             });
-            
-            roomItemsPanel.add(npcBtn);
-        }
 
-        // 4. ITEMS ON FLOOR MANAGEMENT
-        List<GameItem> itemsInRoom = currentRoom.getItemsInRoom();
-        
-        if (itemsInRoom.isEmpty() && npcOpt.isEmpty()) {
-            roomItemsPanel.add(new JLabel("La stanza è vuota"));
-        } else {
-            for (GameItem item : itemsInRoom) {
-            	JPanel itemContainer = new JPanel(new FlowLayout());
-            	
-            	JButton useBtn = new JButton("Usa: " + item.getName());
-                useBtn.addActionListener(e -> {
-                    if (controller != null) controller.handleUseItem(item);
-                });
-                itemContainer.add(useBtn);
-                
-                
-                if (item.getSize() < 20) {
-                JButton pickupBtn = new JButton("Prendi: " + item.getName());
-                // Link to Controller's PickUp handler
-                pickupBtn.addActionListener(e -> {
-                    if (controller != null) controller.handlePickUp(item);
-                });
-                itemContainer.add(pickupBtn);
-                }
-                roomItemsPanel.add(itemContainer);
-            }
+            roomItemsPanel.add(itemBtn);
+            roomItemsPanel.add(Box.createVerticalStrut(5));
         }
+    }
+    
+    /**
+     * Displays a list of options to choose from when interacting with an item
+     * @param options
+     * @return
+     */
+    public int showOptionItem(List<String> options) {
+        return JOptionPane.showOptionDialog(
+                this,                      
+                "Cosa desideri fare con questo oggetto?", 
+                "Interazione Oggetto",              
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                options.toArray(),                  
+                options.get(0)                      
+        );
+    }
+    
+    /**
+     * Helper methods to create NPC button
+     * @param name
+     */
+    private void addNpcButton(String name) {
+        JLabel npcLabel = new JLabel("Persone:");
+        npcLabel.setFont(new Font("Arial", Font.ITALIC, 12));
+        roomItemsPanel.add(npcLabel);
+
+        JButton npcBtn = new JButton("Parla con: " + name);
+        npcBtn.setBackground(new Color(255, 220, 220)); // Rosso chiaro
+        npcBtn.setFont(new Font("Arial", Font.BOLD, 13));
         
-        roomItemsPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
-        JLabel moveLabel = new JLabel("Spostati:");
+        npcBtn.addActionListener(e -> {
+            if (controller != null) {
+                controller.handleNpcInteractions();
+            }
+        });
+        roomItemsPanel.add(npcBtn);
+    }
+    
+    /**
+     * Helper method to create buttons to change room
+     * @param exits
+     */
+    private void addExitButtons(List<String> exits) {
+        JLabel moveLabel = new JLabel("Spostati verso:");
         moveLabel.setFont(new Font("Arial", Font.ITALIC, 12));
         roomItemsPanel.add(moveLabel);
-        
-        for (String direction : currentRoom.getExits().keySet()) {
-            Room nextRoom = currentRoom.getExits().get(direction);
-            
-            JButton moveBtn = new JButton("Spostati: " + direction);
-            moveBtn.setBackground(new Color(200, 255, 200)); // Colore verdino per le porte
+
+        for (String direction : exits) {
+            JButton moveBtn = new JButton(direction);
+            moveBtn.setBackground(new Color(220, 255, 220));
             
             moveBtn.addActionListener(e -> {
                 if (controller != null) {
-                    controller.handleMove(nextRoom);
+                    controller.changeRoom(direction);
                 }
             });
             roomItemsPanel.add(moveBtn);
         }
-        
-        // 5. Refresh UI
-        roomItemsPanel.revalidate();
-        roomItemsPanel.repaint();
     }
+    
+        
     
     // LOG AND DIALOGS -----------------------------------------------------------
 
@@ -306,28 +516,57 @@ public class View extends JFrame {
         for (Component c : inventoryPanel.getComponents()) c.setEnabled(false);
     }
 
-	public String askName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    /**
+     * * @param message
+     */
+    public void showNpcMessage(String message) {
+        JOptionPane.showMessageDialog(
+            this.frame, 
+            message, 
+            "Interazione", 
+            JOptionPane.INFORMATION_MESSAGE
+        );
+        
+        appendLog("NPC: " + message);
+    }
 
-	public int showPersonalizationOptions(List<String> options) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    /**
+     * * @param npcName
+     * @param dialogue
+     */
+    public void showQuestDialogue(String npcName, String dialogue) {
+        JOptionPane.showMessageDialog(
+            this.frame, 
+            dialogue, 
+            npcName + ": ", 
+            JOptionPane.PLAIN_MESSAGE
+        );
+       
+        appendLog(npcName + ": " + dialogue);
+    }
 
-	public int showOptionItem(List<String> asList) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    /**
+     * * @param questName
+     */
+    public void showQuestMessage(String questName) {
+        JOptionPane.showMessageDialog(
+            this.frame, 
+            questName, 
+            "Diario Quest", 
+            JOptionPane.WARNING_MESSAGE
+        );
+        
+        appendLog(">>> QUEST: " + questName + " <<<");
+    }
 
-	public void updateLevelDisplay(int lvl, int xp) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void updateAffinitiesDisplay(int affinity, int affinity2, int affinity3) {
-		// TODO Auto-generated method stub
-		
-	}
+    /**
+     * Displays a message of success/error when entering a room
+     * @param message
+     */
+    public void showAccess(String message) {
+        if (message != null && !message.isEmpty()) {
+            appendLog(""); 
+            appendLog(">>> " + message);
+        }
+    }
 }

@@ -7,10 +7,6 @@ public class ItemDeliveryCondition implements CompletionCondition {
     
     private String itemName;
     
-    public ItemDeliveryCondition(GameItem item) {
-        this.itemName = item.getName();
-    }
-    
     public ItemDeliveryCondition(String itemName) {
         this.itemName = itemName;
     }

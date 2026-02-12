@@ -116,7 +116,7 @@ public class Mum extends NPC {
                                this)
                 .xpReward(QuestDifficulty.MEDIUM.getXpReward())
                 .affinityPoints(QuestDifficulty.MEDIUM.getAffinityReward())
-                .addCondition(new ItemDeliveryCondition(album))
+                .addCondition(new ItemDeliveryCondition(album.getName()))
                 .triggerCondition((character, room) -> room.getRoomName().equals("Salotto")) 
                 .build();
 

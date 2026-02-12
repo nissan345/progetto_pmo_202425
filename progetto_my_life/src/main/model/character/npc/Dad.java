@@ -115,7 +115,7 @@ public class Dad extends NPC {
             Quest plantsQuest = new Quest.Builder("Riporta le chiavi", "Potresti portarmi le chiavi della macchina.", this)
                 .xpReward(QuestDifficulty.MEDIUM.getXpReward())
                 .affinityPoints(QuestDifficulty.MEDIUM.getAffinityReward())
-                .addCondition(new ItemDeliveryCondition (keys))
+                .addCondition(new ItemDeliveryCondition (keys.getName()))
                 .triggerCondition((character, room) -> room.getRoomName().equals("Giardino") &&
                 									   character.getJustEntered() &&
 													   character.hasCompletedQuest("Festa a sorpresa")) 

@@ -48,6 +48,8 @@ public class GameItem{
 	public int getDeltaEnergy() { return deltaEnergy;}
 	public int getDeltaHygiene() { return deltaHygiene; }
 	public Requirement getRequirement() {return requirement;}
+	
+	public void setItemRoom(String r) { this.room = r;}
       
     /**
      * Executes the default action associated with this item. 
@@ -101,7 +103,7 @@ public class GameItem{
         
 		// Required fields
         private final String name;
-        private final String room;
+        private String room;
         private final int size;
         private Requirement requirement;
         

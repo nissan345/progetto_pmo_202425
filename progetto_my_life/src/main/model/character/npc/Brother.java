@@ -81,7 +81,7 @@ public class Brother extends NPC {
                 .xpReward(QuestDifficulty.EASY.getXpReward())
                 .affinityPoints(QuestDifficulty.EASY.getAffinityReward())
                 .addCondition(new ItemUsageCondition(stove))
-                .triggerCondition((player, room) -> room.getRoomName().equals("Cucina")) 
+                .triggerCondition((character, room) -> room.getRoomName().equals("Cucina")) 
                 .build();
 
             addQuest(kitchenQuest);
@@ -97,8 +97,9 @@ public class Brother extends NPC {
                 .xpReward(QuestDifficulty.EASY.getXpReward())
                 .affinityPoints(QuestDifficulty.EASY.getAffinityReward())
                 .addCondition(new ItemUsageCondition(washingMachine))
-                .triggerCondition((player, room) -> room.getRoomName().equals("Cucina") &&
-                									player.hasCompletedQuest("Cibo per tutti"))
+                .triggerCondition((character, room) -> room.getRoomName().equals("Cucina") &&
+                									   character.getJustEntered() &&
+                									   character.hasCompletedQuest("Cibo per tutti"))
                 									
                 .build();
 
@@ -111,8 +112,9 @@ public class Brother extends NPC {
                 .xpReward(QuestDifficulty.HARD.getXpReward())
                 .affinityPoints(QuestDifficulty.HARD.getAffinityReward())
                 .addCondition(new ItemDeliveryCondition("Videogioco retro"))
-                .triggerCondition((player, room) -> room.getRoomName().equals("Cucina") &&
-                									player.hasCompletedQuest("Lava vestiti"))
+                .triggerCondition((character, room) -> room.getRoomName().equals("Cucina") &&
+                									   character.getJustEntered() &&
+                									   character.hasCompletedQuest("Lava vestiti"))
                 									
                 .build();
 

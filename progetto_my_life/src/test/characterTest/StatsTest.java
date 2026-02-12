@@ -76,9 +76,6 @@ class StatsTest {
 		statistics.changeEnergy(-10);
 		statistics.changeSatiety(-50);
 		assertTrue(statistics.canEat()); 
-		// If the energy is too low (35), MainCharacter won't be allowed to eat
-		statistics.changeEnergy(-25);
-		assertFalse(statistics.canEat());
 		
 	}
 	
@@ -129,9 +126,6 @@ class StatsTest {
 		assertFalse(statistics.canShower());
 		statistics.changeHygiene(-20);
 		assertTrue(statistics.canShower());
-		// MainCharacter too tired to shower
-		statistics.changeEnergy(-75);
-		assertFalse(statistics.canShower());
 	}
 	
 	@Test

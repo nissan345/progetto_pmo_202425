@@ -224,7 +224,11 @@ public class View extends JFrame {
      * @param msg The message to log.
      */
     public void showAccess(String msg) { 
-        if(!msg.isEmpty()) appendLog(">>> " + msg); 
+        if(!msg.isEmpty()) {
+        	JOptionPane.showMessageDialog(this, msg, "Attenzione", JOptionPane.WARNING_MESSAGE); 
+            appendLog(msg);
+        }
+        
     }
     
     /**

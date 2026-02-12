@@ -84,6 +84,7 @@ public class QuestSystem {
                 }
             }
         }
+        character.setJustEntered(false);
         return newlyOffered;
     }
 

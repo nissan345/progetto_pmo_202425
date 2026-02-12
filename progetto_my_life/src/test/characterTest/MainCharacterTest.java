@@ -75,7 +75,7 @@ class MainCharacterTest {
         // Default progression state
         assertEquals(1, character.getLvl());
         assertEquals(0, character.getXp());
-        assertEquals(100, character.getXpToNext());             // computeXpToNext(1) = 100
+        assertEquals(50, character.getXpToNext());             // computeXpToNext(1) = 50
         assertNull(character.getCurrentRoom());
     }
 
@@ -90,7 +90,7 @@ class MainCharacterTest {
         character.addXp(30);
         assertEquals(1, character.getLvl());
         assertEquals(30, character.getXp());
-        assertEquals(100, character.getXpToNext());
+        assertEquals(50, character.getXpToNext());
     }
 
     /**
@@ -100,10 +100,10 @@ class MainCharacterTest {
     @Test
     void testAddXp_ExactlyLevelUp() {
         character.addXp(100);
-        // Gets to level 2, thus the xp resets to 0 and new threshold is set -> 150
+        // Gets to level 2, thus the xp resets to 50 and new threshold is set -> 100
         assertEquals(2, character.getLvl());
-        assertEquals(0, character.getXp());
-        assertEquals(150, character.getXpToNext());
+        assertEquals(50, character.getXp());
+        assertEquals(100, character.getXpToNext());
     }
 
     /**
@@ -114,8 +114,8 @@ class MainCharacterTest {
     void testAddXp_MultipleLevelUps() {
         character.addXp(100 + 150 + 215 + 10);          // 475
         assertEquals(4, character.getLvl());            
-        assertEquals(10, character.getXp());            // residue XP = 10
-        assertEquals(287, character.getXpToNext());     // XP to next level = 287
+        assertEquals(160, character.getXp());            // residue XP = 160
+        assertEquals(237, character.getXpToNext());     // XP to next level = 237
     }
 
     /**
@@ -127,7 +127,7 @@ class MainCharacterTest {
         // Both the level and the threshold should update
         character.levelUp();
         assertEquals(2, character.getLvl());
-        assertEquals(150, character.getXpToNext());
+        assertEquals(100, character.getXpToNext());
     }
 
     // TEST FOR STATE DECAY -----------------------------------------------------
@@ -177,8 +177,8 @@ class MainCharacterTest {
     void testEnterRoomWhenRequirementPasses() {
         String msg1 = character.pickCurrentRoom(bedroom);
         assertNotNull(msg1);
-        assertTrue(msg1.startsWith("Sei entrato in: Camera Da Letto"), "Messaggio inatteso: " + msg1);
-        assertEquals("Camera Da Letto", character.getCurrentRoom().getRoomName());
+        assertTrue(msg1.startsWith("Sei entrato in: Camera da Letto"), "Messaggio inatteso: " + msg1);
+        assertEquals("Camera da Letto", character.getCurrentRoom().getRoomName());
 
         String msg2 = character.pickCurrentRoom(kitchen);
         assertNotNull(msg2);

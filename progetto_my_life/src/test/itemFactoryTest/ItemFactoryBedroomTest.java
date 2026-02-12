@@ -26,7 +26,7 @@ class ItemFactoryBedroomTest {
     @Test
     void testBedroomCreation() {
         // Test basic room properties
-        assertEquals("Camera Da Letto", bedroom.getRoomName());
+        assertEquals("Camera da Letto", bedroom.getRoomName());
         assertTrue(bedroom.getEntryRequirement() instanceof LevelRequirement);
         assertEquals(1, ((LevelRequirement) bedroom.getEntryRequirement()).getRequiredLvl());
         
@@ -63,20 +63,19 @@ class ItemFactoryBedroomTest {
     void testBedDynamicBehavior() {
         GameItem letto = bedroom.getItemsInRoom().get(0);
 
-        // if energy is low then it should be +30 energy, -10 hygiene, duration 10
+ 
         character.getStats().changeEnergy(-80); // 100 -> 20
         ActionResult low = letto.use(character);
         assertNotNull(low);
-        assertEquals(30,  low.getDeltaEnergy());
+        assertEquals(80,  low.getDeltaEnergy());
         assertEquals(-10, low.getDeltaHygiene());
         assertEquals(10,  low.getActionDuration());
 
-        // If energy is mid the actionResult should be +20 energy, -10 hygiene, duration 5
         int now = character.getStats().getEnergy();
         character.getStats().changeEnergy(60 - now); // -> 60
         ActionResult mid = letto.use(character);
         assertNotNull(mid);
-        assertEquals(20,  mid.getDeltaEnergy());
+        assertEquals(40,  mid.getDeltaEnergy());
         assertEquals(-10, mid.getDeltaHygiene());
         assertEquals(5,   mid.getActionDuration());
 

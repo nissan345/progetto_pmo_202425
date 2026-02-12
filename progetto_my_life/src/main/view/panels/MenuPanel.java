@@ -38,7 +38,7 @@ public class MenuPanel extends JPanel {
 
         // Title
         JLabel title = new JLabel("MY LIFE SIMULATOR");
-        title.setFont(new Font("Arial", Font.BOLD, 36));
+        title.setFont(new Font("Serif", Font.BOLD, 50));
         add(title, gbc);
 
         // Buttons
@@ -60,7 +60,7 @@ public class MenuPanel extends JPanel {
 	 */
     private JButton createButton(String text, ActionListener action) {
         JButton btn = new JButton(text);
-        btn.setFont(new Font("Arial", Font.PLAIN, 18));
+        btn.setFont(new Font("Arial", Font.BOLD, 18));
         btn.setPreferredSize(new Dimension(200, 50));
         btn.addActionListener(action);
         return btn;

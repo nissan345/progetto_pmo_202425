@@ -92,10 +92,10 @@ public class MainCharacterPanel extends JPanel {
         JPanel namePanel = new JPanel(new GridBagLayout());
         
         JLabel label = new JLabel("INSERISCI IL TUO NOME");
-        label.setFont(new Font("Arial", Font.BOLD, 28));
+        label.setFont(new Font("Monospaced", Font.BOLD, 28));
         
         JTextField nameField = new JTextField(15);
-        nameField.setFont(new Font("Arial", Font.PLAIN, 24));
+        nameField.setFont(new Font("Monospaced", Font.PLAIN, 24));
         nameField.setHorizontalAlignment(JTextField.CENTER);
         
         JButton confirmBtn = createStyledButton("CONFERMA");
@@ -144,7 +144,7 @@ public class MainCharacterPanel extends JPanel {
         JPanel selectionPanel = new JPanel(new BorderLayout());
 
         JLabel titleLbl = new JLabel(title, SwingConstants.CENTER);
-        titleLbl.setFont(new Font("Arial", Font.BOLD, 32));
+        titleLbl.setFont(new Font("Monospaced", Font.BOLD, 32));
         titleLbl.setBorder(BorderFactory.createEmptyBorder(50, 0, 30, 0));
         selectionPanel.add(titleLbl, BorderLayout.NORTH);
 
@@ -154,7 +154,7 @@ public class MainCharacterPanel extends JPanel {
 
         for (T option : options) {
             JButton btn = new JButton(option.toString());
-            btn.setFont(new Font("Arial", Font.PLAIN, 18));
+            btn.setFont(new Font("Arial", Font.PLAIN, 20));
             btn.setFocusPainted(false);
             btn.setPreferredSize(new Dimension(0, 60)); // Taller buttons
             
@@ -173,7 +173,7 @@ public class MainCharacterPanel extends JPanel {
      */
     private JButton createStyledButton(String text) {
         JButton btn = new JButton(text);
-        btn.setFont(new Font("Arial", Font.BOLD, 16));
+        btn.setFont(new Font("Arial", Font.BOLD, 18));
         btn.setFocusPainted(false);
         btn.setMargin(new Insets(10, 20, 10, 20));
         return btn;

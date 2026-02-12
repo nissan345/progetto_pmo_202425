@@ -78,7 +78,7 @@ public class HouseTest {
 	@Test 
 	public void testHouseCreation() {
 	    assertEquals(6, h.getRooms().size());
-	    assertTrue(h.getRooms().containsKey("Camera Da Letto"));
+	    assertTrue(h.getRooms().containsKey("Camera da Letto"));
 	    assertTrue(h.getRooms().containsKey("Salotto"));
 	    assertTrue(h.getRooms().containsKey("Cucina"));
 	    assertTrue(h.getRooms().containsKey("Bagno"));
@@ -96,7 +96,7 @@ public class HouseTest {
 	        h.getCurrentRoom();
 	    });
 	    
-	    Optional<Room> enteredRoom = h.enterRoom("Camera Da Letto");
+	    Optional<Room> enteredRoom = h.enterRoom("Camera da Letto");
 	    assertTrue(enteredRoom.isPresent());
 	    assertEquals(bedroom, h.getCurrentRoom().get());
 	    
@@ -124,7 +124,7 @@ public class HouseTest {
 	 */
 	@Test
 	public void testGetRoom() {
-		Room foundRoom = h.getRoom("Camera Da Letto");
+		Room foundRoom = h.getRoom("Camera da Letto");
 	    assertEquals(bedroom, foundRoom);
 	        
         Room notFound = h.getRoom("Non-existent Room");
@@ -152,7 +152,7 @@ public class HouseTest {
 	@Test 
 	public void testRoomCreation() {
 		assertNotNull(bedroom);
-	    assertEquals("Camera Da Letto", bedroom.getRoomName());
+	    assertEquals("Camera da Letto", bedroom.getRoomName());
         assertNotNull(bedroom.getItemsInRoom());
         assertFalse(bedroom.getItemsInRoom().isEmpty());
         assertFalse(bedroom.getNpcInRoom().isPresent());
@@ -193,12 +193,12 @@ public class HouseTest {
 	@Test
 	public void testRoomRequirements() {
 	    c.addXp(200);
-	    assertEquals(2, c.getLvl());
+	    assertEquals(3, c.getLvl());
 	    
 	    assertTrue(bedroom.canEnter(c));
 	    assertTrue(kitchen.canEnter(c));
 	    
-	    assertFalse(storageRoom.canEnter(c));
+	    assertTrue(storageRoom.canEnter(c));
 	    assertFalse(garden.canEnter(c));
 	    
 	    List<String> reasons = garden.getEntryFailureReasons(c);

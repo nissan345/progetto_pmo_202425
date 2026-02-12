@@ -33,6 +33,7 @@ public class MainCharacter {
     private int xp; 
     private int xpToNext; 
     private Room currentRoom;
+    private boolean justEntered;
     private Map<Quest, Set<String>> ItemUsedForQuests;
     private List<Quest> ongoingQuests;
     private List<String> usedItems; // Keeps track of used Items
@@ -48,7 +49,8 @@ public class MainCharacter {
         this.lvl = 1; 
         this.xp = 0;
         this.xpToNext = computeXpToNext(1);
-        this.currentRoom = null;                                        
+        this.currentRoom = null; 
+        this.justEntered = false; 
         this.ongoingQuests = new ArrayList<>();
         this.completedQuests = new ArrayList<>();
         this.inventory = new Inventory(30);
@@ -63,9 +65,12 @@ public class MainCharacter {
     public int getLvl() { return lvl; }
     public int getXp() { return xp; }
     public int getXpToNext() { return xpToNext; }
+    public boolean getJustEntered() { return justEntered; }
     public Room getCurrentRoom() { return currentRoom;}
     public Inventory getInventory() { return inventory; }
     public List<Quest> getOngoingQuests() { return this.ongoingQuests; }
+    
+    public void setJustEntered(boolean entered) { this.justEntered = entered;}
     
     // MAIN METHODS ----------------------------------------------------------------
     
@@ -104,6 +109,7 @@ public class MainCharacter {
         return message.toString();
         }
         this.currentRoom = room;
+        this.justEntered = true;  
         return "Sei entrato in: " + room.getRoomName();
     }
 

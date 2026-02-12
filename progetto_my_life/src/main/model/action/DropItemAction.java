@@ -18,6 +18,7 @@ public class DropItemAction {
         }
 
         room.addItemRoom(item);
+        item.setItemRoom(room.getRoomName());
         return new ActionResult("Hai lasciato " + item.getName() + " nella stanza.");
     }
 }

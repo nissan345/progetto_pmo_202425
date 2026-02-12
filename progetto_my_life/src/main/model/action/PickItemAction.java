@@ -19,6 +19,7 @@ public class PickItemAction {
         }
 
         room.removeItemRoom(item);
+        item.setItemRoom(room.getRoomName());
         return new ActionResult("Hai raccolto " + item.getName() + "!");
     }
 }

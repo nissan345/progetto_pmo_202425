@@ -135,7 +135,7 @@ public class DashboardPanel extends JPanel {
                 
                 questContent.add(qText);
                 questContent.add(Box.createVerticalStrut(5));
-                questContent.add(new JSeparator()); // Aesthetic separator between quests
+  
             }
         }
         questContent.revalidate(); 

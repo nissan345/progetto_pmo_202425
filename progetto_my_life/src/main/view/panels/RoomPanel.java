@@ -40,7 +40,7 @@ public class RoomPanel extends JPanel {
         
         // Room Title
         roomTitle = new JLabel("Caricamento...", SwingConstants.CENTER);
-        roomTitle.setFont(new Font("Segoe UI", Font.BOLD, 26));
+        roomTitle.setFont(new Font("Monospaced", Font.BOLD, 26));
         roomTitle.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
         add(roomTitle, BorderLayout.NORTH);
 

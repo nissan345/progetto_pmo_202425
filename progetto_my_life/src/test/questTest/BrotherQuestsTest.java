@@ -17,7 +17,6 @@ public class BrotherQuestsTest extends SetUpWorldTest {
     public void testQuests() {
     	c.addXp(300);
     	
-        // --- QUEST 1: Cibo per tutti ---
         // Trigger: Player enters the kitchen
         c.pickCurrentRoom(kitchen);
         List<Quest> firstQuest = questSystem.onPlayerEnteredRoom(c, kitchen);
@@ -57,7 +56,6 @@ public class BrotherQuestsTest extends SetUpWorldTest {
         assertFalse(c.hasActiveQuestWithNPC(brother));
         
         
-        // --- QUEST 2: Il Bucato (Assumed Name) ---
         
         // Re-enter kitchen to trigger the second quest (requires Quest 1 completed)
         List<Quest> secondQuest = questSystem.onPlayerEnteredRoom(c, kitchen);
@@ -76,11 +74,10 @@ public class BrotherQuestsTest extends SetUpWorldTest {
         c.pickCurrentRoom(kitchen);
         boolean turnIn2 = questSystem.tryTurnIn(c, brother); // Complete Quest 2
         
-        assertTrue("Second quest turn-in should succeed", turnIn2);
-        assertFalse("Brother should have no active quests now", c.hasActiveQuestWithNPC(brother));
+        assertTrue(turnIn2);
+        assertFalse(c.hasActiveQuestWithNPC(brother));
 
 
-        // --- QUEST 3: Videogioco retro (Requires Item from Mum) ---
         // Mum gives the gift only if affinity is >= 70. Brother needs this item.
         mum.increaseAffinity(80); 
         

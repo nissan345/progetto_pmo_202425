@@ -40,13 +40,25 @@ public class StatusPanel extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setPreferredSize(new Dimension(220, 0));
         setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10)); // Right padding
+        
+        // Colour definition 
+        Color energyCol = new Color(255, 209, 80);
+        Color satietyCol = new Color(234, 168, 183);
+        Color thirstCol = new Color(126, 196, 203);
+        Color hygieneCol = new Color(72, 179, 175);
+        
+        Color lvlCol = new Color(240, 143, 160);
+
+        Color mumCol = new Color(203, 161, 191);
+        Color dadCol = new Color(71, 110, 174);
+        Color broCol = new Color(246, 191, 184);
 
         // 1. Vital Parameters Section
         JPanel statsBox = createBox("Parametri Vitali");
-        barEnergy = createBar(Color.ORANGE);
-        barSatiety = createBar(Color.GREEN);
-        barHydration = createBar(Color.BLUE);
-        barHygiene = createBar(Color.CYAN);
+        barEnergy = createBar(energyCol);
+        barSatiety = createBar(satietyCol);
+        barHydration = createBar(thirstCol);
+        barHygiene = createBar(hygieneCol);
         
         statsBox.add(createPair("Energia", barEnergy));
         statsBox.add(createPair("Sazietà", barSatiety));
@@ -57,7 +69,7 @@ public class StatusPanel extends JPanel {
         JPanel lvlBox = createBox("Esperienza");
         levelLabel = new JLabel("Livello: 1");
         levelLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        xpBar = createBar(new Color(138, 43, 226));
+        xpBar = createBar(lvlCol);
         xpBar.setString("XP");
         
         lvlBox.add(levelLabel);
@@ -65,10 +77,10 @@ public class StatusPanel extends JPanel {
         lvlBox.add(xpBar);
 
         // 3. Affinities Section
-        JPanel affBox = createBox("Relazioni");
-        affMum = createBar(Color.PINK);
-        affDad = createBar(new Color(100, 149, 237));
-        affBro = createBar(new Color(50, 205, 50));
+        JPanel affBox = createBox("Affinità");
+        affMum = createBar(mumCol);
+        affDad = createBar(dadCol);
+        affBro = createBar(broCol);
         
         affBox.add(createPair("Mamma", affMum));
         affBox.add(createPair("Papà", affDad));

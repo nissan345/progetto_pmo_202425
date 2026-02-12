@@ -141,7 +141,6 @@ public class Controller {
             
             // If the MC got access to the room, they enter
             if(this.mainCharacter.getCurrentRoom().equals(currentRoom)) {
-                view.showAccess(roomMessage);
                 this.updateView();
                 
                 Optional<NPC> npc = currentRoom.getNpcInRoom();

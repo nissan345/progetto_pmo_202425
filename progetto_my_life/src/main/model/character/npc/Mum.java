@@ -117,7 +117,7 @@ public class Mum extends NPC {
                 .xpReward(QuestDifficulty.MEDIUM.getXpReward())
                 .affinityPoints(QuestDifficulty.MEDIUM.getAffinityReward())
                 .addCondition(new ItemDeliveryCondition(album))
-                .triggerCondition((player, room) -> room.getRoomName().equals("Salotto")) 
+                .triggerCondition((character, room) -> room.getRoomName().equals("Salotto")) 
                 .build();
 
             this.addQuest(albumQuest);
@@ -134,8 +134,9 @@ public class Mum extends NPC {
                 .affinityPoints(QuestDifficulty.MEDIUM.getAffinityReward())
                 .addCondition(new ItemUsageCondition(shower))
                 .addCondition(new ItemUsageCondition(wardrobe))
-                .triggerCondition((player, room) -> room.getRoomName().equals("Salotto") && 
-                									player.hasCompletedQuest("L'album perduto"))
+                .triggerCondition((character, room) -> room.getRoomName().equals("Salotto") && 
+                									   character.getJustEntered() &&
+                									   character.hasCompletedQuest("L'album perduto"))
                 .build();
             
             this.addQuest(guestsQuest);
@@ -150,8 +151,9 @@ public class Mum extends NPC {
                 .xpReward(QuestDifficulty.EASY.getXpReward())
                 .affinityPoints(QuestDifficulty.EASY.getAffinityReward())
                 .addCondition(new ItemUsageCondition(bookshelf))
-                .triggerCondition((player, room) -> room.getRoomName().equals("Salotto") && 
-                									player.hasCompletedQuest("Visita ospiti"))
+                .triggerCondition((character, room) -> room.getRoomName().equals("Salotto") &&
+                									   character.getJustEntered() &&
+                									   character.hasCompletedQuest("Visita ospiti"))
                 .build();
             
             this.addQuest(bookQuest);

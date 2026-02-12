@@ -12,7 +12,7 @@ public class Dad extends NPC {
 
     // CONSTRUCTOR ---------------------------------------------------------------------
     public Dad(Room s, House house) {
-        super("Babbo", s, house);
+        super("Papà", s, house);
     }
     
     // MAIN METHODS ------------------------------------------------------------------
@@ -73,35 +73,36 @@ public class Dad extends NPC {
     @Override
     protected void initializeQuests() {
         // Get the item from the garden
-        GameItem annaffiatoio = findItem("Annaffiatoio", "Giardino");
+        GameItem wateringCan = findItem("Annaffiatoio", "Giardino");
         
         // If the item exists, create and add the quest
-        if (annaffiatoio != null) {
+        if (wateringCan != null) {
             Quest plantsQuest = new Quest.Builder("Annaffia le piante", "Dovresti annaffiare le piante.", this)
                 .xpReward(QuestDifficulty.EASY.getXpReward())
                 .affinityPoints(QuestDifficulty.EASY.getAffinityReward())
-                .addCondition(new ItemUsageCondition(annaffiatoio))
-                .triggerCondition((player, room) -> room.getRoomName().equals("Giardino")) 
+                .addCondition(new ItemUsageCondition(wateringCan))
+                .triggerCondition((character, room) -> room.getRoomName().equals("Giardino")) 
                 .build();
 
             this.addQuest(plantsQuest);
         }
 
         // Get the items from the other rooms
-        GameItem aspirapolvere = findItem("Aspirapolvere", "Sgabuzzino"); 
-        GameItem fornelli = findItem("Fornelli", "Cucina");
+        GameItem vacuum = findItem("Aspirapolvere", "Sgabuzzino"); 
+        GameItem stove = findItem("Fornelli", "Cucina");
         GameItem stereo = findItem("Stereo", "Salotto");
 
-        if (aspirapolvere != null && fornelli != null && stereo != null) {
+        if (vacuum != null && stove != null && stereo != null) {
             
             Quest partyQuest = new Quest.Builder("Festa a sorpresa", "Prepara la festa per la mamma!", this)
                 .xpReward(QuestDifficulty.HARD.getXpReward())
                 .affinityPoints(QuestDifficulty.HARD.getAffinityReward())
-                .addCondition(new ItemUsageCondition(aspirapolvere))
-                .addCondition(new ItemUsageCondition(fornelli))
+                .addCondition(new ItemUsageCondition(vacuum))
+                .addCondition(new ItemUsageCondition(stove))
                 .addCondition(new ItemUsageCondition(stereo))
-                .triggerCondition((player, room) -> room.getRoomName().equals("Giardino") &&
-                									player.hasCompletedQuest("Annaffia le piante."))
+                .triggerCondition((character, room) -> room.getRoomName().equals("Giardino") &&
+                									   character.getJustEntered() &&
+                									   character.hasCompletedQuest("Annaffia le piante"))
                 .build();
 
             this.addQuest(partyQuest);
@@ -115,8 +116,9 @@ public class Dad extends NPC {
                 .xpReward(QuestDifficulty.MEDIUM.getXpReward())
                 .affinityPoints(QuestDifficulty.MEDIUM.getAffinityReward())
                 .addCondition(new ItemDeliveryCondition (keys))
-                .triggerCondition((player, room) -> room.getRoomName().equals("Giardino") &&
-													player.hasCompletedQuest("Festa a sorpresa")) 
+                .triggerCondition((character, room) -> room.getRoomName().equals("Giardino") &&
+                									   character.getJustEntered() &&
+													   character.hasCompletedQuest("Festa a sorpresa")) 
                 .build();
 
             this.addQuest(plantsQuest);

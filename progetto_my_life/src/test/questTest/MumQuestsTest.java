@@ -53,9 +53,8 @@ public class MumQuestsTest extends SetUpWorldTest {
         assertFalse(c.getInventory().hasItem("Album"));
 
 
-        // --- QUEST 2: Visita ospiti ---
-
         // Re-enter Living Room to trigger the second quest (requires Quest 1 completed)
+        c.pickCurrentRoom(livingRoom);
         List<Quest> secondQuest = questSystem.onPlayerEnteredRoom(c, livingRoom);
         
         Quest guestQuest = secondQuest.stream()

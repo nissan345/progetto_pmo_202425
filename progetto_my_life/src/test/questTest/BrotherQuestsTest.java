@@ -58,8 +58,10 @@ public class BrotherQuestsTest extends SetUpWorldTest {
         
         
         // Re-enter kitchen to trigger the second quest (requires Quest 1 completed)
+        c.pickCurrentRoom(kitchen);
+        
         List<Quest> secondQuest = questSystem.onPlayerEnteredRoom(c, kitchen);
-        assertFalse("Second quest should be triggered", secondQuest.isEmpty());
+        assertFalse(secondQuest.isEmpty());
         
         // Go to the bathroom and use the washing machine
         c.pickCurrentRoom(bathroom);

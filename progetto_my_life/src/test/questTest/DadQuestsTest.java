@@ -33,8 +33,9 @@ public class DadQuestsTest extends SetUpWorldTest {
                                              .anyMatch(q -> q.getName().equals("Festa a sorpresa"));
         assertFalse(hassecondQuest);        
 
-
         // Find the Watering Can (Annaffiatoio) in the Garden
+        c.pickCurrentRoom(garden);
+        
         GameItem wateringCan = garden.getItemsInRoom().stream()
                 .filter(i -> i.getName().equals("Annaffiatoio"))
                 .findFirst()

@@ -9,15 +9,12 @@ public class Stats {
 	private static final int SLEEP_MAX_ENERGY = 70;
     private static final int SLEEP_MIN_HYGIENE = 30;
 
-    private static final int EAT_MIN_ENERGY = 40;
-    private static final int EAT_MIN_HYGIENE = 50;
     private static final int EAT_MIN_SATIETY = 85; 
 
     private static final int DRINK_MIN_HYDRATION = 70; 
     
     private static final int PLAY_MIN_ENERGY = 20;
 
-    private static final int SHOWER_MIN_ENERGY = 20;
     private static final int SHOWER_MAX_HYGIENE = 70;
 
 	private static final int MAX_STAT = 100;
@@ -53,9 +50,7 @@ public class Stats {
 	
 	public boolean canEat() {
 		boolean isHungryEnough = satiety < EAT_MIN_SATIETY;
-		boolean isCleanEnough = hygiene > EAT_MIN_HYGIENE;
-		boolean isEnergeticEnough = energy > EAT_MIN_ENERGY;
-		return isHungryEnough && isCleanEnough && isEnergeticEnough;
+		return isHungryEnough;
 	}
 	
 	/**
@@ -67,9 +62,8 @@ public class Stats {
 	}
 	 
 	public boolean canShower() {
-		boolean hasEnoughEnergy =  energy > SHOWER_MIN_ENERGY;
 		boolean isDirtyEnough =  hygiene < SHOWER_MAX_HYGIENE;
-		return hasEnoughEnergy && isDirtyEnough;
+		return isDirtyEnough;
 	}
 	
 	/**

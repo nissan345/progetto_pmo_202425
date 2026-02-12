@@ -1,7 +1,7 @@
-package main.controller;
+package main;
 
 import main.view.View;
-
+import main.controller.Controller;
 import main.model.character.MainCharacter;
 
 public class Main {
@@ -15,7 +15,7 @@ public class Main {
             Controller controller = new Controller(view);
             
             // Starting game session
-            controller.startSession();
+            controller.StartMenu();
 	}
 
 }

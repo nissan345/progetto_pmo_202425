@@ -1,572 +1,273 @@
 package main.view;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.CardLayout;
 import java.util.List;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import main.controller.Controller;
+import main.view.panels.GamePanel;
+import main.view.panels.MainCharacterPanel;
+import main.view.panels.MenuPanel;
 
 /**
- * View class responsible for the user interface.
- * It handles the visualization of the game state and captures user inputs.
+ * The main graphical user interface for the application "My Life Simulator".
+ * <p>
+ * This class extends {@link JFrame} and manages the different screens of the game
+ * (Menu, Character Creation, Main Game) using a {@link CardLayout}. It acts as the
+ * primary View component in the MVC pattern, delegating specific UI updates to
+ * sub-panels like {@link GamePanel}, {@link MenuPanel}, and {@link MainCharacterPanel}.
+ * </p>
  */
 public class View extends JFrame {
-
-    // GUI COMPONENTS ------------------------------------------------------------
-    private JProgressBar barEnergy, barSatiety, barHydration, barHygiene;
-    private JTextArea gameLog;
-    private JPanel roomItemsPanel;      // Central panel for items and NPCs interactions
-    private JPanel inventoryPanel;      // Side panel for the inventory
-    private JLabel roomTitleLabel;      // Label for the current room name
     
-    // NEW COMPONENTS
-    private JLabel levelLabel;          // Shows current level
-    private JProgressBar xpBar;         // Experience bar
-    private JProgressBar affMumBar, affDadBar, affBroBar; // Affinities bars
+    // --- LAYOUT & CONTAINERS ---------------------------------------------------
     
-    private JFrame frame; 
-
-    // CONTROLLER REFERENCE ------------------------------------------------------
-    private Controller controller;
-
-    // CONSTRUCTOR ---------------------------------------------------------------
-    public View() {
-        super("My Life Simulator");
-        this.frame = this; // Assign current frame
-        initUI();
-    }
-
+    private CardLayout cardLayout;
+    private JPanel mainContainer;
+    
+    private static final String MENU_CARD = "MENU";
+    private static final String MC_CARD = "MAINCHARACTER"; 
+    private static final String GAME_CARD = "GAME";
+    
+    // --- SUB-PANELS ------------------------------------------------------------
+    
+    private MenuPanel menu;
+    private MainCharacterPanel characterPanel; 
+    private GamePanel gamePanel; 
+    
+    // --- CONTROLLER ------------------------------------------------------------
+    
+    private Controller controller; 
+    
+    // --- CONSTRUCTOR & INITIALIZATION ------------------------------------------
+    
     /**
-     * Initializes the graphical user interface components.
+     * Constructs the main application window.
+     * Initializes the window properties and the user interface components.
+     */
+    public View() {
+        super("My life Simulator"); 
+        this.initWindow();
+        this.initUI(); 
+        this.setVisible(true);
+    }
+    
+    /**
+     * Sets up the main window properties (size, close operation, location).
+     * Initializes the CardLayout container.
+     */
+    private void initWindow() {
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(1280, 800); // Wider resolution to accommodate the 3-column layout
+        setLocationRelativeTo(null);
+
+        cardLayout = new CardLayout();
+        mainContainer = new JPanel(cardLayout);
+        
+        add(mainContainer);
+    }
+    
+    /**
+     * Initializes the default UI components, specifically the GamePanel.
      */
     private void initUI() {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1100, 750); // Increased size slightly to fit new panels
-        setLayout(new BorderLayout());
-
-        // 1. NORTH: Stats Panel (Energy, Satiety, etc.)
-        JPanel statsPanel = new JPanel(new GridLayout(1, 4));
-        barEnergy = createStyledBar("Energia", Color.ORANGE);
-        barSatiety = createStyledBar("Sazietà", Color.GREEN);
-        barHydration = createStyledBar("Idratazione", Color.BLUE);
-        barHygiene = createStyledBar("Igiene", Color.CYAN);
-
-        statsPanel.add(createStatContainer("Energia", barEnergy));
-        statsPanel.add(createStatContainer("Sazietà", barSatiety));
-        statsPanel.add(createStatContainer("Idratazione", barHydration));
-        statsPanel.add(createStatContainer("Igiene", barHygiene));
-        add(statsPanel, BorderLayout.NORTH);
-
-        // 2. CENTER: Room Info & Interaction Area
-        JPanel centerPanel = new JPanel(new BorderLayout());
-        
-        roomTitleLabel = new JLabel("Loading...", SwingConstants.CENTER);
-        roomTitleLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        centerPanel.add(roomTitleLabel, BorderLayout.NORTH);
-
-        // Interactive area (NPCs and Items on the floor)
-        roomItemsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 15));
-        roomItemsPanel.setBorder(BorderFactory.createTitledBorder("Interagisci:"));
-        centerPanel.add(new JScrollPane(roomItemsPanel), BorderLayout.CENTER);
-        
-        add(centerPanel, BorderLayout.CENTER);
-
-        // 3. EAST: Side Panel (Level, Inventory, Affinities)
-        JPanel sidePanel = new JPanel(new BorderLayout());
-        sidePanel.setPreferredSize(new Dimension(280, 0));
-
-        // 3A. Level Panel (Top of Side Panel)
-        JPanel levelPanel = new JPanel(new GridLayout(2, 1));
-        levelPanel.setBorder(BorderFactory.createTitledBorder("Progresso Giocatore"));
-        
-        levelLabel = new JLabel("Livello: 1", SwingConstants.CENTER);
-        levelLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        
-        xpBar = new JProgressBar(0, 100);
-        xpBar.setStringPainted(true);
-        xpBar.setForeground(new Color(138, 43, 226)); // Purple color for XP
-        xpBar.setString("XP");
-        
-        levelPanel.add(levelLabel);
-        levelPanel.add(xpBar);
-        sidePanel.add(levelPanel, BorderLayout.NORTH);
-
-        // 3B. Inventory Panel (Center of Side Panel)
-        inventoryPanel = new JPanel();
-        inventoryPanel.setLayout(new BoxLayout(inventoryPanel, BoxLayout.Y_AXIS));
-        // The border is now on the scroll pane
-        
-        JScrollPane invScroll = new JScrollPane(inventoryPanel);
-        invScroll.setBorder(BorderFactory.createTitledBorder("Inventario"));
-        // Remove preferred size to let it fill available space
-        sidePanel.add(invScroll, BorderLayout.CENTER);
-
-        // 3C. Affinity Panel (Bottom of Side Panel)
-        JPanel affinityPanel = new JPanel(new GridLayout(3, 1, 0, 5));
-        affinityPanel.setBorder(BorderFactory.createTitledBorder("Relazioni"));
-        affinityPanel.setPreferredSize(new Dimension(0, 180)); // Fixed height for affinities
-
-        affMumBar = createStyledBar("", Color.PINK);
-        affDadBar = createStyledBar("", new Color(100, 149, 237)); // Cornflower Blue
-        affBroBar = createStyledBar("", new Color(50, 205, 50));   // Lime Green
-
-        affinityPanel.add(createStatContainer("Mamma", affMumBar));
-        affinityPanel.add(createStatContainer("Papà", affDadBar));
-        affinityPanel.add(createStatContainer("Fratello", affBroBar));
-        
-        sidePanel.add(affinityPanel, BorderLayout.SOUTH);
-
-        // Add the complete side panel to the frame
-        add(sidePanel, BorderLayout.EAST);
-
-        // 4. SOUTH: Game Log (Console)
-        gameLog = new JTextArea(8, 50);
-        gameLog.setEditable(false);
-        gameLog.setLineWrap(true);
-        JScrollPane logScroll = new JScrollPane(gameLog);
-        logScroll.setBorder(BorderFactory.createTitledBorder("Aggiornamenti"));
-        add(logScroll, BorderLayout.SOUTH);
-
-        setLocationRelativeTo(null); // Center window on screen
-        setVisible(true);
+        this.gamePanel = new GamePanel();
+        mainContainer.add(this.gamePanel, GAME_CARD); 
     }
     
-    // CONTROLLER CONNECTION -----------------------------------------------------
-
     /**
-     * Sets the controller reference to allow callbacks from UI events.
-     * @param controller The main game controller.
+     * Sets the controller for this view and propagates it to the sub-panels.
+     * @param controller The main application controller.
      */
     public void setController(Controller controller) {
-        this.controller = controller;
+        this.controller = controller; 
+        gamePanel.setController(controller);
     }
     
-    // STARTING MENU ----------------------------------------------------------------
+    // --- NAVIGATION & SCREENS --------------------------------------------------
+    
     /**
-     * Shows the starting menu of the game 
+     * Displays the main menu screen.
+     * Initializes the MenuPanel if it hasn't been created yet.
      */
     public void showMenu() {
-        
-        JDialog menuDialog = new JDialog(frame, "Menu Iniziale", true);
-        menuDialog.setSize(10, 10);
-        menuDialog.setLayout(new BorderLayout());
-
-        JLabel titolo = new JLabel("Benvenuto in My Life!", SwingConstants.CENTER);
-        titolo.setFont(new Font("Arial", Font.BOLD, 20));
-        menuDialog.add(titolo, BorderLayout.NORTH);
-
-        JPanel center = new JPanel(new GridLayout(3,1,10,10));
-        JButton startBtn = new JButton("Inizia Gioco");
-        JButton infoBtn = new JButton("Crediti");
-        JButton exitBtn = new JButton("Esci");
-
-        center.add(startBtn);
-        center.add(infoBtn);
-        center.add(exitBtn); 
-
-        startBtn.addActionListener(e -> menuDialog.dispose());
-        infoBtn.addActionListener(e -> JOptionPane.showMessageDialog(menuDialog, "Progetto realizzato per PMO dalle studentesse del gruppo.", "Crediti", JOptionPane.INFORMATION_MESSAGE));
-        exitBtn.addActionListener(e -> System.exit(0));
-
-        menuDialog.add(center, BorderLayout.CENTER);
-        menuDialog.pack();
-        menuDialog.setResizable(false);
-        menuDialog.setLocationRelativeTo(frame);
-        menuDialog.setVisible(true);
-        
-    }
-    
-    // MAINCHARACTER PERSONALIZATION ----------------------------------------------------------------
-    
-    /**
-     * Asks to input the Main Character's name
-     * @return
-     */
-    public String askName() {
-        JPanel panel = new JPanel();
-        final JLabel label = new JLabel("Inserisci il tuo nome:");
-        JTextField textField = new JTextField(20);
-        panel.add(label);
-        panel.add(textField);
-        
-        int result = JOptionPane.showConfirmDialog(
-                frame, 
-                panel, 
-                "Name MainCharacter", 
-                JOptionPane.OK_CANCEL_OPTION, 
-                JOptionPane.QUESTION_MESSAGE
-            );
-           return textField.getText().trim();
-    }
-
-    /**
-     * Displays the different personalization options
-     * @param message
-     * @param options
-     * @return
-     */
-    public int showPersonalizationOptions(String message, List<String> options) {
-        if (options == null || options.isEmpty()) {
-            return -1;
+        if (this.menu == null) {
+            this.menu = new MenuPanel(
+                e -> switchToMainCharacterCreation(),
+                e -> System.exit(0)); 
+            this.mainContainer.add(this.menu, MENU_CARD); 
         }
-        
-        String[] arrayOptions = options.toArray(new String[0]);
-        
-        Object choice = JOptionPane.showInputDialog(
-            frame,
-            message,
-            "Personalizzazione MainCharacter",
-            JOptionPane.QUESTION_MESSAGE,
-            null,
-            arrayOptions,
-            arrayOptions[0] 
-        );
-        
-        if (choice == null) {
-            return -1;
-        }
-        
-        for (int i = 0; i < arrayOptions.length; i++) {
-            if (arrayOptions[i].equals(choice)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-    
-
-    /**
-     * Helper method to create a styled progress bar.
-     */
-    private JProgressBar createStyledBar(String title, Color c) {
-        JProgressBar bar = new JProgressBar(0, 100);
-        bar.setValue(0); // Default to 0
-        bar.setStringPainted(true);
-        bar.setForeground(c);
-        return bar;
-    }
-
-    /**
-     * Helper method to wrap a progress bar within a labelled panel.
-     */
-    private JPanel createStatContainer(String label, JProgressBar bar) {
-        JPanel p = new JPanel(new BorderLayout());
-        p.add(new JLabel(label, SwingConstants.CENTER), BorderLayout.NORTH);
-        p.add(bar, BorderLayout.CENTER);
-        return p;
-    }
-
-
-
-    // DATA UPDATES --------------------------------------------------------------
-
-    /**
-     * Updates the display of the character's vital statistics.
-     */
-    public void updateStatsDisplay(int energy, int satiety, int hydration, int hygiene) {
-        barEnergy.setValue(energy);
-        barSatiety.setValue(satiety);
-        barHydration.setValue(hydration);
-        barHygiene.setValue(hygiene);
+        this.cardLayout.show(mainContainer, MENU_CARD);
     }
     
     /**
-     * Updates the display of level and XP.
-     * @param lvl Current level.
-     * @param xp Current XP amount.
-     * @param xpToNext XP needed for the next level (sets the max value of the bar).
+     * Switches the view to the Main Character Creation screen.
+     * Initializes the MainCharacterPanel if it hasn't been created yet.
      */
-    public void updateLevelDisplay(int lvl, int xp, int xpToNext) {
-        levelLabel.setText("Livello: " + lvl);
-        xpBar.setMaximum(xpToNext);
-        xpBar.setValue(xp);
-        xpBar.setString(xp + " / " + xpToNext + " XP");
-    }
-
-    /**
-     * Updates the affinity bars for the NPCs.
-     * @param affinityMum Affinity value for Mum.
-     * @param affinityDad Affinity value for Dad.
-     * @param affinityBro Affinity value for Brother.
-     */
-    public void updateAffinitiesDisplay(int affinityMum, int affinityDad, int affinityBro) {
-        affMumBar.setValue(affinityMum);
-        affDadBar.setValue(affinityDad);
-        affBroBar.setValue(affinityBro);
-    }
-
-    /**
-     * Updates the display of the inventory list in the side panel.
-     * Generates buttons that trigger the controller interaction.
-     * @param inventory The character's current inventory.
-     */
-    public void updateInventoryList(List<String> inventory) {
-        System.out.println("DEBUG View: Aggiornamento inventario. Numero oggetti: " + inventory.size());
-        
-        inventoryPanel.removeAll();
-
-        for (int i = 0; i < inventory.size(); i++) {
-            String name = inventory.get(i);
-            final int index = i; 
-            
-            JButton itemBtn = new JButton(name);
-            itemBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
-            itemBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
-            itemBtn.setToolTipText("Clicca per interagire"); 
-
-            
-            itemBtn.addActionListener(e -> {
-                if (controller != null) {
-                    controller.handleInventoryInteraction(index);
-                }
+    private void switchToMainCharacterCreation() {
+        if (this.characterPanel == null) {
+            this.characterPanel = new MainCharacterPanel((name, outfit, hair) -> {
+                this.controller.mainCharacterCreation(name, outfit, hair);
             });
-
-            inventoryPanel.add(itemBtn);
-            inventoryPanel.add(Box.createVerticalStrut(5));
+            mainContainer.add(characterPanel, MC_CARD);
         }
-
-        inventoryPanel.revalidate();
-        inventoryPanel.repaint();
+        cardLayout.show(mainContainer, MC_CARD);
     }
     
-    // ROOM DISPLAY ----------------------------------------------------------------------------------------------------------------------
-
     /**
-     * Updates the current room view.
-     * It displays the room name, creates a button for the NPC (if present),
-     * and creates buttons for items lying on the floor.
-     * @param currentRoom The room the character is currently in.
+     * Switches the view to the main game screen.
      */
-    public void updateCurrentRoom(String currentRoom, String npcName, List<String> items, List<Integer> itemSizes, List<String> exits) {
-        
-        // Clear the central panel
-        roomItemsPanel.removeAll();
-        
-        // Update Title
-        roomTitleLabel.setText("Posizione attuale: " + currentRoom);
-        
-        // Adding item buttons
-        this.addRoomItemsButtons(items, itemSizes);
-        
-        if (!items.isEmpty()) roomItemsPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
-        
-        // NPC button
-        if (npcName != null && !npcName.isEmpty()) {
-            this.addNpcButton(npcName);
-            roomItemsPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
-        }
-        
-        // Exits buttons
-        this.addExitButtons(exits);
-        
-        roomItemsPanel.revalidate();
-        roomItemsPanel.repaint();
+    public void switchToGame() {
+        this.cardLayout.show(this.mainContainer, GAME_CARD);
     }
     
-    /**
-     * Helper method to create item buttons 
-     * @param items Lista dei nomi degli oggetti
-     * @param itemSizes Lista delle dimensioni degli oggetti (per il tooltip)
-     */
-    private void addRoomItemsButtons(List<String> items, List<Integer> itemSizes) {
-        if (items.isEmpty()) {
-            JLabel emptyLabel = new JLabel("Nessun oggetto nella stanza.");
-            emptyLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-            roomItemsPanel.add(emptyLabel);
-            return;
-        }
-
-        JLabel itemsLabel = new JLabel("Oggetti a terra:");
-        itemsLabel.setFont(new Font("Arial", Font.ITALIC, 12));
-        itemsLabel.setAlignmentX(Component.CENTER_ALIGNMENT); 
-        roomItemsPanel.add(itemsLabel);
-        roomItemsPanel.add(Box.createVerticalStrut(5)); 
-
-        for (int i = 0; i < items.size(); i++) {
-            String itemName = items.get(i);
-
-            int size = (itemSizes != null && i < itemSizes.size()) ? itemSizes.get(i) : 0;
-            
-            final int index = i; 
-
-            JButton itemBtn = new JButton(itemName);
-            itemBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
-            itemBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30)); 
-            
-            itemBtn.setToolTipText("Dimensione oggetto: " + size);
-         
-            itemBtn.addActionListener(e -> {
-                if (controller != null) {
-                    controller.handleItemInteraction(index);
-                }
-            });
-
-            roomItemsPanel.add(itemBtn);
-            roomItemsPanel.add(Box.createVerticalStrut(5));
-        }
-    }
+    // --- USER INTERACTION DIALOGS ----------------------------------------------
     
     /**
-     * Displays a list of options to choose from when interacting with an item
-     * @param options
-     * @return
+     * Shows a dialog with a list of options for the user to choose from.
+     * @param options A list of strings representing the available options.
+     * @return The index of the selected option, or a closed-dialog code.
      */
     public int showOptionItem(List<String> options) {
-        return JOptionPane.showOptionDialog(
-                this,                      
-                "Cosa desideri fare con questo oggetto?", 
-                "Interazione Oggetto",              
-                JOptionPane.DEFAULT_OPTION,
-                JOptionPane.PLAIN_MESSAGE,
-                null,
-                options.toArray(),                  
-                options.get(0)                      
-        );
-    }
-    
-    /**
-     * Helper methods to create NPC button
-     * @param name
-     */
-    private void addNpcButton(String name) {
-        JLabel npcLabel = new JLabel("Persone:");
-        npcLabel.setFont(new Font("Arial", Font.ITALIC, 12));
-        roomItemsPanel.add(npcLabel);
-
-        JButton npcBtn = new JButton("Parla con: " + name);
-        npcBtn.setBackground(new Color(255, 220, 220)); // Rosso chiaro
-        npcBtn.setFont(new Font("Arial", Font.BOLD, 13));
-        
-        npcBtn.addActionListener(e -> {
-            if (controller != null) {
-                controller.handleNpcInteractions();
-            }
-        });
-        roomItemsPanel.add(npcBtn);
-    }
-    
-    /**
-     * Helper method to create buttons to change room
-     * @param exits
-     */
-    private void addExitButtons(List<String> exits) {
-        JLabel moveLabel = new JLabel("Spostati verso:");
-        moveLabel.setFont(new Font("Arial", Font.ITALIC, 12));
-        roomItemsPanel.add(moveLabel);
-
-        for (String direction : exits) {
-            JButton moveBtn = new JButton(direction);
-            moveBtn.setBackground(new Color(220, 255, 220));
-            
-            moveBtn.addActionListener(e -> {
-                if (controller != null) {
-                    controller.changeRoom(direction);
-                }
-            });
-            roomItemsPanel.add(moveBtn);
-        }
-    }
-    
-        
-    
-    // LOG AND DIALOGS -----------------------------------------------------------
-
-    /**
-     * Appends a message to the main game log text area.
-     * @param msg The message to display.
-     */
-    public void appendLog(String msg) {
-        gameLog.append(msg + "\n");
-        // Auto-scroll to the bottom
-        gameLog.setCaretPosition(gameLog.getDocument().getLength());
+        return JOptionPane.showOptionDialog(this, "Cosa vuoi fare?", "Azione",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, 
+                options.toArray(), options.get(0));
     }
 
     /**
-     * Opens a dialog to ask the user for a specific choice (e.g., FoodType).
-     * @param message The prompt message.
-     * @param availableOptions The list of available options.
-     * @return The selected object.
+     * Shows a dialog asking the user to make a choice from a list.
+     * @param message The message to display in the dialog.
+     * @param availableOptions A list of objects to choose from.
+     * @return The selected object, or null if cancelled.
      */
     public Object askUserChoice(String message, List<?> availableOptions) {
-        if (availableOptions == null || availableOptions.isEmpty()) return null;
+         Object[] choices = availableOptions.toArray();
+         return JOptionPane.showInputDialog(this, message, "Scelta", 
+                 JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
+    }
 
-        Object[] choices = availableOptions.toArray();
-        return JOptionPane.showInputDialog(
-            this, message, "Scegli", JOptionPane.QUESTION_MESSAGE,
-            null, choices, choices[0]
-        );
+    // --- GAME STATE UPDATES (DELEGATED TO PANELS) ------------------------------
+
+    /**
+     * Updates the status panel with the character's vital statistics.
+     * @param en Energy level.
+     * @param sat Satiety level.
+     * @param hyd Hydration level.
+     * @param hyg Hygiene level.
+     */
+    public void updateStatsDisplay(int en, int sat, int hyd, int hyg) {
+        gamePanel.getStatusPanel().updateStats(en, sat, hyd, hyg);
     }
 
     /**
-     * Shows a modal Game Over dialog.
-     * @param message The reason for the game over.
+     * Updates the status panel with the character's level and experience.
+     * @param lvl Current level.
+     * @param xp Current experience points.
+     * @param xpToNext Experience points required for the next level.
      */
-    public void showGameOverDialog(String message) {
-        JOptionPane.showMessageDialog(this, message, "GAME OVER", JOptionPane.ERROR_MESSAGE);
+    public void updateLevelDisplay(int lvl, int xp, int xpToNext) {
+        gamePanel.getStatusPanel().updateLevel(lvl, xp, xpToNext);
     }
 
     /**
-     * Disables all interactive controls in the UI (used when Game Over).
+     * Updates the status panel with the character's relationship affinities.
+     * @param mum Affinity with Mum.
+     * @param dad Affinity with Dad.
+     * @param bro Affinity with Brother.
      */
-    public void disableControls() {
-        roomItemsPanel.setEnabled(false);
-        inventoryPanel.setEnabled(false);
-        // Recursively disable components inside panels if necessary
-        for (Component c : roomItemsPanel.getComponents()) c.setEnabled(false);
-        for (Component c : inventoryPanel.getComponents()) c.setEnabled(false);
+    public void updateAffinitiesDisplay(int mum, int dad, int bro) {
+        gamePanel.getStatusPanel().updateAffinities(mum, dad, bro);
     }
 
     /**
-     * * @param message
+     * Updates the dashboard panel with the current inventory items.
+     * @param inventory A list of item names in the inventory.
      */
-    public void showNpcMessage(String message) {
-        JOptionPane.showMessageDialog(
-            this.frame, 
-            message, 
-            "Interazione", 
-            JOptionPane.INFORMATION_MESSAGE
-        );
-        
-        appendLog("NPC: " + message);
+    public void updateInventoryList(List<String> inventory) {
+        gamePanel.getDashboardPanel().updateInventory(inventory);
+    }
+    
+    /**
+     * Updates the dashboard panel with the list of active quests.
+     * @param quests A list of active quest descriptions or names.
+     */
+    public void updateQuests(List<String> quests) {
+        gamePanel.getDashboardPanel().updateQuests(quests);
     }
 
     /**
-     * * @param npcName
-     * @param dialogue
+     * Updates the room panel with the details of the current location.
+     * @param roomName The name of the room.
+     * @param npcName The name of the NPC in the room (can be empty/null).
+     * @param items A list of item names present in the room.
+     * @param sizes A list of sizes corresponding to the items (optional).
+     * @param exits A list of available exit names.
      */
-    public void showQuestDialogue(String npcName, String dialogue) {
-        JOptionPane.showMessageDialog(
-            this.frame, 
-            dialogue, 
-            npcName + ": ", 
-            JOptionPane.PLAIN_MESSAGE
-        );
-       
-        appendLog(npcName + ": " + dialogue);
+    public void updateCurrentRoom(String roomName, String npcName, List<String> items, List<Integer> sizes, List<String> exits) {
+        gamePanel.getRoomPanel().updateRoom(roomName, npcName, items, sizes, exits);
     }
 
-    /**
-     * * @param questName
-     */
-    public void showQuestMessage(String questName) {
-        JOptionPane.showMessageDialog(
-            this.frame, 
-            questName, 
-            "Diario Quest", 
-            JOptionPane.WARNING_MESSAGE
-        );
-        
-        appendLog(">>> QUEST: " + questName + " <<<");
-    }
+    // --- LOGGING & MESSAGING ---------------------------------------------------
 
     /**
-     * Displays a message of success/error when entering a room
-     * @param message
+     * Appends a message to the in-game log area.
+     * @param msg The message string to append.
      */
-    public void showAccess(String message) {
-        if (message != null && !message.isEmpty()) {
-            appendLog(""); 
-            appendLog(">>> " + message);
-        }
+    public void appendLog(String msg) {
+        gamePanel.appendLog(msg);
+    }
+    
+    /**
+     * Logs an access message (e.g., entering/exiting rooms) if not empty.
+     * @param msg The message to log.
+     */
+    public void showAccess(String msg) { 
+        if(!msg.isEmpty()) appendLog(">>> " + msg); 
+    }
+    
+    /**
+     * Displays a Game Over dialog with the specified reason.
+     * @param msg The game over message.
+     */
+    public void showGameOverDialog(String msg) { 
+        JOptionPane.showMessageDialog(this, msg, "GAME OVER", JOptionPane.ERROR_MESSAGE); 
+    }
+    
+    /**
+     * Disables interactive controls in the game panel (e.g., upon death).
+     */
+    public void disableControls() { 
+        gamePanel.disableInteraction(); 
+    }
+    
+    /**
+     * Shows a message from an NPC in a dialog and logs it.
+     * @param npcName The name of the NPC speaking.
+     * @param msg The message content.
+     */
+    public void showNpcMessage(String npcName, String msg) { 
+        JOptionPane.showMessageDialog(this, msg, npcName, JOptionPane.INFORMATION_MESSAGE); 
+        appendLog("NPC: " + msg); 
+    }
+    
+    /**
+     * Shows a dialogue related to a specific Quest and logs it.
+     * @param name The name of the speaker (usually NPC).
+     * @param dialog The dialogue content.
+     */
+    public void showQuestDialogue(String name, String dialog) { 
+        JOptionPane.showMessageDialog(this, dialog, name, JOptionPane.PLAIN_MESSAGE); 
+        appendLog(name + ": " + dialog); 
+    }
+    
+    /**
+     * Shows a general system message regarding Quests (e.g., New Quest, Completed).
+     * @param msg The quest notification message.
+     */
+    public void showQuestMessage(String msg) { 
+        JOptionPane.showMessageDialog(this, msg, "QUEST", JOptionPane.WARNING_MESSAGE); 
+        appendLog(msg); 
     }
 }

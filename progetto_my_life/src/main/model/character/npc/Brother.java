@@ -31,7 +31,7 @@ public class Brother extends NPC {
             return "Non so nulla di questa faccenda.";
         }
         if (getAffinity() < LOW_AFFINITY) {
-            return "Senti, mi serve una mano: " + quest.getDescription() + " Fai in fretta";
+            return "Senti, mi serve una mano: " + quest.getDescription() + " Fai in fretta.";
         } else {
             return "Ehii, mi faresti un favore? " + quest.getDescription();
         }
@@ -50,7 +50,7 @@ public class Brother extends NPC {
     	case "Lava vestiti":
     		return "Hai messo i panni in lavatrice? Ricorda di usare la lavatrice!"; 
     	case "Videogioco retro":
-    		return "Hai trovato il mio videogioco? Prova a chiedere alla mamma";
+    		return "Hai trovato il mio videogioco? Prova a chiedere alla mamma.";
     	default:
     		return "Come sta andando con la quest? Torna da me quando hai finito!";
     	} 
@@ -76,7 +76,7 @@ public class Brother extends NPC {
         // If the item exists, create and add the quest
         if (stove != null) {
             Quest kitchenQuest = new Quest.Builder("Cibo per tutti", 
-                    "Dei nostri amici vengono a casa, potresti prepare qualcosa per tutti mentre io pulisco la mia camera",  
+                    "Dei nostri amici vengono a casa, potresti prepare qualcosa per tutti mentre io pulisco la mia camera?",  
                                 this)
                 .xpReward(QuestDifficulty.EASY.getXpReward())
                 .affinityPoints(QuestDifficulty.EASY.getAffinityReward())
@@ -106,7 +106,7 @@ public class Brother extends NPC {
         } 
         
         Quest videogameQuest = new Quest.Builder("Videogioco retro", 
-                    "Potresti trovare il mio vecchio videogioco Shenmue II, devo finire la mia collezione di giochi retro",  
+                    "Potresti trovare il mio vecchio videogioco Shenmue II? Devo finire la mia collezione di giochi retro.",  
                                 this)
                 .xpReward(QuestDifficulty.HARD.getXpReward())
                 .affinityPoints(QuestDifficulty.HARD.getAffinityReward())

@@ -1,8 +1,9 @@
-package main.controller;
+package main.controller.handlers;
 
 import java.util.List;
 import java.util.Optional;
 
+import main.controller.Controller;
 import main.model.character.MainCharacter;
 import main.model.character.npc.Mum;
 import main.model.character.npc.NPC;
@@ -57,7 +58,7 @@ public class NpcInteractionHandler {
         if (npcOpt.isPresent()) {
             NPC npc = npcOpt.get();
 
-            // A. PRIORITY: Check for Quest Completion (Auto Turn-in)
+            // PRIORITY: Check for Quest Completion (Auto Turn-in)
             // If the player enters the room and has finished the task, complete it immediately.
             Optional<Quest> completedQuest = mainCharacter.getCompletedQuestWithNPC(npc);
             if (completedQuest.isPresent()) {
@@ -67,7 +68,7 @@ public class NpcInteractionHandler {
                 return; 
             }
 
-            // B. ASSIGNMENT: Check for New Quests
+            // ASSIGNMENT: Check for New Quests
             // Only assign if the player does NOT already have an active quest with this NPC.
             if (!mainCharacter.hasActiveQuestWithNPC(npc)) {
                 
@@ -76,7 +77,7 @@ public class NpcInteractionHandler {
 
                 // We take the first valid new quest
                 Optional<Quest> validNewQuest = newQuests.stream()
-                    .filter(q -> !mainCharacter.getCompletedQuests().contains(q)) // Ensure it's not a repeated old quest
+                    .filter(q -> (!mainCharacter.getCompletedQuests().contains(q) && q.getAssignerNPC().equals(npc))) // Ensure it's not a repeated old quest
                     .findFirst();
 
                 if (validNewQuest.isPresent()) {
@@ -114,7 +115,7 @@ public class NpcInteractionHandler {
             if (npc instanceof Mum) {
                 String giftMessage = ((Mum) npc).checkGiftInteraction(mainCharacter);
                 if (!giftMessage.isEmpty()) {
-                    view.showNpcMessage(giftMessage);
+                	view.showNpcMessage(npc.getName(), giftMessage);
                     controller.updateView();
                     return; 
                 }
@@ -130,7 +131,7 @@ public class NpcInteractionHandler {
             } 
             else {
                 String dialogue = npc.getInitialDialogue();
-                view.showNpcMessage(dialogue);
+                view.showNpcMessage(npc.getName(), dialogue);
             }
         }
     }
@@ -145,7 +146,7 @@ public class NpcInteractionHandler {
      */
     private void performQuestAssignment(NPC npc, Quest quest) {
         // 1. Visual Alert
-        view.showQuestMessage("Nuova quest: " + quest.getName());
+    	view.showQuestMessage("Nuova quest: " + quest.getName());
         
         // 2. NPC Dialogue
         String assignDialogue = npc.getQuestAssignedDialogue(quest);
@@ -153,7 +154,7 @@ public class NpcInteractionHandler {
 
         // Note: QuestSystem.onPlayerEnteredRoom usually adds the quest to the character.
         // If it doesn't, ensure mainCharacter.addQuest(quest) is called here.
-        controller.updateView();
+   //     controller.updateView();
     }
 
     /**
@@ -169,7 +170,7 @@ public class NpcInteractionHandler {
         boolean success = questSystem.tryTurnIn(mainCharacter, npc);
         
         if (success) {
-            view.showQuestMessage("Quest Completata: " + quest.getName());
+        	view.showQuestMessage("Quest Completata: " + quest.getName());
             controller.updateView(); 
         }
     }

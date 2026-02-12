@@ -1,4 +1,4 @@
-package main.controller;
+package main.controller.init;
 
 import main.model.world.House;
 import main.model.world.Room;
@@ -40,18 +40,20 @@ public class WorldInitializer {
 
         // Setting up room connections
         bedroom.addExit("Cucina", kitchen);
-        bedroom.addExit("Bagno", bathroom);
+        bedroom.addExit("Salotto", bathroom);
         
         kitchen.addExit("Camera da Letto", bedroom);
         kitchen.addExit("Salotto", livingRoom);
+        kitchen.addExit("Bagno", bathroom);
         kitchen.addExit("Giardino", garden);
         
         livingRoom.addExit("Cucina", kitchen);
-        livingRoom.addExit("Ripostiglio", storageRoom);
+        livingRoom.addExit("Camera da Letto", bedroom);
+        livingRoom.addExit("Sgabuzzino", storageRoom);
         
         storageRoom.addExit("Salotto", livingRoom);
         
-        bathroom.addExit("Camera da Letto", bedroom);
+        bathroom.addExit("Cucina", kitchen);
         
         garden.addExit("Cucina", kitchen);
 

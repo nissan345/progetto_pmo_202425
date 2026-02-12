@@ -1,9 +1,11 @@
-package main.controller;
+package main.controller.engine;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javax.swing.SwingUtilities;
+
+import main.controller.Controller;
 import main.model.character.MainCharacter;
 
 /**

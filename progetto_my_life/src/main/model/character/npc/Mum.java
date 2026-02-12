@@ -26,7 +26,7 @@ public class Mum extends NPC {
     @Override
     public String getInitialDialogue() {
         if (getAffinity() < LOW_AFFINITY) {
-            return "Ciao tesoro! Mi raccomando ricordati le faccende di casa da svolgere";
+            return "Ciao tesoro! Mi raccomando ricordati le faccende di casa da svolgere.";
         } else {
             return "Ciao tesoro! Come sta andando la tua giornata?"; 
         } 
@@ -112,7 +112,7 @@ public class Mum extends NPC {
         
         if (album != null) {
             Quest albumQuest = new Quest.Builder("L'album perduto", 
-                  "Dovresti riportarmi il vecchio album di famiglia che ho perduto da qualche parte in casa e riportamelo",  
+                  "Dovresti riportarmi il vecchio album di famiglia che ho perduto da qualche parte in casa e riportamelo.",  
                                this)
                 .xpReward(QuestDifficulty.MEDIUM.getXpReward())
                 .affinityPoints(QuestDifficulty.MEDIUM.getAffinityReward())

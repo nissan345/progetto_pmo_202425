@@ -14,6 +14,8 @@ import main.model.world.gameItem.Refrigerator;
 public class ItemFactory { 
 	
     private static final int NO_EFFECT = 0;
+    
+    private static final int MAX_EFFECT = 100; 
 
     // Energy threshold for dynamic calculations
 	private static final int ENERGY_LOW = 40;
@@ -23,7 +25,7 @@ public class ItemFactory {
 	private static final int HYGIENE_LOW = 40;
 	private static final int HYGIENE_MID = 80;
 	
-	// Positive effect values
+	// Positive effect valueS
 	private static final int HIGH_GAIN = 30;
 	private static final int MID_GAIN = 20;
 	private static final int LOW_GAIN = 10;
@@ -54,7 +56,7 @@ public class ItemFactory {
                     .message("Ti sdrai e ti riposi")
                     .dynamic((mc, self) -> {
                         int en = mc.getStats().getEnergy();
-                        int gain = (en < ENERGY_LOW) ? HIGH_GAIN : (en < ENERGY_MID ? MID_GAIN : LOW_GAIN);
+                        int gain = MAX_EFFECT - en;
                         int duration = (en < ENERGY_LOW) ? HIGH_DURATION : (en < ENERGY_MID ? MID_DURATION : LOW_DURATION);
                         int hyg = -LOW_GAIN;
                         return new ActionResult(self.getMessage(), 0, 0, gain, hyg, duration);
@@ -96,11 +98,9 @@ public class ItemFactory {
                             int en = mc.getStats().getEnergy();
                             int energyCost   = (en < ENERGY_MID ? MID_COST : LOW_COST); 
                             int durationSec  = (en < ENERGY_MID ?  MID_DURATION :   LOW_DURATION);  
-                            int satietyGain  = -HIGH_COST;
                             int hygieneCost  = -LOW_GAIN;
-                            return new ActionResult(self.getMessage(), satietyGain, NO_EFFECT, energyCost, hygieneCost, durationSec);
+                            return new ActionResult(self.getMessage(), NO_EFFECT, NO_EFFECT, energyCost, hygieneCost, durationSec);
                         })
-                        .requirement(new CanEatRequirement())
                         .build(),
                         
                 new Refrigerator(),
@@ -133,7 +133,7 @@ public class ItemFactory {
                         .message("Fai una doccia rinfrescante.")
                         .dynamic((mc, self) -> {
                             int currentHyg   = mc.getStats().getHygiene();
-                            int hygieneGain  = (currentHyg < HYGIENE_LOW) ? HIGH_GAIN : (currentHyg < HYGIENE_MID  ? MID_GAIN : LOW_GAIN);
+                            int hygieneGain  = MAX_EFFECT - currentHyg;
                             int durationSec  = (currentHyg < HYGIENE_LOW) ? HIGH_DURATION : (currentHyg <  HYGIENE_MID ? MID_DURATION : LOW_DURATION);
                             int energyCost   = LOW_COST; 
                             return new ActionResult(self.getMessage(), NO_EFFECT, NO_EFFECT, energyCost, hygieneGain, durationSec);

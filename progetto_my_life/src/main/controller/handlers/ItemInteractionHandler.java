@@ -1,8 +1,9 @@
-package main.controller;
+package main.controller.handlers;
 
 import main.model.character.MainCharacter;
 import main.model.world.gameItem.FoodType;
 import main.model.world.gameItem.GameItem;
+import main.controller.Controller;
 import main.model.action.ActionResult;
 import main.view.View;
 

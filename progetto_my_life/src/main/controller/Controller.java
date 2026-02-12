@@ -6,10 +6,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import main.controller.engine.GameLoopManager;
+import main.controller.handlers.ItemInteractionHandler;
+import main.controller.handlers.NpcInteractionHandler;
+import main.controller.init.WorldInitializer;
 import main.model.character.MainCharacter;
 import main.model.character.enums.Hair;
 import main.model.character.enums.Outfit;
 import main.model.character.npc.NPC;
+import main.model.quest.Quest;
 import main.model.quest.QuestSystem;
 import main.model.world.House;
 import main.model.world.Room;
@@ -54,14 +59,18 @@ public class Controller {
     // GAME LIFECYCLE METHODS ------------------------------------------------------------
     
     /**
+     * Starts menu
+     */
+    public void StartMenu() {
+    	 view.showMenu();
+    }
+    
+    /**
      * Starts the game session.
      * Displays the menu, handles character creation, initializes the world, 
      * NPCs, handlers, systems, and starts the main game loop.
      */
     public void startSession() {
-        view.showMenu();
-        
-        this.mainCharacterCreation();
         
         // Initialization Quest System
         this.questSystem = new QuestSystem();
@@ -78,12 +87,14 @@ public class Controller {
         // Intialization NPC interactions handler
         this.NpcHandler = new NpcInteractionHandler(this, mainCharacter, view, questSystem);
         
+        view.switchToGame();
+        
         // Initial view update
         this.updateView();
         
         // Start the game loop
         this.gameLoopManager = new GameLoopManager(this, mainCharacter);
-        this.gameLoopManager.startGameLoop();
+        this.gameLoopManager.startGameLoop(); 
     }
     
     /**
@@ -103,34 +114,14 @@ public class Controller {
         view.showGameOverDialog("GAME OVER: " + reason);
         this.gameLoopManager.stopGameLoop();;
         view.disableControls();
-    }
+    } 
 
     // CHARACTER CREATION --------------------------------------------------------------
     
-    /**
-     * Handles the initial personalization of the MainCharacter.
-     * Asks the user for name, outfit, and hair via the View.
-     */
-    private void mainCharacterCreation() {
-        String name = view.askName();
-        Outfit outfit = chooseOption("Scegli outfit", Outfit.values());
-        Hair hair = chooseOption("Scegli i capelli", Hair.values());
+    public void mainCharacterCreation(String name, Outfit outfit, Hair hair) {
         this.mainCharacter = new MainCharacter(name, outfit, hair);
-    }
-    
-    /**
-     * Helper method to present a list of options to the user and return the selected choice.
-     * * @param <T> The type of the options.
-     * @param message The message to display to the user.
-     * @param availableOptions An array of available options.
-     * @return The option selected by the user.
-     */
-    private <T> T chooseOption(String message, T[] availableOptions){
-        List<String> options = Arrays.stream(availableOptions)
-                                     .map(Object::toString)
-                                     .toList();
-        int choice  = view.showPersonalizationOptions(message, options);
-        return availableOptions[choice];
+        
+        this.startSession();
     }
     
     // NAVIGATION & EXPLORATION --------------------------------------------------------
@@ -266,7 +257,7 @@ public class Controller {
      * Updates the View with the latest data from the Model.
      * Refreshes stats, level, inventory, affinities, and room information.
      */
-    protected void updateView() {
+    public void updateView() {
         Room room = mainCharacter.getCurrentRoom();
         
         int mumAff = this.family.get("Mum").getAffinity();
@@ -289,6 +280,10 @@ public class Controller {
         
         List<String> exitDirections = room.getExits().keySet().stream().toList();
         
+        List<String> activeQuests = mainCharacter.getOngoingQuests().stream()
+                												    .map(Quest::getName) 
+                												    .toList();
+        
         view.updateStatsDisplay(
             mainCharacter.getStats().getEnergy(),
             mainCharacter.getStats().getSatiety(),
@@ -309,5 +304,7 @@ public class Controller {
         view.updateAffinitiesDisplay(mumAff, dadAff, broAff);
             
         view.updateCurrentRoom(room.getRoomName(), npcName, itemNames, itemSizes, exitDirections);
+        
+        view.updateQuests(activeQuests);
     }
 }

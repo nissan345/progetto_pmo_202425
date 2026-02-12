@@ -47,7 +47,7 @@ public class Dad extends NPC {
     	}
         switch(quest.getName()) {
             case "Annaffia le piante":
-                return "Hai già annaffiato le piante? Ricorda che l'annaffiatoio si trova in giardino";
+                return "Hai già annaffiato le piante? Ricorda che l'annaffiatoio si trova in giardino.";
             case "Festa a sorpresa": 
                 return "Com'è andata con i preparativi per la festa a sorpresa? Ricordati di: pulire con l'aspirapolvere, cucinare ai fornelli e mettere la musica con lo stereo!";
             default:
@@ -61,7 +61,7 @@ public class Dad extends NPC {
             return "Non so nulla di questa faccenda.";
         }
         if (getAffinity() < LOW_AFFINITY) {
-            return "Ben fatto. Sapevo che potevi farcela se ti impegnavi.";
+            return "Ben fatto. Sapevo che ce l'avresti fatta.";
         } else {
             return "Grazie mille! Hai fatto un ottimo lavoro.\nSei sempre così affidabile, sono orgoglioso di te!";
         }
@@ -77,7 +77,7 @@ public class Dad extends NPC {
         
         // If the item exists, create and add the quest
         if (annaffiatoio != null) {
-            Quest plantsQuest = new Quest.Builder("Annaffia le piante", "Dovresti innaffiare le piante", this)
+            Quest plantsQuest = new Quest.Builder("Annaffia le piante", "Dovresti annaffiare le piante.", this)
                 .xpReward(QuestDifficulty.EASY.getXpReward())
                 .affinityPoints(QuestDifficulty.EASY.getAffinityReward())
                 .addCondition(new ItemUsageCondition(annaffiatoio))
@@ -101,7 +101,7 @@ public class Dad extends NPC {
                 .addCondition(new ItemUsageCondition(fornelli))
                 .addCondition(new ItemUsageCondition(stereo))
                 .triggerCondition((player, room) -> room.getRoomName().equals("Giardino") &&
-                									player.hasCompletedQuest("Annaffia le piante"))
+                									player.hasCompletedQuest("Annaffia le piante."))
                 .build();
 
             this.addQuest(partyQuest);
@@ -111,7 +111,7 @@ public class Dad extends NPC {
         
         // If the item exists, create and add the quest
         if (keys != null) {
-            Quest plantsQuest = new Quest.Builder("Riporta le chiavi", "Potresti portarmi le chiavi della macchina", this)
+            Quest plantsQuest = new Quest.Builder("Riporta le chiavi", "Potresti portarmi le chiavi della macchina.", this)
                 .xpReward(QuestDifficulty.MEDIUM.getXpReward())
                 .affinityPoints(QuestDifficulty.MEDIUM.getAffinityReward())
                 .addCondition(new ItemDeliveryCondition (keys))

@@ -2,7 +2,6 @@ package main;
 
 import main.view.View;
 import main.controller.Controller;
-import main.model.character.MainCharacter;
 
 public class Main {
 	

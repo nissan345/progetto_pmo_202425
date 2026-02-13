@@ -5,41 +5,26 @@ import java.awt.*;
 
 /**
  * A side panel responsible for displaying the main character's real-time status.
- * <p>
- * This panel is vertically divided into three main sections:
- * <ul>
- * <li><b>Vital Parameters:</b> Energy, Satiety, Hydration, Hygiene.</li>
- * <li><b>Experience:</b> Current level and XP progress.</li>
- * <li><b>Relationships:</b> Affinity levels with family members (Mum, Dad, Brother).</li>
- * </ul>
- * It serves as a passive view component, updating visual indicators (mostly {@link JProgressBar})
- * when instructed by the main View.
- * </p>
  */
 public class StatusPanel extends JPanel {
 
-    // --- UI COMPONENTS ---------------------------------------------------------
+    // UI COMPONENTS ---------------------------------------------------------
     
     // Vital Stats Bars
     private JProgressBar barEnergy, barSatiety, barHydration, barHygiene;
-    
-    // Level & Experience
     private JLabel levelLabel;
     private JProgressBar xpBar;
-    
-    // NPC Affinities
     private JProgressBar affMum, affDad, affBro;
 
-    // --- CONSTRUCTOR -----------------------------------------------------------
+    // CONSTRUCTOR ------------------------------------------------------------------
 
     /**
      * Constructs the StatusPanel and organizes the layout.
-     * Initializes the three main titled sections and populates them with progress bars.
      */
     public StatusPanel() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setPreferredSize(new Dimension(220, 0));
-        setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10)); // Right padding
+        setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
         
         // Colour definition 
         Color energyCol = new Color(255, 209, 80);
@@ -53,7 +38,7 @@ public class StatusPanel extends JPanel {
         Color dadCol = new Color(71, 110, 174);
         Color broCol = new Color(246, 191, 184);
 
-        // 1. Vital Parameters Section
+        // Vital Parameters Section
         JPanel statsBox = createBox("Parametri Vitali");
         barEnergy = createBar(energyCol);
         barSatiety = createBar(satietyCol);
@@ -65,7 +50,7 @@ public class StatusPanel extends JPanel {
         statsBox.add(createPair("Idratazione", barHydration));
         statsBox.add(createPair("Igiene", barHygiene));
 
-        // 2. Experience/Level Section
+        // Experience/Level Section
         JPanel lvlBox = createBox("Esperienza");
         levelLabel = new JLabel("Livello: 1");
         levelLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -76,7 +61,7 @@ public class StatusPanel extends JPanel {
         lvlBox.add(Box.createVerticalStrut(5));
         lvlBox.add(xpBar);
 
-        // 3. Affinities Section
+        // Affinities Section
         JPanel affBox = createBox("Affinità");
         affMum = createBar(mumCol);
         affDad = createBar(dadCol);
@@ -94,7 +79,7 @@ public class StatusPanel extends JPanel {
         add(affBox);
     }
 
-    // --- UPDATE METHODS (CALLED BY VIEW) ---------------------------------------
+    // UPDATE METHODS ----------------------------------------------------------
 
     /**
      * Updates the visual bars for the character's vital parameters.
@@ -124,7 +109,7 @@ public class StatusPanel extends JPanel {
     }
 
     /**
-     * Updates the affinity bars representing relationships with NPCs.
+     * Updates the affinity bars.
      * @param m Affinity value for Mum.
      * @param d Affinity value for Dad.
      * @param b Affinity value for Brother.
@@ -163,7 +148,6 @@ public class StatusPanel extends JPanel {
 
     /**
      * Creates a labeled pair containing a text label and a progress bar.
-     * Used to stack metrics cleanly (e.g., "Energy" label above the Energy Bar).
      * @param lbl The text label.
      * @param bar The progress bar component.
      * @return A JPanel containing the label and bar.

@@ -12,17 +12,11 @@ import main.view.panels.MainCharacterPanel;
 import main.view.panels.MenuPanel;
 
 /**
- * The main graphical user interface for the application "My Life Simulator".
- * <p>
- * This class extends {@link JFrame} and manages the different screens of the game
- * (Menu, Character Creation, Main Game) using a {@link CardLayout}. It acts as the
- * primary View component in the MVC pattern, delegating specific UI updates to
- * sub-panels like {@link GamePanel}, {@link MenuPanel}, and {@link MainCharacterPanel}.
- * </p>
+ * The main graphical user interface for the application.
  */
 public class View extends JFrame {
     
-    // --- LAYOUT & CONTAINERS ---------------------------------------------------
+    // ATTRIBUTES -------------- ---------------------------------------------------
     
     private CardLayout cardLayout;
     private JPanel mainContainer;
@@ -31,21 +25,16 @@ public class View extends JFrame {
     private static final String MC_CARD = "MAINCHARACTER"; 
     private static final String GAME_CARD = "GAME";
     
-    // --- SUB-PANELS ------------------------------------------------------------
-    
     private MenuPanel menu;
     private MainCharacterPanel characterPanel; 
     private GamePanel gamePanel; 
-    
-    // --- CONTROLLER ------------------------------------------------------------
-    
+        
     private Controller controller; 
     
-    // --- CONSTRUCTOR & INITIALIZATION ------------------------------------------
+    // CONSTRUCTOR --------------------------------------------------------------
     
     /**
      * Constructs the main application window.
-     * Initializes the window properties and the user interface components.
      */
     public View() {
         super("My life Simulator"); 
@@ -54,13 +43,14 @@ public class View extends JFrame {
         this.setVisible(true);
     }
     
+    // INITIALIZATION -----------------------------------------------------------------------------
+
     /**
-     * Sets up the main window properties (size, close operation, location).
-     * Initializes the CardLayout container.
+     * Sets up the main window properties.
      */
     private void initWindow() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1280, 800); // Wider resolution to accommodate the 3-column layout
+        setSize(1280, 800);
         setLocationRelativeTo(null);
 
         cardLayout = new CardLayout();
@@ -86,7 +76,7 @@ public class View extends JFrame {
         gamePanel.setController(controller);
     }
     
-    // --- NAVIGATION & SCREENS --------------------------------------------------
+    // NAVIGATION & SCREENS ---------------------------------------------------------
     
     /**
      * Displays the main menu screen.
@@ -123,7 +113,7 @@ public class View extends JFrame {
         this.cardLayout.show(this.mainContainer, GAME_CARD);
     }
     
-    // --- USER INTERACTION DIALOGS ----------------------------------------------
+    // USER INTERACTION DIALOGS ------------------------------------------------------------------
     
     /**
      * Shows a dialog with a list of options for the user to choose from.
@@ -148,7 +138,7 @@ public class View extends JFrame {
                  JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
     }
 
-    // --- GAME STATE UPDATES (DELEGATED TO PANELS) ------------------------------
+    // GAME STATE UPDATES ------------------------------------------------------------
 
     /**
      * Updates the status panel with the character's vital statistics.
@@ -209,7 +199,7 @@ public class View extends JFrame {
         gamePanel.getRoomPanel().updateRoom(roomName, npcName, items, sizes, exits);
     }
 
-    // --- LOGGING & MESSAGING ---------------------------------------------------
+    // LOGGING & MESSAGING --------------------------------------------------------------------------
 
     /**
      * Appends a message to the in-game log area.
@@ -240,7 +230,7 @@ public class View extends JFrame {
     }
     
     /**
-     * Disables interactive controls in the game panel (e.g., upon death).
+     * Disables interactive controls in the game panel.
      */
     public void disableControls() { 
         gamePanel.disableInteraction(); 

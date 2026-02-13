@@ -7,33 +7,22 @@ import main.controller.Controller;
 
 /**
  * Represents the visual interface for the current room in the game.
- * <p>
- * This panel is responsible for displaying:
- * <ul>
- * <li>The name of the current room.</li>
- * <li>Any NPC present (as a clickable button).</li>
- * <li>Interactable items available in the room.</li>
- * <li>Exits leading to other rooms (navigation).</li>
- * </ul>
- * Interaction events (clicks) are forwarded to the {@link Controller}.
- * </p>
  */
 public class RoomPanel extends JPanel {
 
-    // --- UI COMPONENTS ---------------------------------------------------------
+    // UI COMPONENTS -------------------------------------------------------------
     private JLabel roomTitle;
     private JPanel npcContainer;
     private JPanel itemContainer;
     private JPanel exitContainer;
 
-    // --- CONTROLLER REFERENCE --------------------------------------------------
+    // CONTROLLER REFERENCE -------------------------------------------------------
     private Controller controller;
 
-    // --- CONSTRUCTOR -----------------------------------------------------------
+    // CONSTRUCTOR -------------------------------------------------------------------
 
     /**
      * Constructs the RoomPanel and initializes the UI layout.
-     * Sets up the title and the scrollable area containing the NPC, Item, and Exit sections.
      */
     public RoomPanel() {
         setLayout(new BorderLayout());
@@ -62,7 +51,7 @@ public class RoomPanel extends JPanel {
         add(new JScrollPane(contentStack), BorderLayout.CENTER);
     }
 
-    // --- CONFIGURATION ---------------------------------------------------------
+    // CONFIGURATION ---------------------------------------------------------
 
     /**
      * Sets the controller responsible for handling interactions from this panel.
@@ -72,16 +61,15 @@ public class RoomPanel extends JPanel {
         this.controller = c; 
     }
 
-    // --- VIEW UPDATE METHODS ---------------------------------------------------
+    // VIEW UPDATE METHODS ---------------------------------------------------
 
     /**
      * Updates the panel to reflect the current state of the room.
-     * Rebuilds the buttons for NPCs, Items, and Exits based on the provided data.
-     * * @param name The name of the room to display as the title.
-     * @param npcName The name of the NPC in the room (can be null or empty).
+     * @param name The name of the room to display as the title.
+     * @param npcName The name of the NPC in the room.
      * @param items A list of names of items present in the room.
-     * @param sizes A list of sizes corresponding to the items (for tooltips).
-     * @param exits A list of names of adjacent rooms (exits).
+     * @param sizes A list of sizes corresponding to the items.
+     * @param exits A list of names of adjacent rooms.
      */
     public void updateRoom(String name, String npcName, List<String> items, List<Integer> sizes, List<String> exits) {
         roomTitle.setText(name);
@@ -123,11 +111,10 @@ public class RoomPanel extends JPanel {
         revalidate(); repaint();
     }
 
-    // --- UI CONTROL METHODS ----------------------------------------------------
+    // UI CONTROL METHODS ----------------------------------------------------
 
     /**
      * Recursively disables all buttons within the interaction containers.
-     * Useful for locking the UI during transitions or Game Over states.
      */
     public void disableButtons() {
         setEnabledRecursive(npcContainer, false);
@@ -135,7 +122,7 @@ public class RoomPanel extends JPanel {
         setEnabledRecursive(exitContainer, false);
     }
 
-    // --- INTERNAL HELPERS ------------------------------------------------------
+    // INTERNAL HELPERS ------------------------------------------------------
 
     /**
      * Helper method to create a titled section panel.

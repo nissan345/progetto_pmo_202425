@@ -7,30 +7,22 @@ import main.controller.Controller;
 
 /**
  * A specialized panel that displays the player's current status regarding Items and Quests.
- * <p>
- * This panel is divided vertically using a {@link GridBagLayout}:
- * <ul>
- * <li><b>Top (75%):</b> Scrollable Inventory list (interactive buttons).</li>
- * <li><b>Bottom (25%):</b> Scrollable Active Quest list (text descriptions).</li>
- * </ul>
  * It acts as a passive view component, updating its content only when instructed
  * by the Controller or the main View.
- * </p>
  */
 public class DashboardPanel extends JPanel {
     
-    // --- ATTRIBUTES ------------------------------------------------------------
+    // ATTRIBUTES ------------------------------------------------------------
     
     private JPanel invContent;
     private JPanel questContent;
     private Controller controller;
 
-    // --- CONSTRUCTOR -----------------------------------------------------------
+    // CONSTRUCTOR -----------------------------------------------------------
 
     /**
      * Constructs the DashboardPanel and initializes the layout.
      * Sets up the two main scrollable areas with specific height weights
-     * (Inventory takes priority space).
      */
     public DashboardPanel() {
         // Change main layout to GridBagLayout to manage weights
@@ -38,9 +30,9 @@ public class DashboardPanel extends JPanel {
         setPreferredSize(new Dimension(220, 0));
         
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.BOTH; // Expand components in both directions
-        gbc.gridx = 0; // Single column
-        gbc.weightx = 1.0; // Occupy all available width
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.gridx = 0;
+        gbc.weightx = 1.0;
         
         // --- 1. INVENTORY SECTION ---
         invContent = new JPanel();
@@ -48,9 +40,9 @@ public class DashboardPanel extends JPanel {
         JScrollPane invScroll = new JScrollPane(invContent);
         invScroll.setBorder(BorderFactory.createTitledBorder("Inventario"));
         
-        // Grid configuration for Inventory
-        gbc.gridy = 0;       // First row
-        gbc.weighty = 0.75;  // OCCUPIES 75% OF HEIGHT
+        // Grid configuration
+        gbc.gridy = 0;
+        gbc.weighty = 0.75;
         add(invScroll, gbc);
         
         // --- 2. QUEST SECTION ---
@@ -59,25 +51,24 @@ public class DashboardPanel extends JPanel {
         JScrollPane questScroll = new JScrollPane(questContent);
         questScroll.setBorder(BorderFactory.createTitledBorder("Quest Attive"));
         
-        // Grid configuration for Quests
-        gbc.gridy = 1;       // Second row
-        gbc.weighty = 0.25;  // OCCUPIES 25% OF HEIGHT
+        // Grid configuration
+        gbc.gridy = 1;
+        gbc.weighty = 0.25;
         gbc.insets = new Insets(10, 0, 0, 0); // Spacing above quests
         add(questScroll, gbc);
     }
 
-    // --- CONTROLLER SETUP ------------------------------------------------------
+    // CONTROLLER SETUP ------------------------------------------------------
 
     /**
      * Sets the reference to the main application controller.
-     * This is required for handling button clicks in the inventory.
      * * @param c The controller instance.
      */
     public void setController(Controller c) { 
         this.controller = c; 
     }
 
-    // --- VIEW UPDATE METHODS ---------------------------------------------------
+    // VIEW UPDATE METHODS ---------------------------------------------------
 
     /**
      * Updates the inventory display with a list of item names.
@@ -128,9 +119,8 @@ public class DashboardPanel extends JPanel {
                 qText.setLineWrap(true);
                 qText.setEditable(false);
                 qText.setOpaque(false);
-                qText.setFont(new Font("Arial", Font.ITALIC, 14)); // Slightly reduced font for readability
+                qText.setFont(new Font("Arial", Font.ITALIC, 14));
                 qText.setAlignmentX(Component.LEFT_ALIGNMENT);
-                // Important for JTextArea inside ScrollPane:
                 qText.setMaximumSize(new Dimension(Integer.MAX_VALUE, qText.getPreferredSize().height));
                 
                 questContent.add(qText);
@@ -142,11 +132,10 @@ public class DashboardPanel extends JPanel {
         questContent.repaint();
     }
 
-    // --- UI CONTROL METHODS ----------------------------------------------------
+    // UI CONTROL METHODS ----------------------------------------------------
 
     /**
      * Disables all interactive buttons in the inventory.
-     * Typically used when the game is over or paused.
      */
     public void disableButtons() {
         for(Component c : invContent.getComponents()) c.setEnabled(false);

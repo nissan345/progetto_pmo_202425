@@ -6,17 +6,6 @@ import main.controller.Controller;
 
 /**
  * The main container panel for the gameplay interface.
- * <p>
- * This class uses a {@link BorderLayout} to organize the game screen into four distinct areas:
- * <ul>
- * <li><b>West:</b> {@link StatusPanel} (Stats, Level, Affinities).</li>
- * <li><b>Center:</b> {@link RoomPanel} (Current location and interactions).</li>
- * <li><b>East:</b> {@link DashboardPanel} (Inventory and Quests).</li>
- * <li><b>South:</b> Game Log (Text area for narrative feedback).</li>
- * </ul>
- * It acts as an aggregate view, holding references to specific sub-panels to allow
- * modular updates from the View/Controller.
- * </p>
  */
 public class GamePanel extends JPanel {
     
@@ -28,18 +17,16 @@ public class GamePanel extends JPanel {
     // Panel handling room interactions (NPCs, Items, Exits). 
     private RoomPanel roomPanel;          
     
-    // Panel managing the player's inventory and active quests. 
+    // Panel managing inventory and active quests. 
     private DashboardPanel dashboardPanel; 
     
     // Scrollable text area for the game narrative log. 
     private JTextArea gameLog;
 
-    // --- CONSTRUCTOR -----------------------------------------------------------
+    // CONSTRUCTOR -----------------------------------------------------------
 
     /**
      * Constructs the GamePanel and initializes the user interface layout.
-     * Sets up the border layout, initializes all sub-panels, configures the 
-     * log area, and assembles the visual components.
      */
     public GamePanel() {
         setLayout(new BorderLayout(10, 10));
@@ -64,11 +51,10 @@ public class GamePanel extends JPanel {
         add(logScroll, BorderLayout.SOUTH);
     }
 
-    // --- CONTROLLER CONFIGURATION ----------------------------------------------
+    // CONTROLLER CONFIGURATION ----------------------------------------------
 
     /**
      * Propagates the controller instance to the interactive sub-panels.
-     * This allows the sub-panels (Room and Dashboard) to trigger events in the controller.
      * @param c The main application controller.
      */
     public void setController(Controller c) {
@@ -76,11 +62,10 @@ public class GamePanel extends JPanel {
         dashboardPanel.setController(c);
     }
 
-    // --- UI LOGIC & MANIPULATION -----------------------------------------------
+    // UI LOGIC & MANIPULATION -----------------------------------------------
 
     /**
      * Appends a new message to the game log at the bottom of the screen.
-     * Automatically scrolls the text area to the most recent message.
      * @param msg The message string to display.
      */
     public void appendLog(String msg) {
@@ -91,14 +76,13 @@ public class GamePanel extends JPanel {
 
     /**
      * Disables interactive elements in the sub-panels.
-     * Typically called when the game ends (Game Over) to prevent further actions.
      */
     public void disableInteraction() {
         roomPanel.disableButtons();
         dashboardPanel.disableButtons();
     }
 
-    // --- GETTERS (COMPONENT ACCESS) --------------------------------------------
+    // GETTERS ----------------------------------------------------------------------
 
     /**
      * Retrieves the Status Panel.

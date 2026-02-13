@@ -9,34 +9,24 @@ import main.model.character.enums.Hair;
 import main.model.character.enums.Outfit;
 
 /**
- * Handles the "Wizard" style flow for creating a new character.
- * <p>
- * This panel uses a {@link CardLayout} to guide the user through three sequential steps:
- * <ol>
- * <li>Name Entry</li>
- * <li>Hair Selection</li>
- * <li>Outfit Selection</li>
- * </ol>
- * Data is accumulated locally and sent to the Controller via the {@link CharacterCreatorListener}
- * only when the final step is completed.
- * </p>
+ * Handles the creation of the new character.
  */
 public class MainCharacterPanel extends JPanel {
 
-    // --- CONSTANTS (Card Identifiers) ------------------------------------------
+    // CONSTANTS -----------------------------------------------------------------
     private static final String CARD_NAME = "NAME";
     private static final String CARD_HAIR = "HAIR";
     private static final String CARD_OUTFIT = "OUTFIT";
 
-    // --- UI COMPONENTS ---------------------------------------------------------
+    // UI COMPONENTS -------------------------------------------------------------
     private CardLayout cardLayout;
     
-    // --- TEMPORARY STATE (Data Accumulation) -----------------------------------
+    // TEMPORARY STATE -----------------------------------------------------------
     private String tempName;
     private Hair tempHair;
     private Outfit tempOutfit;
 
-    // --- EVENTS & LISTENER -----------------------------------------------------
+    // EVENTS & LISTENER ------------------------------------------------------------
     
     /**
      * Interface definition for the callback invoked when character creation is finalized.
@@ -53,11 +43,10 @@ public class MainCharacterPanel extends JPanel {
 
     private CharacterCreatorListener listener;
 
-    // --- CONSTRUCTOR -----------------------------------------------------------
+    // CONSTRUCTOR ----------------------------------------------------------------------
 
     /**
      * Constructs the character creation panel.
-     * Initializes the CardLayout and builds the three sub-panels (Name, Hair, Outfit).
      * @param listener The listener to notify when the creation process is complete.
      */
     public MainCharacterPanel(CharacterCreatorListener listener) {
@@ -81,11 +70,10 @@ public class MainCharacterPanel extends JPanel {
         cardLayout.show(this, CARD_NAME);
     }
 
-    // --- UI CONSTRUCTION METHODS -----------------------------------------------
+    // UI CONSTRUCTION METHODS ------------------------------------------------------
 
     /**
      * Creates the first screen for entering the character's name.
-     * Uses a custom {@link GridBagLayout} for centering elements.
      * @return The constructed JPanel for name entry.
      */
     private JPanel createNamePanel() {
@@ -100,7 +88,7 @@ public class MainCharacterPanel extends JPanel {
         
         JButton confirmBtn = createStyledButton("CONFERMA");
 
-        // Layout Logic
+        // Layout
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0; gbc.gridy = 0;
         gbc.insets = new Insets(0, 0, 20, 0); // Spacing below label
@@ -114,12 +102,12 @@ public class MainCharacterPanel extends JPanel {
         gbc.insets = new Insets(20, 0, 0, 0); // Spacing above button
         namePanel.add(confirmBtn, gbc);
 
-        // Action Logic (Click and Enter Key)
+        // Actions
         ActionListener submitAction = e -> {
             String text = nameField.getText().trim();
             if(!text.isEmpty()) {
-                this.tempName = text; // Save name
-                cardLayout.show(this, CARD_HAIR); // Proceed to next screen
+                this.tempName = text;
+                cardLayout.show(this, CARD_HAIR);
             } else {
                 JOptionPane.showMessageDialog(this, "Il nome non può essere vuoto", "Attenzione", JOptionPane.WARNING_MESSAGE);
             }
@@ -133,7 +121,6 @@ public class MainCharacterPanel extends JPanel {
 
     /**
      * Generically creates a selection grid based on Enum values.
-     * Used for both Hair and Outfit selection to avoid code duplication.
      * * @param <T> The Enum type (e.g., Hair or Outfit).
      * @param title The title to display at the top of the panel.
      * @param options The array of Enum values to generate buttons for.
@@ -149,14 +136,14 @@ public class MainCharacterPanel extends JPanel {
         selectionPanel.add(titleLbl, BorderLayout.NORTH);
 
         // Button Grid
-        JPanel grid = new JPanel(new GridLayout(0, 2, 20, 20)); // 2 columns, 20px gap
-        grid.setBorder(BorderFactory.createEmptyBorder(20, 100, 100, 100)); // Wide margins
+        JPanel grid = new JPanel(new GridLayout(0, 2, 20, 20));
+        grid.setBorder(BorderFactory.createEmptyBorder(20, 100, 100, 100));
 
         for (T option : options) {
             JButton btn = new JButton(option.toString());
             btn.setFont(new Font("Arial", Font.PLAIN, 20));
             btn.setFocusPainted(false);
-            btn.setPreferredSize(new Dimension(0, 60)); // Taller buttons
+            btn.setPreferredSize(new Dimension(0, 60));
             
             btn.addActionListener(e -> onSelection.accept(option));
             grid.add(btn);
@@ -167,7 +154,7 @@ public class MainCharacterPanel extends JPanel {
     }
 
     /**
-     * Helper method to create buttons with consistent styling.
+     * Helper method to create buttons.
      * @param text The text to display on the button.
      * @return A styled JButton.
      */
@@ -179,12 +166,11 @@ public class MainCharacterPanel extends JPanel {
         return btn;
     }
 
-    // --- EVENT HANDLERS --------------------------------------------------------
+    // EVENT HANDLERS ---------------------------------------------------------------
 
     /**
      * Handles the selection of a hairstyle.
-     * Saves the choice locally and advances to the Outfit screen.
-     * @param hair The selected hair enum.
+ù     * @param hair The selected hair enum.
      */
     private void handleHairSelection(Hair hair) {
         this.tempHair = hair;
@@ -193,14 +179,12 @@ public class MainCharacterPanel extends JPanel {
     }
 
     /**
-     * Handles the selection of an outfit.
-     * This is the final step: saves the choice and notifies the main Listener.
+     * Handles the selection of an outfit and the finalization of the character.
      * @param outfit The selected outfit enum.
      */
     private void handleOutfitSelection(Outfit outfit) {
         this.tempOutfit = outfit;
         
-        // ALL DATA COLLECTED -> Notify Controller via Listener
         if (listener != null) {
             listener.onCreate(tempName, tempOutfit, tempHair);
         }

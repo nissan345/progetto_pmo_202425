@@ -46,8 +46,6 @@ public class NpcInteractionHandler {
 
     /**
      * Handles automatic interactions that occur when the player enters a room.
-     * <p>
-     * Logic flow:
      * 1. Checks if there is a completed quest with the NPC in the room. If so, and if it's auto-completable, turns it in.
      * 2. If no quest is turned in, checks if a new quest can be assigned by the NPC and assigns it.
      */
@@ -58,7 +56,6 @@ public class NpcInteractionHandler {
         if (npcOpt.isPresent()) {
             NPC npc = npcOpt.get();
 
-            // PRIORITY: Check for Quest Completion (Auto Turn-in)
             // If the player enters the room and has finished the task, complete it immediately.
             Optional<Quest> completedQuest = mainCharacter.getCompletedQuestWithNPC(npc);
             if (completedQuest.isPresent()) {
@@ -68,14 +65,13 @@ public class NpcInteractionHandler {
                 return; 
             }
 
-            // ASSIGNMENT: Check for New Quests
             // Only assign if the player does NOT already have an active quest with this NPC.
             if (!mainCharacter.hasActiveQuestWithNPC(npc)) {
                 
                 // QuestSystem returns quests that are triggered by entering this room
                 List<Quest> newQuests = questSystem.onPlayerEnteredRoom(mainCharacter, currentRoom);
 
-                // We take the first valid new quest
+                // Takes the first valid new quest
                 Optional<Quest> validNewQuest = newQuests.stream()
                     .filter(q -> (!mainCharacter.getCompletedQuests().contains(q) && q.getAssignerNPC().equals(npc))) // Ensure it's not a repeated old quest
                     .findFirst();
@@ -91,10 +87,8 @@ public class NpcInteractionHandler {
 
     /**
      * Handles the interaction logic when the user explicitly clicks the "Talk" button for an NPC.
-     * <p>
-     * Logic flow:
      * 1. Checks for any completed quest (manual turn-in).
-     * 2. Checks for special interactions (e.g., Mum's gift).
+     * 2. Checks for special interactions 
      * 3. Checks for an ongoing active quest to show progress dialogue.
      * 4. Otherwise, shows the standard initial dialogue.
      */
@@ -145,16 +139,13 @@ public class NpcInteractionHandler {
      * @param quest The quest being assigned.
      */
     private void performQuestAssignment(NPC npc, Quest quest) {
-        // 1. Visual Alert
+        // Visual Alert
     	view.showQuestMessage("Nuova quest: " + quest.getName());
         
-        // 2. NPC Dialogue
+        // NPC Dialogue
         String assignDialogue = npc.getQuestAssignedDialogue(quest);
         view.showQuestDialogue(npc.getName(), assignDialogue);
 
-        // Note: QuestSystem.onPlayerEnteredRoom usually adds the quest to the character.
-        // If it doesn't, ensure mainCharacter.addQuest(quest) is called here.
-   //     controller.updateView();
     }
 
     /**

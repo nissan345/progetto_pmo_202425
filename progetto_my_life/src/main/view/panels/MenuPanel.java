@@ -5,12 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 /**
- * Represents the initial menu screen of the application "My Life Simulator".
- * <p>
- * This panel serves as the entry point for the user, providing options to 
- * start a new game session or exit the application. It uses a {@link GridBagLayout} 
- * to center the title and buttons visually.
- * </p>
+ * Represents the initial menu screen of the application.
  */
 public class MenuPanel extends JPanel {
 	
@@ -18,12 +13,11 @@ public class MenuPanel extends JPanel {
 
     /**
      * Constructs the MenuPanel and initializes the user interface.
-     * Sets up the background, title, and navigation buttons.
-     * * @param onStart The action listener to execute when the "GIOCA" (Play) button is clicked.
-     * @param onExit  The action listener to execute when the "ESCI" (Exit) button is clicked.
+     * * @param onStart The action listener to execute when the "GIOCA" button is clicked.
+     * @param onExit  The action listener to execute when the "ESCI" button is clicked.
      */
 	public MenuPanel(ActionListener onStart, ActionListener onExit) {
-		// Center everything
+		// Center
         setLayout(new GridBagLayout());
         
         // Background color
@@ -50,7 +44,7 @@ public class MenuPanel extends JPanel {
         add(createButton("ESCI", onExit), gbc);
 	}
 	
-    // --- UI HELPERS ------------------------------------------------------------
+    // UI HELPERS -------------------------------------------------------------------
 
 	/**
 	 * Helper method to create a styled button with consistent properties.

@@ -11,7 +11,7 @@ import main.model.world.gameItem.GameItem;
 
 public class Mum extends NPC {
 	
-	private final int HIGH_AFFINITY = 70;
+	private static final int HIGH_AFFINITY = 70;
 	
 	private boolean giftGiven;
 

@@ -80,6 +80,7 @@ public class NpcInteractionHandler {
                     performQuestAssignment(npc, validNewQuest.get());
                 }
             }
+            mainCharacter.setJustEntered(false);
         }
     }
 

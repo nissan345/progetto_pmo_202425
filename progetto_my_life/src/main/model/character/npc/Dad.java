@@ -1,6 +1,5 @@
 package main.model.character.npc;
 
-import main.model.character.npc.NPC.QuestDifficulty;
 import main.model.quest.ItemDeliveryCondition;
 import main.model.quest.ItemUsageCondition;
 import main.model.quest.Quest;

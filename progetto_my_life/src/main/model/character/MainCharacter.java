@@ -36,7 +36,6 @@ public class MainCharacter {
     private boolean justEntered;
     private Map<Quest, Set<String>> ItemUsedForQuests;
     private List<Quest> ongoingQuests;
-    private List<String> usedItems; // Keeps track of used Items
     private List<Quest> completedQuests;                      
  
     // CONSTRUCTOR ------------------------------------------------------------------------
